@@ -1,0 +1,28 @@
+
+  <form nz-form [formGroup]="formModel">
+    <!--产品名称-->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSm]="6">
+        注册国家
+      </nz-form-label>
+      <nz-form-control [nzSm]="14">
+        <nz-select formControlName="country_code" >
+          <nz-option *ngFor="let d of regInfo" nzLabel ={{d.country_name}} nzValue = {{d.country_code}}></nz-option>
+
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+
+    <!--申报价值-->
+    <nz-form-item >
+      <nz-form-label nzRequired nz-col [nzSm]="6">
+        申报价值
+      </nz-form-label>
+      <nz-form-control [nzSm]="14">
+        <nz-input-group nzAddOnAfter="USD">
+          <input nz-input formControlName="import_value" type="text">
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+
+  </form>

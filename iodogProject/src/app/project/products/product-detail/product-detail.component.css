@@ -1,0 +1,35 @@
+.product_page {
+  display: flex;
+  flex-direction: row;
+}
+
+.p_main {
+  flex: 1;
+}
+
+.p_nav {
+  width: 250px;
+  padding-left: 10px;
+}
+
+nz-card{
+  width: 100%;
+  margin: 20px 0;
+}
+/*nz-form-item {*/
+  /*!*max-width: 300px;*!*/
+  /*min-width: 400px;*/
+/*}*/
+
+.save_bg {
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-between;
+
+}
+
+@media screen and (max-width: 800px){
+  .p_nav {
+    display: none;
+  }
+}

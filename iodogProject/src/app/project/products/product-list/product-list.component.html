@@ -1,0 +1,118 @@
+
+
+  <nz-table #basicTable
+            nzBordered
+            nzShowSizeChanger="true"
+            [nzTitle] = "titleTemp"
+            [nzShowTotal] = "totalItemsTemp"
+            [nzNoResult] = "noResultTemp"
+            [nzPageSizeOptions]="[20,50,100]"
+            (nzCurrentPageDataChange)="currentPageDataChange($event)"
+            [nzData]="product" nzPageSize="5">
+
+    <thead>
+    <tr>
+      <th nzWidth="30px"
+          nzShowCheckbox
+          [(nzChecked)]="allChecked"
+          [nzIndeterminate]="indeterminate"
+          (nzCheckedChange)="checkAll($event)"
+      >
+      </th>
+      <th nzWidth="85px" *ngIf="display.image">缩略图</th>
+      <th nzWidth="300px">SKU/中文名称</th>
+      <th *ngIf="display.status">产品状态</th>
+      <th nzWidth="120px" *ngIf="display.reg_status">注册状态</th>
+      <th *ngIf="display.cost">成本￥</th>
+      <th *ngIf="display.weight">重量g</th>
+      <th *ngIf="display.supplier">供应商</th>
+      <th *ngIf="display.create_time">创建时间</th>
+      <th nzWidth="100px">操作</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td nzShowCheckbox [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatus($event)"></td>
+      <td *ngIf="display.image">
+        <img src="http://placehold.it/50x50">
+      </td>
+      <td>
+          <div>{{data.sku}}</div>
+          <div>{{nameFormat(data.cn_name,20)}}</div>
+      </td>
+
+      <td [ngSwitch]="data.status" *ngIf="display.status">
+        <nz-tag [nzColor]="'green'" *ngSwitchCase="'ON_SALE'">正常</nz-tag>
+        <nz-tag [nzColor]="'red'" *ngSwitchCase="'OFFLINE'">停售</nz-tag>
+        <nz-tag [nzColor]="'orange'" *ngSwitchCase="'CLEAN'">清仓中</nz-tag>
+        <nz-tag [nzColor]="'blue'" *ngSwitchCase="'UNKNOW'">自动创建</nz-tag>
+      </td>
+
+      <td *ngIf="display.reg_status">
+
+          <div>AU: <nz-badge nzStatus="success" nzText="已发布"></nz-badge></div>
+          <div>US: <nz-badge nzStatus="processing" nzText="待审核"></nz-badge></div>
+
+      </td>
+      <td *ngIf="display.cost">{{data.cost}}</td>
+      <td *ngIf="display.weight">{{data.weight}}</td>
+      <td *ngIf="display.supplier">{{nameFormat('乐士购',5)}}</td>
+      <td *ngIf="display.create_time">
+        <div>2018-05-23</div>
+        <div>23:59:59</div>
+      </td>
+      <td>
+        <nz-dropdown [nzTrigger]="'click'">
+          <button nz-button nz-dropdown [nzSize]="'small'"><span>处理</span> <i class="anticon anticon-down"></i></button>
+
+          <ul nz-menu>
+            <li nz-menu-item><i class="anticon anticon-barcode"></i>&nbsp;打印标签</li>
+            <li nz-menu-item><i class="anticon anticon-edit"></i>&nbsp;编辑</li>
+            <li nz-menu-item><i class="anticon anticon-idcard"></i>&nbsp;添加注册</li>
+            <li nz-menu-item class="red"><i class="anticon anticon-delete"></i>&nbsp;删除</li>
+          </ul>
+        </nz-dropdown>
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+
+<ng-template #totalItemsTemp let-total>
+  总共 {{total}} 个产品
+</ng-template>
+
+<ng-template #noResultTemp>
+  <i class="fa fa-child fa-5x"></i>木有！
+</ng-template>
+
+<ng-template #titleTemp>
+  <div class="operating">
+
+    <button nz-button [nzType]="'primary'" [disabled]="disabledButton"><i class="anticon anticon-barcode"></i>打印标签</button>
+    <button nz-button [nzType]="'primary'" [disabled]="disabledButton"><i class="anticon anticon-edit"></i>批量编辑</button>
+    <button nz-button [nzType]="'primary'" [disabled]="disabledButton"><i class="anticon anticon-idcard"></i>批量注册</button>
+    <button nz-button [nzType]="'danger'" [disabled]="disabledButton"><i class="anticon anticon-delete"></i>删除</button>
+
+    <button nz-button class="at_right" (click)="setDisplay()"><i class="anticon anticon-setting"></i>自定义</button>
+
+    <nz-dropdown class="at_right" [nzTrigger]="'click'">
+      <button nz-button nz-dropdown >
+        <i class="anticon anticon-cloud-download"></i>
+        导入/导出
+        <i class="anticon anticon-down"></i>
+      </button>
+      <ul nz-menu>
+        <li nz-menu-item><i class="anticon anticon-cloud-upload-o"></i>&nbsp;模板导入SKU</li>
+        <li nz-menu-item><i class="anticon anticon-cloud-upload-o"></i>&nbsp;模板导入虚拟SKU</li>
+        <li nz-menu-item><i class="anticon anticon-cloud-download-o"></i>&nbsp;导出SKU</li>
+      </ul>
+    </nz-dropdown>
+
+    <button nz-button [disabled]="disabledButton" [nzType]="'primary'" [nzLoading]="operating" (click)="operateData()">
+      Reload{{checkedNumber}}
+    </button>
+    <span style="margin-left: 8px;" *ngIf="checkedNumber">共选中 {{checkedNumber}} 项</span>
+  </div>
+</ng-template>
+

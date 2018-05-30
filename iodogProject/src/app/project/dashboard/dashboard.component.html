@@ -1,0 +1,29 @@
+<p>
+  dashboard works!
+</p>
+<button nz-button nzType="primary" (click)="createComponentModal()">
+  <span>Use Component</span>
+</button>
+<ul *ngFor="let d of data">
+  <li>{{d.country_code}},{{d.import_value}},{{d.import_rate}}</li>
+</ul>
+
+<button nz-button nzType="primary" (click)="createTplModal(tplTitle, tplContent, tplFooter)">
+  <span>Template</span>
+</button>
+<ng-template #tplTitle>
+  <div class="tt">
+    <span>Title Template</span>
+  </div>
+
+</ng-template>
+<ng-template #tplContent>
+  <p>some contents...</p>
+  <p>some contents...</p>
+  <p>some contents...</p>
+  <p>some contents...</p>
+  <p>some contents...</p>
+</ng-template>
+<ng-template #tplFooter>
+  <button nz-button nzType="primary" (click)="destroyTplModal()" [nzLoading]="tplModalButtonLoading">Close after submit</button>
+</ng-template>

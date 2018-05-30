@@ -1,0 +1,105 @@
+<div class="login_home">
+  <div class="login_window" >
+    <div class="login_banner">
+      <div><i class="fa fa-user-circle fa-3x" aria-hidden="true"></i></div>
+      <div>注册账号</div>
+    </div>
+
+    <div class="login_form">
+      <form nz-form [formGroup]="formModel" (ngSubmit)="submitForm($event,formModel.value)">
+
+        <!--用户名-->
+        <nz-form-item>
+          <nz-form-control nzHasFeedback>
+            <nz-input-group nzPrefixIcon="anticon anticon-user">
+              <input type="text" placeholder="注册邮箱" nz-input formControlName="username" nzSize="large">
+            </nz-input-group>
+            <nz-form-explain *ngIf="getFormControl('username').dirty && getFormControl('username').errors|| getFormControl('username').pending">
+              <ng-container *ngIf="getFormControl('username').hasError('required')">
+                请输入邮箱!
+              </ng-container>
+              <ng-container *ngIf="getFormControl('username').hasError('duplicated')">
+                该邮箱已存在!
+              </ng-container>
+              <ng-container *ngIf="getFormControl('username').hasError('email')">
+                邮箱格式不正确！
+              </ng-container>
+              <ng-container *ngIf="getFormControl('username').hasError('maxlength')">
+                账号最大长度不超过30位
+              </ng-container>
+              <ng-container *ngIf="getFormControl('username').pending">
+                正在核对...
+              </ng-container>
+            </nz-form-explain>
+
+            <!--<nz-form-explain *ngIf="getFormControl('username').touched&&getFormControl('username').errors || getFormControl('username').pending">-->
+              <!--<ng-container *ngIf="getFormControl('username').hasError('email')">-->
+                <!--邮箱格式不正确！-->
+              <!--</ng-container>-->
+              <!--<ng-container *ngIf="getFormControl('username').hasError('maxlength')">-->
+                <!--账号最大长度不超过30位-->
+              <!--</ng-container>-->
+              <!--<ng-container *ngIf="getFormControl('username').pending">-->
+                <!--正在核对...-->
+              <!--</ng-container>-->
+            <!--</nz-form-explain>-->
+            <!--<nz-form-explain *ngIf="getFormControl('username').dirty&&getFormControl('username').hasError('required')">请输入邮箱!</nz-form-explain>-->
+            <!--<nz-form-explain *ngIf="getFormControl('username').dirty&&getFormControl('username').hasError('duplicated')">该邮箱已存在!</nz-form-explain>-->
+            <!--<nz-form-explain *ngIf="getFormControl('username').touched&&getFormControl('username').hasError('email')">邮箱格式不正确！</nz-form-explain>-->
+            <!--<nz-form-explain *ngIf="getFormControl('username').touched&&getFormControl('username').hasError('maxlength')">账号最大长度不超过30位</nz-form-explain>-->
+            <!--<nz-form-explain *ngIf="getFormControl('username').touched&&getFormControl('username').pending">正在核对...</nz-form-explain>-->
+          </nz-form-control>
+        </nz-form-item>
+
+        <!--密码-->
+        <nz-form-item>
+          <div>
+            <nz-form-control nzHasFeedback>
+              <nz-input-group nzPrefixIcon="anticon anticon-lock">
+                <input type="password" placeholder="输入密码" nz-input formControlName="password" nzSize="large" (ngModelChange)="validateConfirmPassword()">
+              </nz-input-group>
+
+              <nz-form-explain *ngIf="getFormControl('password').dirty&&getFormControl('password').hasError('required')">请输入密码！</nz-form-explain>
+              <nz-form-explain *ngIf="getFormControl('password').dirty&&getFormControl('password').hasError('minlength')">密码长度不能小于6位！</nz-form-explain>
+            </nz-form-control>
+          </div>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control nzHasFeedback>
+            <nz-input-group nzPrefixIcon="anticon anticon-lock">
+              <input type="password" placeholder="确认密码" nz-input formControlName="pconfirm" nzSize="large" (ngModelChange)="validateConfirmPassword()">
+            </nz-input-group>
+
+            <nz-form-explain *ngIf="getFormControl('pconfirm').dirty&&getFormControl('pconfirm').hasError('required')">请输入确认密码！</nz-form-explain>
+            <nz-form-explain *ngIf="getFormControl('pconfirm').dirty&&getFormControl('pconfirm').hasError('confirm')">两次密码不一致!</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+
+
+        <button type="submit" class="login_button" nz-button nzType="primary">
+          <span>注册</span>
+        </button>
+
+      </form>
+
+      <div class="create">
+        <div class="create_btn">
+          <nz-dropdown [nzTrigger]="'click'">
+            <a class="ant-dropdown-link" nz-dropdown>
+              已有账号？ <i class="anticon anticon-down"></i>
+            </a>
+            <ul nz-menu>
+              <li nz-menu-item><a [routerLink]="['/login']">我要登录</a></li>
+              <li nz-menu-item>忘记密码？</li>
+            </ul>
+          </nz-dropdown>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+

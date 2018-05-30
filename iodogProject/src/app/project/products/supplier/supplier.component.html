@@ -1,0 +1,124 @@
+<nz-card>
+
+  <div class="search">
+    <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+      <input type="text" nz-input placeholder="请输入供应商名称">
+    </nz-input-group>
+    <ng-template #suffixIconButton>
+      <button nz-button nzType="primary" nzSearch><i class="anticon anticon-search"></i></button>
+    </ng-template>
+  </div>
+
+  <div class="search">
+    <nz-radio-group [nzSize]="'small'">
+      <label nz-radio-button nzValue="A">全部</label>
+      <label nz-radio-button nzValue="B">启用</label>
+      <label nz-radio-button nzValue="C">停用</label>
+    </nz-radio-group>
+  </div>
+
+
+  <nz-table #basicTable
+            nzBordered
+            nzShowSizeChanger="true"
+            [nzTitle] = "titleTemp"
+            [nzShowTotal] = "totalItemsTemp"
+            [nzNoResult] = "noResultTemp"
+            [nzPageSizeOptions]="[20,50,100]"
+            (nzCurrentPageDataChange)="currentPageDataChange($event)"
+            [nzData]="supplier" nzPageSize="5">
+
+    <thead>
+    <tr>
+      <th nzWidth="30px"
+          nzShowCheckbox
+          [(nzChecked)]="allChecked"
+          [nzIndeterminate]="indeterminate"
+          (nzCheckedChange)="checkAll($event)"
+      >
+      </th>
+      <th nzWidth="150px">供应商</th>
+      <th nzWidth="100px" *ngIf="checkDisplay('buy_way')">采购渠道</th>
+      <th *ngIf="checkDisplay('store_url')">店铺链接</th>
+      <th *ngIf="checkDisplay('address')">地址</th>
+      <th *ngIf="checkDisplay('qq')">QQ</th>
+      <th *ngIf="checkDisplay('phone')">电话</th>
+      <th *ngIf="checkDisplay('note')">备注</th>
+      <th *ngIf="checkDisplay('status')">状态</th>
+      <th nzWidth="100px">操作</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td nzShowCheckbox [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatus($event)"></td>
+      <td>
+        {{data.supplier_name}}
+      </td>
+      <td *ngIf="checkDisplay('buy_way')">
+        {{data.buy_way}}
+      </td>
+
+      <td *ngIf="checkDisplay('store_url')">
+        {{data.store_url}}
+      </td>
+
+      <td *ngIf="checkDisplay('address')">{{data.address}}</td>
+      <td *ngIf="checkDisplay('qq')">{{data.qq}}</td>
+      <td *ngIf="checkDisplay('phone')">{{data.phone}}</td>
+      <td *ngIf="checkDisplay('note')">{{data.note}}</td>
+      <td *ngIf="checkDisplay('status')">
+        <nz-tag [nzColor]="'green'" *ngIf="data.status">启用</nz-tag>
+        <nz-tag [nzColor]="'red'" *ngIf="!data.status">停用</nz-tag>
+      </td>
+      <td>
+        <nz-dropdown [nzTrigger]="'click'">
+          <button nz-button nz-dropdown [nzSize]="'small'"><span>处理</span> <i class="anticon anticon-down"></i></button>
+
+          <ul nz-menu>
+            <li nz-menu-item><i class="anticon anticon-profile"></i>&nbsp;产品列表</li>
+            <li nz-menu-item><i class="anticon anticon-edit"></i>&nbsp;编辑</li>
+            <li nz-menu-item class="red"><i class="anticon anticon-delete"></i>&nbsp;删除</li>
+          </ul>
+        </nz-dropdown>
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+
+  <ng-template #totalItemsTemp let-total>
+    总共 {{total}} 个供应商
+  </ng-template>
+
+  <ng-template #noResultTemp>
+    <i class="fa fa-child fa-5x"></i>木有！
+  </ng-template>
+
+  <ng-template #titleTemp>
+    <div class="operating">
+
+      <button nz-button [nzType]="'primary'" (click)="checkDisplay('buy_way')"><i class="anticon anticon-plus"></i>新增供应商</button>
+      <button nz-button [disabled]="disabledButton"><i class="anticon anticon-edit"></i>批量编辑</button>
+      <button nz-button [nzType]="'danger'" [disabled]="disabledButton"><i class="anticon anticon-delete"></i>删除</button>
+
+      <button nz-button class="at_right" (click)="setDisplay()"><i class="anticon anticon-setting"></i>自定义</button>
+
+      <nz-dropdown class="at_right" [nzTrigger]="'click'">
+        <button nz-button nz-dropdown >
+          <i class="anticon anticon-cloud-download"></i>
+          导入/导出
+          <i class="anticon anticon-down"></i>
+        </button>
+        <ul nz-menu>
+          <li nz-menu-item><i class="anticon anticon-cloud-upload-o"></i>&nbsp;模板导入供应商</li>
+          <li nz-menu-item><i class="anticon anticon-cloud-download-o"></i>&nbsp;导出供应商</li>
+        </ul>
+      </nz-dropdown>
+
+      <button nz-button [disabled]="disabledButton" [nzType]="'primary'" [nzLoading]="operating" (click)="operateData()">
+        Reload{{checkedNumber}}
+      </button>
+      <span style="margin-left: 8px;" *ngIf="checkedNumber">共选中 {{checkedNumber}} 项</span>
+    </div>
+  </ng-template>
+</nz-card>

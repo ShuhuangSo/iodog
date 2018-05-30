@@ -1,0 +1,404 @@
+<div class="product_page">
+
+  <div class="p_main">
+    <form nz-form [formGroup]="formModel" (ngSubmit)="submitForm()">
+
+      <!--表单保存按钮-->
+      <div class="save_bg">
+
+        <button nz-button [nzType]="'default'" [nzSize]="'large'">
+          <i class="anticon anticon-arrow-left"></i><span>返回</span>
+        </button>
+
+        <button type="submit" nz-button [nzType]="'primary'" [nzSize]="'large'">
+          <i class="anticon anticon-save"></i><span>保存修改</span>
+        </button>
+      </div>
+
+      <nz-card id="basin_info" nzTitle="基本信息" nzHoverable="true" nzType="inner">
+
+
+            <!--SKU编码-->
+              <nz-form-item>
+                <nz-form-label [nzSm]="4">
+                  SKU编码
+                </nz-form-label>
+                <nz-form-control [nzSm]="8">
+                  <nz-tag [nzColor]="'cyan'">N193BK</nz-tag>
+                </nz-form-control>
+              </nz-form-item>
+
+            <!--产品名称-->
+              <nz-form-item>
+                <nz-form-label nzRequired nz-col [nzSm]="4">
+                  产品名称
+                </nz-form-label>
+                <nz-form-control [nzSm]="8">
+                  <input nz-input formControlName="cn_name" type="text">
+                </nz-form-control>
+              </nz-form-item>
+
+
+            <!--产品状态-->
+            <nz-form-item >
+              <nz-form-label nzRequired nz-col [nzSm]="4">
+                状态
+              </nz-form-label>
+              <nz-form-control [nzSm]="8">
+                <nz-select formControlName="status">
+                  <nz-option [nzLabel]="'正常销售'" [nzValue]="'ON_SALE'"></nz-option>
+                  <nz-option [nzLabel]="'停售'" [nzValue]="'OFFLINE'"></nz-option>
+                  <nz-option [nzLabel]="'清仓'" [nzValue]="'CLEAN'"></nz-option>
+                  <nz-option [nzLabel]="'自动创建'" [nzValue]="'UNKNOW'"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+
+            <!--产品成本-->
+            <nz-form-item >
+              <nz-form-label nzRequired nz-col [nzSm]="4">
+                成本
+              </nz-form-label>
+              <nz-form-control [nzSm]="8">
+                <nz-input-group nzAddOnAfter="RMB">
+                  <input nz-input formControlName="cost" type="text">
+                </nz-input-group>
+              </nz-form-control>
+            </nz-form-item>
+
+            <!--创建时间-->
+            <nz-form-item >
+              <nz-form-label [nzSm]="4">
+                创建时间
+              </nz-form-label>
+              <nz-form-control [nzSm]="8">
+                <nz-tag>2018-05-13 08:39</nz-tag>
+              </nz-form-control>
+            </nz-form-item>
+
+
+      </nz-card>
+
+      <nz-card id="acc_info" nzTitle="辅助信息" nzHoverable="true" nzType="inner">
+
+
+        <nz-form-item>
+          <!--申报品名(英文)-->
+          <nz-form-label [nzSm]="4">
+            申报品名(英文)
+          </nz-form-label>
+          <nz-form-control [nzSm]="8" >
+            <input nz-input formControlName="en_name" type="text">
+          </nz-form-control>
+
+          <!--申报价值-->
+          <nz-form-label [nzSm]="4">
+            申报价值
+          </nz-form-label>
+          <nz-form-control [nzSm]="8" >
+            <nz-input-group nzAddOnAfter="USD">
+              <input nz-input formControlName="declared_value" type="text">
+            </nz-input-group>
+          </nz-form-control>
+
+        </nz-form-item>
+
+
+        <nz-form-item>
+          <!--长-->
+          <nz-form-label [nzSm]="4">
+            长
+          </nz-form-label>
+          <nz-form-control [nzSm]="8" >
+            <nz-input-group nzAddOnAfter="cm">
+              <input nz-input formControlName="length" type="text">
+            </nz-input-group>
+          </nz-form-control>
+
+          <!--宽-->
+          <nz-form-label [nzSm]="4">
+            宽
+          </nz-form-label>
+          <nz-form-control [nzSm]="8" >
+            <nz-input-group nzAddOnAfter="cm">
+              <input nz-input formControlName="width" type="text">
+            </nz-input-group>
+          </nz-form-control>
+
+        </nz-form-item>
+
+
+
+        <nz-form-item >
+          <!--高-->
+          <nz-form-label [nzSm]="4">
+            高
+          </nz-form-label>
+          <nz-form-control [nzSm]="8" >
+            <nz-input-group nzAddOnAfter="cm">
+              <input nz-input formControlName="heigth" type="text">
+            </nz-input-group>
+          </nz-form-control>
+
+          <!--重量-->
+          <nz-form-label [nzSm]="4">
+            重量
+          </nz-form-label>
+          <nz-form-control [nzSm]="8" >
+            <nz-input-group nzAddOnAfter="g">
+              <input nz-input formControlName="weight" type="text">
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+
+        <!--URL-->
+        <nz-form-item>
+          <nz-form-label [nzSm]="4">
+            审核URL
+          </nz-form-label>
+          <nz-form-control [nzSm]="20">
+            <input nz-input formControlName="url" type="text">
+          </nz-form-control>
+        </nz-form-item>
+
+        <!--是否带电-->
+        <nz-form-item>
+          <nz-form-control [nzSm]="4">
+            <label nz-checkbox formControlName="is_battery">
+              带电
+            </label>
+          </nz-form-control>
+          <nz-form-control [nzSm]="4">
+            <label nz-checkbox formControlName="is_jack">
+              带插座
+            </label>
+          </nz-form-control>
+          <nz-form-control [nzSm]="4">
+            <label nz-checkbox formControlName="is_brand">
+              品牌
+            </label>
+          </nz-form-control>
+        </nz-form-item>
+
+
+        <nz-form-item>
+          <!--品牌名称-->
+          <nz-form-label [nzSm]="4">
+            品牌名称
+          </nz-form-label>
+          <nz-form-control [nzSm]="8" >
+            <input nz-input formControlName="brand_name" type="text">
+          </nz-form-control>
+
+          <!--品牌型号-->
+          <nz-form-label [nzSm]="4">
+            品牌型号
+          </nz-form-label>
+          <nz-form-control [nzSm]="8">
+            <input nz-input formControlName="brand_model" type="text">
+          </nz-form-control>
+        </nz-form-item>
+
+
+      </nz-card>
+
+    </form>
+
+      <nz-card id="vsku_info" nzTitle="虚拟SKU" nzHoverable="true" nzType="inner">
+
+          <!--虚拟sku-->
+          <nz-form-item>
+            <nz-form-label>
+              虚拟SKU列表（输入并回车新增）
+            </nz-form-label>
+          </nz-form-item>
+
+        <nz-tag
+          *ngFor="let tag of tags;"
+          nzMode = "closeable"
+          (nzAfterClose)="handleClose(tag)">
+          {{ sliceTagName(tag) }}
+        </nz-tag>
+
+        <button nz-button nzType="dashed" nzSize="small" *ngIf="!inputVisible" (click)="showInput()">
+          <i class="anticon anticon-plus"></i>添加虚拟SKU
+        </button>
+
+        <input
+          #inputElement
+          nz-input
+          nzSize="small"
+          *ngIf="inputVisible" type="text"
+          [(ngModel)]="inputValue"
+          style="width: 100px;"
+          (blur)="handleInputConfirm()"
+          (keydown.enter)="handleInputConfirm()">
+
+
+      </nz-card>
+
+
+      <nz-card id="reg_info" nzTitle="注册信息" nzHoverable="true" nzType="inner" [nzExtra]="reg_extraTemplate">
+
+
+            <nz-form-item>
+
+              <nz-form-label [nzSm]="4">
+                物流公司
+              </nz-form-label>
+              <nz-form-control [nzSm]="8">
+                <nz-tag>万邑通</nz-tag>
+              </nz-form-control>
+
+              <nz-form-label [nzSm]="4">
+                核实长
+              </nz-form-label>
+              <nz-form-control [nzSm]="8">
+                <nz-tag>12cm</nz-tag>
+              </nz-form-control>
+
+              <nz-form-label [nzSm]="4">
+                核实宽
+              </nz-form-label>
+              <nz-form-control [nzSm]="8">
+                <nz-tag>12cm</nz-tag>
+              </nz-form-control>
+
+              <nz-form-label [nzSm]="4">
+                核实高
+              </nz-form-label>
+              <nz-form-control [nzSm]="8">
+                <nz-tag>12cm</nz-tag>
+              </nz-form-control>
+
+              <nz-form-label [nzSm]="4">
+                核实体积(CBM)
+              </nz-form-label>
+              <nz-form-control [nzSm]="8">
+                <nz-tag>0.00021</nz-tag>
+              </nz-form-control>
+
+              <nz-form-label [nzSm]="4">
+                核实重量
+              </nz-form-label>
+              <nz-form-control [nzSm]="8">
+                <nz-tag>55g</nz-tag>
+              </nz-form-control>
+
+            </nz-form-item>
+
+
+          <nz-table #basicTable [nzData]="data" nzPageSize="5">
+
+            <thead>
+            <tr>
+              <th>状态</th>
+              <th>进口国家</th>
+              <th>进口申报价值(USD)</th>
+              <th>进口关税</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let data of basicTable.data">
+              <td>
+                <nz-tag [nzColor]="'green'" *ngIf="data.reg_status=='已发布'">{{data.reg_status}}</nz-tag>
+                <nz-tag [nzColor]="'blue'" *ngIf="data.reg_status=='待审核'">{{data.reg_status}}</nz-tag>
+              </td>
+              <td>{{data.country_code}}</td>
+              <td>{{data.import_value}}美元</td>
+              <td>{{data.import_rate}}%</td>
+            </tr>
+            </tbody>
+          </nz-table>
+
+      </nz-card>
+
+      <!--卡片右侧按钮-->
+      <ng-template #reg_extraTemplate>
+        <button nz-button nzType="primary" (click)="addCountry()">
+          +增加注册国家
+        </button>
+        <button nz-button nzType="primary">
+          <i class="anticon anticon-printer"></i>打印标签
+        </button>
+      </ng-template>
+
+
+      <nz-card id="supplier" nzTitle="供应商" nzHoverable="true" nzType="inner" [nzExtra]="sup_extraTemplate">
+
+          <nz-table #nzTable [nzData]="suppliers">
+
+            <thead>
+            <tr>
+              <th>默认</th>
+              <th>供应商</th>
+              <th>采购链接</th>
+              <th>渠道</th>
+              <th>操作</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let data of nzTable.data">
+              <td>
+                <nz-tag [nzColor]="'blue'" *ngIf="data.primary_supplier">默认</nz-tag>
+              </td>
+              <td>{{data.name}}</td>
+              <td>
+                <a target="_blank" rel="noopener noreferrer" href="{{data.buy_url}}">{{data.buy_url}}</a>
+              </td>
+              <td>{{data.buy_way}}</td>
+              <td>
+
+                  <nz-dropdown>
+                <a class="ant-dropdown-link" nz-dropdown>
+                  管理供应商 <i class="anticon anticon-down"></i>
+                </a>
+                <ul nz-menu>
+                  <li nz-menu-item>
+                    <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">设为默认供应商</a>
+                  </li>
+                  <li nz-menu-item>
+                    <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">编辑</a>
+                  </li>
+                  <li nz-menu-item>
+                    <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">删除</a>
+                  </li>
+                </ul>
+              </nz-dropdown>
+
+              </td>
+            </tr>
+            </tbody>
+          </nz-table>
+
+      </nz-card>
+      <!--卡片右侧按钮-->
+      <ng-template #sup_extraTemplate>
+        <button nz-button nzType="primary">
+          +增加关联供应商
+        </button>
+      </ng-template>
+
+
+  </div>
+
+
+  <div class="p_nav">
+    <nz-affix [nzOffsetTop]="56">
+      <nz-card nzTitle="快速导航" nzHoverable="true" nzType="inner">
+
+          <nz-anchor [nzOffsetTop]="76">
+            <nz-link nzHref="#basin_info" nzTitle="基本信息"></nz-link>
+            <nz-link nzHref="#vsku_info" nzTitle="虚拟SKU"></nz-link>
+            <nz-link nzHref="#acc_info" nzTitle="辅助信息"></nz-link>
+            <nz-link nzHref="#reg_info" nzTitle="注册信息"></nz-link>
+            <nz-link nzHref="#supplier" nzTitle="供应商"></nz-link>
+          </nz-anchor>
+
+      </nz-card>
+    </nz-affix>
+  </div>
+</div>

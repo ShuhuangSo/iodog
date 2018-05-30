@@ -1,0 +1,40 @@
+.sidenav-btn {
+  width: 60px;
+  margin-left: -2rem;
+}
+.sidenav-btn i {
+  line-height: 58px;
+}
+.logo {
+  height: 100%;
+  flex: 1;
+}
+.notice-app {
+  height: 100%;
+}
+
+.app {
+  width: 60px;
+}
+.ant-badge {
+ color: white;
+}
+.ant-badge-count {
+  box-shadow: 0 0 0 1px #f5222d !important;
+  -webkit-box-shadow: 0 0 0 1px #f5222d !important;
+  background-color: #0088ed !important;
+  color: #0088ed;
+}
+
+/*顶部图标按钮样式*/
+.topicon {
+  width: 60px;
+  height: 100%;
+  border: none;
+  outline:none;
+  background-color: transparent;
+}
+.topicon:hover {
+  background-color: #6f858d;
+  cursor:pointer;
+}

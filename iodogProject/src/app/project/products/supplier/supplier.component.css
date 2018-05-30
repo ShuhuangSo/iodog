@@ -1,0 +1,19 @@
+nz-card {
+  margin: 10px 0;
+}
+
+.at_right {
+  float: right;
+}
+
+.red {
+  color: red;
+}
+
+.search {
+  margin-bottom: 15px;
+}
+
+nz-input-group {
+  width: 300px;
+}

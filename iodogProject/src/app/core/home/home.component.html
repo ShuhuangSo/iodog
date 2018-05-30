@@ -1,0 +1,17 @@
+<div class="site">
+  <!--顶部loading动画-->
+  <div class="progress-bar-bg" *ngIf="isLoading">
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="header_bg">
+    <app-header class="header flex-row" (toggle)="sidenavToggle()"></app-header>
+  </div>
+
+  <div class="main">
+    <app-sidenav class="sidenav" [class.hideNav]="isHidden"></app-sidenav>
+    <div class="mainContent">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

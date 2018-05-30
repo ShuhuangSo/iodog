@@ -1,0 +1,3 @@
+<div *ngFor="let d of display">
+  <label nz-checkbox [nzDisabled]="d.disabled" [(ngModel)]="d.show">{{d.list_name}}</label>
+</div>

@@ -1,0 +1,36 @@
+<div class="search">
+  <nz-radio-group>
+    <label nz-radio-button nzValue="A">SKU编号</label>
+    <label nz-radio-button nzValue="B">中文名称</label>
+    <label nz-radio-button nzValue="C">虚拟SKU</label>
+    <label nz-radio-button nzValue="D">供应商</label>
+
+    <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+      <input type="text" nz-input placeholder="请选择项目搜索">
+    </nz-input-group>
+    <ng-template #suffixIconButton>
+      <button nz-button nzType="primary" nzSearch><i class="anticon anticon-search"></i>搜索</button>
+    </ng-template>
+  </nz-radio-group>
+</div>
+
+<div class="search">
+  <nz-radio-group [nzSize]="'small'">
+    <label nz-radio-button nzValue="A">全部</label>
+    <label nz-radio-button nzValue="B">正常</label>
+    <label nz-radio-button nzValue="C">清仓中</label>
+    <label nz-radio-button nzValue="D">停售</label>
+    <label nz-radio-button nzValue="E">自动创建</label>
+  </nz-radio-group>
+</div>
+
+<div class="search">
+  <nz-radio-group [nzSize]="'small'">
+    <label nz-radio-button nzValue="A">全部</label>
+    <label nz-radio-button nzValue="B">已发布</label>
+    <label nz-radio-button nzValue="C">待审核</label>
+    <label nz-radio-button nzValue="D">注册中</label>
+    <label nz-radio-button nzValue="E">审核失败</label>
+  </nz-radio-group>
+</div>
+

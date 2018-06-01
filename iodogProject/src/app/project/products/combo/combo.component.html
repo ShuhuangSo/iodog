@@ -41,8 +41,8 @@
       </th>
       <th rowspan="2">组合SKU<nz-divider nzType="vertical"></nz-divider>名称</th>
       <th colspan="2">商品信息</th>
-      <th rowspan="2" *ngIf="checkDisplay('combo_cost')">组合成本￥</th>
-      <th rowspan="2" *ngIf="checkDisplay('combo_weight')">组合重量g</th>
+      <th rowspan="2" *ngIf="checkDisplay('combo_cost')">组合成本</th>
+      <th rowspan="2" *ngIf="checkDisplay('combo_weight')">组合重量</th>
       <th rowspan="2" *ngIf="checkDisplay('create_time')">创建时间</th>
       <th rowspan="2" *ngIf="checkDisplay('status')">状态</th>
       <th rowspan="2">操作</th>
@@ -73,7 +73,7 @@
 
         <td *ngIf="i===0 && checkDisplay('combo_cost')"
             [attr.rowspan]="data.skus.length">
-          11
+          11元
         </td>
 
         <td *ngIf="i===0 && checkDisplay('combo_weight')" [attr.rowspan]="data.skus.length">120g</td>

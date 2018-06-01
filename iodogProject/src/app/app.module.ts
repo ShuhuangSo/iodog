@@ -22,6 +22,7 @@ import { ProductDisplaySettingComponent } from './project/products/product-displ
 import { SupplierComponent } from './project/products/supplier/supplier.component';
 import { SupplierProductComponent } from './project/products/supplier-product/supplier-product.component';
 import { ListDisplaySettingComponent } from './project/list-display-setting/list-display-setting.component';
+import { ComboComponent } from './project/products/combo/combo.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { ListDisplaySettingComponent } from './project/list-display-setting/list
     ProductDisplaySettingComponent,
     SupplierComponent,
     SupplierProductComponent,
-    ListDisplaySettingComponent
+    ListDisplaySettingComponent,
+    ComboComponent
   ],
   imports: [
     BrowserModule,

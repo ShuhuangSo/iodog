@@ -1,0 +1,128 @@
+<nz-card>
+
+  <div class="search">
+    <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+      <input type="text" nz-input placeholder="请输入组合名称">
+    </nz-input-group>
+    <ng-template #suffixIconButton>
+      <button nz-button nzType="primary" nzSearch><i class="anticon anticon-search"></i></button>
+    </ng-template>
+  </div>
+
+  <div class="search">
+    <nz-radio-group [nzSize]="'small'">
+      <label nz-radio-button nzValue="A">全部</label>
+      <label nz-radio-button nzValue="B">启用</label>
+      <label nz-radio-button nzValue="C">停用</label>
+    </nz-radio-group>
+  </div>
+
+
+  <nz-table #basicTable
+            nzBordered
+            nzSize="middle"
+            nzShowSizeChanger="true"
+            [nzTitle] = "titleTemp"
+            [nzShowTotal] = "totalItemsTemp"
+            [nzNoResult] = "noResultTemp"
+            [nzPageSizeOptions]="[20,50,100]"
+            (nzCurrentPageDataChange)="currentPageDataChange($event)"
+            [nzData]="combo" nzPageSize="5">
+
+    <thead>
+    <tr>
+      <th nzWidth="30px"
+          rowspan="2"
+          nzShowCheckbox
+          [(nzChecked)]="allChecked"
+          [nzIndeterminate]="indeterminate"
+          (nzCheckedChange)="checkAll($event)"
+      >
+      </th>
+      <th rowspan="2" nzWidth="150px">组合SKU/名称</th>
+      <th colspan="2" nzWidth="300px">商品信息</th>
+      <th rowspan="2">组合成本</th>
+      <th rowspan="2">组合重量</th>
+      <th rowspan="2">创建时间</th>
+      <th rowspan="2" nzWidth="100px">操作</th>
+    </tr>
+
+    <tr>
+      <th nzWidth="80px">缩略图</th>
+      <th>库存SKU/捆绑数量/中文名称</th>
+    </tr>
+
+    </thead>
+
+    <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td nzShowCheckbox [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatus($event)"></td>
+      <td>
+        <div>{{data.combo_code}}</div>
+        <div>{{data.combo_name}}</div>
+      </td>
+      <td>
+        <img src="http://placehold.it/50x50">
+      </td>
+      <td>
+        product1*2,{{combo_inside_sku.length}}
+      </td>
+
+      <td>
+        11
+      </td>
+
+      <td>120g</td>
+      <td>{{data.create_time}}</td>
+
+      <td>
+        <nz-dropdown [nzTrigger]="'click'">
+          <button nz-button nz-dropdown [nzSize]="'small'"><span>处理</span> <i class="anticon anticon-down"></i></button>
+
+          <ul nz-menu>
+            <li nz-menu-item><i class="anticon anticon-edit"></i>&nbsp;编辑</li>
+            <li nz-menu-item class="red"><i class="anticon anticon-delete"></i>&nbsp;删除</li>
+          </ul>
+        </nz-dropdown>
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+
+  <ng-template #totalItemsTemp let-total>
+    总共 {{total}} 个组合
+  </ng-template>
+
+  <ng-template #noResultTemp>
+    <i class="fa fa-child fa-5x"></i>木有！
+  </ng-template>
+
+  <ng-template #titleTemp>
+    <div class="operating">
+
+      <button nz-button [nzType]="'primary'"><i class="anticon anticon-plus"></i>新增组合SKU</button>
+      <button nz-button [disabled]="disabledButton"><i class="anticon anticon-edit"></i>批量编辑</button>
+      <button nz-button [nzType]="'danger'" [disabled]="disabledButton"><i class="anticon anticon-delete"></i>删除</button>
+
+      <button nz-button class="at_right"><i class="anticon anticon-setting"></i>自定义</button>
+
+      <nz-dropdown class="at_right" [nzTrigger]="'click'">
+        <button nz-button nz-dropdown >
+          <i class="anticon anticon-cloud-download"></i>
+          导入/导出
+          <i class="anticon anticon-down"></i>
+        </button>
+        <ul nz-menu>
+          <li nz-menu-item><i class="anticon anticon-cloud-upload-o"></i>&nbsp;模板导入新增组合SKU</li>
+          <li nz-menu-item><i class="anticon anticon-cloud-upload-o"></i>&nbsp;模板导入组合虚拟SKU</li>
+          <li nz-menu-item><i class="anticon anticon-cloud-download-o"></i>&nbsp;导出组合SKU</li>
+        </ul>
+      </nz-dropdown>
+
+      <button nz-button [disabled]="disabledButton" [nzType]="'primary'" [nzLoading]="operating" (click)="operateData()">
+        Reload{{checkedNumber}}
+      </button>
+      <span style="margin-left: 8px;" *ngIf="checkedNumber">共选中 {{checkedNumber}} 项</span>
+    </div>
+  </ng-template>
+</nz-card>

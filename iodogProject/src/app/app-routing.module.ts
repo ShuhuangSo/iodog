@@ -7,6 +7,7 @@ import {ProductDetailComponent} from './project/products/product-detail/product-
 import {DashboardComponent} from './project/dashboard/dashboard.component';
 import {ProductComponent} from './project/products/product/product.component';
 import {SupplierComponent} from './project/products/supplier/supplier.component';
+import {ComboComponent} from './project/products/combo/combo.component';
 
 
 const routes: Routes = [
@@ -19,7 +20,8 @@ const routes: Routes = [
       {path: '', component: DashboardComponent},
       {path: 'product2', component: ProductDetailComponent},
       {path: 'product', component: ProductComponent},
-      {path: 'supplier', component: SupplierComponent}
+      {path: 'supplier', component: SupplierComponent},
+      {path: 'combo', component: ComboComponent}
     ]
   },
   {

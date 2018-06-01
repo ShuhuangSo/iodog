@@ -9,7 +9,6 @@ import {NzModalService} from 'ng-zorro-antd';
 })
 export class ComboComponent implements OnInit {
   combo: Combo [];
-  combo_inside_sku: ComboInsideSKU [];
 
   allChecked = false; // 全选状态
   indeterminate = false; // 选择框的不确定状态
@@ -23,7 +22,7 @@ export class ComboComponent implements OnInit {
 
   ngOnInit() {
     this.combo = this.productService.getCombo();
-    this.combo_inside_sku = this.productService.getComboInsideSKU();
+    console.log(this.combo);
   }
 
   // 处理全选/全不选

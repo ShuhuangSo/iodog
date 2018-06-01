@@ -22,6 +22,7 @@
             nzBordered
             nzSize="middle"
             nzShowSizeChanger="true"
+            [nzWidthConfig]="['30px','200px','60px',null,'100px','100px',null,'100px']"
             [nzTitle] = "titleTemp"
             [nzShowTotal] = "totalItemsTemp"
             [nzNoResult] = "noResultTemp"
@@ -31,7 +32,7 @@
 
     <thead>
     <tr>
-      <th nzWidth="30px"
+      <th
           rowspan="2"
           nzShowCheckbox
           [(nzChecked)]="allChecked"
@@ -39,53 +40,59 @@
           (nzCheckedChange)="checkAll($event)"
       >
       </th>
-      <th rowspan="2" nzWidth="150px">组合SKU/名称</th>
-      <th colspan="2" nzWidth="300px">商品信息</th>
+      <th rowspan="2">组合SKU<nz-divider nzType="vertical"></nz-divider>名称</th>
+      <th colspan="2">商品信息</th>
       <th rowspan="2">组合成本</th>
       <th rowspan="2">组合重量</th>
       <th rowspan="2">创建时间</th>
-      <th rowspan="2" nzWidth="100px">操作</th>
+      <th rowspan="2">操作</th>
     </tr>
 
     <tr>
-      <th nzWidth="80px">缩略图</th>
-      <th>库存SKU/捆绑数量/中文名称</th>
+      <th>缩略图</th>
+      <th>库存SKU<nz-divider nzType="vertical"></nz-divider>捆绑数量<nz-divider nzType="vertical"></nz-divider>中文名称</th>
     </tr>
 
     </thead>
 
-    <tbody>
-    <tr *ngFor="let data of basicTable.data">
-      <td nzShowCheckbox [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatus($event)"></td>
-      <td>
-        <div>{{data.combo_code}}</div>
-        <div>{{data.combo_name}}</div>
-      </td>
-      <td>
-        <img src="http://placehold.it/50x50">
-      </td>
-      <td>
-        product1*2,{{combo_inside_sku.length}}
-      </td>
+    <tbody  *ngFor="let data of basicTable.data">
 
-      <td>
-        11
-      </td>
+      <tr *ngFor="let s of data.skus; index as i" >
+        <td *ngIf="i===0" [attr.rowspan]="data.skus.length" nzShowCheckbox [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatus($event)"></td>
+        <td *ngIf="i===0" [attr.rowspan]="data.skus.length">
+          <div>{{data.combo_code}}</div>
+          <div>{{data.combo_name}}</div>
+        </td>
+        <td>
+          <img src="http://placehold.it/40x40">
+        </td>
+        <td>
+          <div>{{s.sku}}x <span class="green">{{s.quanlity}}</span></div>
+          <div>{{s.name}}</div>
+        </td>
 
-      <td>120g</td>
-      <td>{{data.create_time}}</td>
+        <td *ngIf="i===0" [attr.rowspan]="data.skus.length">
+          11
+        </td>
 
-      <td>
-        <nz-dropdown [nzTrigger]="'click'">
-          <button nz-button nz-dropdown [nzSize]="'small'"><span>处理</span> <i class="anticon anticon-down"></i></button>
+        <td *ngIf="i===0" [attr.rowspan]="data.skus.length">120g</td>
+        <td *ngIf="i===0" [attr.rowspan]="data.skus.length">{{data.create_time}}</td>
 
-          <ul nz-menu>
-            <li nz-menu-item><i class="anticon anticon-edit"></i>&nbsp;编辑</li>
-            <li nz-menu-item class="red"><i class="anticon anticon-delete"></i>&nbsp;删除</li>
-          </ul>
-        </nz-dropdown>
-      </td>
-    </tr>
+        <td *ngIf="i===0" [attr.rowspan]="data.skus.length">
+          <nz-dropdown [nzTrigger]="'click'">
+            <button nz-button nz-dropdown [nzSize]="'small'"><span>处理</span> <i class="anticon anticon-down"></i></button>
+
+            <ul nz-menu>
+              <li nz-menu-item><i class="anticon anticon-edit"></i>&nbsp;编辑</li>
+              <li nz-menu-item class="red"><i class="anticon anticon-delete"></i>&nbsp;删除</li>
+            </ul>
+          </nz-dropdown>
+        </td>
+      </tr>
+
+
+
+
     </tbody>
   </nz-table>
 

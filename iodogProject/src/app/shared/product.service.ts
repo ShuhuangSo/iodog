@@ -241,6 +241,7 @@ export class ProductService {
           '/image/115.jpg'
         )
       ],
+      false,
       false
       ),
     new Combo(
@@ -268,23 +269,9 @@ export class ProductService {
           '/image/115.jpg'
         )
       ],
+      true,
       false
     )
-  ];
-
-  private combo_inside_sku: ComboInsideSKU [] = [
-    new ComboInsideSKU(
-      'N123BK',
-      '平纹真皮左右 三星S9 【黑色】',
-      1,
-      '/image/113.jpg'
-    ),
-    // new ComboInsideSKU(
-    //   'N125CR',
-    //   '钢化膜 三星S9 【透明】',
-    //   2,
-    //   '/image/115.jpg'
-    // )
   ];
 
   constructor() { }
@@ -304,10 +291,6 @@ export class ProductService {
     return this.combo;
   }
 
-  // 获取组合内SKU
-  getComboInsideSKU() {
-    return this.combo_inside_sku;
-  }
 
 }
 
@@ -363,6 +346,7 @@ export class Combo {
     public combo_name: string,
     public create_time: string,
     public skus: ComboInsideSKU[],
+    public status: boolean,
     public checked: boolean // 数据选择状态
   ) {}
 }

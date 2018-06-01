@@ -20,9 +20,8 @@
 
   <nz-table #basicTable
             nzBordered
-            nzSize="middle"
             nzShowSizeChanger="true"
-            [nzWidthConfig]="['30px','200px','60px',null,'100px','100px',null,'100px']"
+            [nzWidthConfig]="['30px','200px','60px',null,'100px','100px',null,'50px','100px']"
             [nzTitle] = "titleTemp"
             [nzShowTotal] = "totalItemsTemp"
             [nzNoResult] = "noResultTemp"
@@ -42,9 +41,10 @@
       </th>
       <th rowspan="2">组合SKU<nz-divider nzType="vertical"></nz-divider>名称</th>
       <th colspan="2">商品信息</th>
-      <th rowspan="2">组合成本</th>
-      <th rowspan="2">组合重量</th>
-      <th rowspan="2">创建时间</th>
+      <th rowspan="2" *ngIf="checkDisplay('combo_cost')">组合成本￥</th>
+      <th rowspan="2" *ngIf="checkDisplay('combo_weight')">组合重量g</th>
+      <th rowspan="2" *ngIf="checkDisplay('create_time')">创建时间</th>
+      <th rowspan="2" *ngIf="checkDisplay('status')">状态</th>
       <th rowspan="2">操作</th>
     </tr>
 
@@ -71,13 +71,18 @@
           <div>{{s.name}}</div>
         </td>
 
-        <td *ngIf="i===0" [attr.rowspan]="data.skus.length">
+        <td *ngIf="i===0 && checkDisplay('combo_cost')"
+            [attr.rowspan]="data.skus.length">
           11
         </td>
 
-        <td *ngIf="i===0" [attr.rowspan]="data.skus.length">120g</td>
-        <td *ngIf="i===0" [attr.rowspan]="data.skus.length">{{data.create_time}}</td>
+        <td *ngIf="i===0 && checkDisplay('combo_weight')" [attr.rowspan]="data.skus.length">120g</td>
+        <td *ngIf="i===0 && checkDisplay('create_time')" [attr.rowspan]="data.skus.length">{{data.create_time}}</td>
 
+        <td *ngIf="i===0 && checkDisplay('status')" [attr.rowspan]="data.skus.length">
+          <nz-tag [nzColor]="'green'" *ngIf="data.status">启用</nz-tag>
+          <nz-tag [nzColor]="'red'" *ngIf="!data.status">停用</nz-tag>
+        </td>
         <td *ngIf="i===0" [attr.rowspan]="data.skus.length">
           <nz-dropdown [nzTrigger]="'click'">
             <button nz-button nz-dropdown [nzSize]="'small'"><span>处理</span> <i class="anticon anticon-down"></i></button>
@@ -111,7 +116,7 @@
       <button nz-button [disabled]="disabledButton"><i class="anticon anticon-edit"></i>批量编辑</button>
       <button nz-button [nzType]="'danger'" [disabled]="disabledButton"><i class="anticon anticon-delete"></i>删除</button>
 
-      <button nz-button class="at_right"><i class="anticon anticon-setting"></i>自定义</button>
+      <button nz-button class="at_right" (click)="setDisplay()"><i class="anticon anticon-setting"></i>自定义</button>
 
       <nz-dropdown class="at_right" [nzTrigger]="'click'">
         <button nz-button nz-dropdown >

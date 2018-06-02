@@ -203,7 +203,7 @@ export class ProductService {
       '13473844736',
       '广州市龙岗区收到第三档颠三倒四的',
       '备注内容。。。',
-      'www.1688.com/item/12972131927391',
+      'http://www.1688.com/item/12972131927391',
       false,
       true
     ),
@@ -215,7 +215,7 @@ export class ProductService {
       '13473844736',
       '佛山龙岗区收到第三档颠三倒四的',
       '备注内容。。。',
-      'www.1688.com/item/1292272131927391',
+      'http://www.1688.com/item/1292272131927391',
       false,
       false
     )
@@ -283,6 +283,23 @@ export class ProductService {
 
   // 获取供应商列表
   getSuppliers() {
+    for (let i = 0; i < 55; i++) {
+      this.supplier.push(
+        new Supplier(
+          100 + i,
+          `黑驹${i}`,
+          '1688',
+          '33334342',
+          '13473844736',
+          '佛山龙岗区收到第三档颠三倒四的',
+          '备注内容。。。',
+          'http://www.1688.com/item/1292272131927391',
+          false,
+          true
+        )
+      );
+    }
+
     return this.supplier;
   }
 

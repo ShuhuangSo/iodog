@@ -25,8 +25,9 @@
             [nzShowTotal] = "totalItemsTemp"
             [nzNoResult] = "noResultTemp"
             [nzPageSizeOptions]="[20,50,100]"
+            (nzPageSizeChange) = "pageSizeChange($event)"
             (nzCurrentPageDataChange)="currentPageDataChange($event)"
-            [nzData]="supplier" nzPageSize="5">
+            [nzData]="supplier" nzPageSize="{{pageSize}}">
 
     <thead>
     <tr>
@@ -44,7 +45,7 @@
       <th *ngIf="checkDisplay('qq')">QQ</th>
       <th *ngIf="checkDisplay('phone')">电话</th>
       <th *ngIf="checkDisplay('note')">备注</th>
-      <th *ngIf="checkDisplay('status')">状态</th>
+      <th nzWidth="60px" *ngIf="checkDisplay('status')">状态</th>
       <th nzWidth="100px">操作</th>
     </tr>
     </thead>
@@ -60,7 +61,7 @@
       </td>
 
       <td *ngIf="checkDisplay('store_url')">
-        {{data.store_url}}
+        <a target="_blank" rel="noopener noreferrer" href="{{data.store_url}}">{{data.store_url}}</a>
       </td>
 
       <td *ngIf="checkDisplay('address')">{{data.address}}</td>

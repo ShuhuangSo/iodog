@@ -30,6 +30,8 @@ export class SupplierComponent implements OnInit {
     {show: true, model_name: 'status', list_name: '状态', disabled: false},
     ];
 
+  // 默认一页显示条数
+  pageSize = 20;
 
   constructor(private productService: ProductService,
               private modalService: NzModalService) { }
@@ -42,6 +44,20 @@ export class SupplierComponent implements OnInit {
     if (display_setting && display_setting !== 'undefined' && display_setting !== 'null') {
       this.display = JSON.parse(display_setting);
     }
+
+    // 取出本地存储一页显示数设置信息
+    const pagsize_setting = localStorage.getItem('supplier_list_pagesize');
+    if (pagsize_setting && pagsize_setting !== 'undefined' && pagsize_setting !== 'null') {
+      this.pageSize = Number(pagsize_setting);
+    }
+  }
+
+  // 每页显示数据改变回调
+  pageSizeChange(pageSize) {
+
+    // 将一页显示数存储到本地
+    localStorage.setItem('supplier_list_pagesize', pageSize)
+    console.log(pageSize);
   }
 
   // 处理全选/全不选

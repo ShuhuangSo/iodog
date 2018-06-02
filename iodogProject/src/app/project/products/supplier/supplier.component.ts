@@ -173,4 +173,31 @@ export class SupplierComponent implements OnInit {
 
   }
 
+  // 删除确认
+  deleteConfirm(id): void {
+    this.modalService.confirm({
+      nzTitle: '<i>是否确认要删除?</i>',
+      nzContent: '<b>一旦删除将无法恢复</b>',
+      nzOnOk: () => {
+        this.operating = true;
+        setTimeout(_ => {
+          if (id) {
+            console.log(id);
+          } else {
+            this.supplier.forEach(value => {
+              if (value.checked) {
+                console.log(value.id);
+              }
+              value.checked = false;
+            });
+          }
+          this.refreshStatus();
+          this.operating = false;
+        }, 2000);
+
+      }
+    });
+  }
+
+
 }

@@ -154,6 +154,9 @@ export class SupplierComponent implements OnInit {
         {
           label: '确认',
           type: 'primary',
+          loading: ((componentInstance) => {
+            return componentInstance.isSpinning;
+          }),
           onClick: (componentInstance) => {
             componentInstance.destroyModal();
           }

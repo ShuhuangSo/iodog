@@ -1,65 +1,88 @@
-<form nz-form [formGroup]="formModel" (ngSubmit)="submitForm()">
-  <nz-form-item>
-    <nz-form-label nzRequired [nzSm]="4">
-      供应商名称
-    </nz-form-label>
-    <nz-form-control [nzSm]="20">
-      <input nz-input formControlName="supplier_name" type="text">
-    </nz-form-control>
-  </nz-form-item>
+<nz-spin [nzSpinning]="isSpinning">
+  <form nz-form [formGroup]="formModel">
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSm]="4">
+        供应商名称
+      </nz-form-label>
+      <nz-form-control [nzSm]="20" nzHasFeedback>
+        <input nz-input formControlName="supplier_name" type="text">
+        <nz-form-explain *ngIf="getFormControl('supplier_name').dirty && getFormControl('supplier_name').errors|| getFormControl('supplier_name').pending">
+          <ng-container *ngIf="getFormControl('supplier_name').hasError('required')">
+            请输入供应商名称!
+          </ng-container>
+          <ng-container *ngIf="getFormControl('supplier_name').hasError('duplicated')">
+            该供应商已存在!
+          </ng-container>
+          <ng-container *ngIf="getFormControl('supplier_name').hasError('maxlength')">
+            名称最大长度不超过30位
+          </ng-container>
+          <ng-container *ngIf="getFormControl('supplier_name').pending">
+            正在核对...
+          </ng-container>
+        </nz-form-explain>
+      </nz-form-control>
 
-  <nz-form-item>
-    <nz-form-label nzRequired [nzSm]="4">
-      采购渠道
-    </nz-form-label>
-    <nz-form-control [nzSm]="20">
-      <input nz-input formControlName="buy_way" type="text">
-    </nz-form-control>
-  </nz-form-item>
+    </nz-form-item>
 
-  <nz-form-item>
-    <nz-form-label [nzSm]="4">
-      店铺链接
-    </nz-form-label>
-    <nz-form-control [nzSm]="20">
-      <input nz-input formControlName="store_url" type="text">
-    </nz-form-control>
-  </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSm]="4">
+        采购渠道
+      </nz-form-label>
+      <nz-form-control [nzSm]="20">
+        <nz-select formControlName="buy_way" nzPlaceHolder="Choose">
+          <nz-option nzValue="阿里1688" nzLabel="阿里1688"></nz-option>
+          <nz-option nzValue="QQ" nzLabel="QQ"></nz-option>
+          <nz-option nzValue="市场" nzLabel="市场"></nz-option>
+          <nz-option nzValue="其它" nzLabel="其它"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
 
-  <nz-form-item>
-    <nz-form-label [nzSm]="4">
-      地址
-    </nz-form-label>
-    <nz-form-control [nzSm]="20">
-      <input nz-input formControlName="address" type="text">
-    </nz-form-control>
-  </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4">
+        店铺链接
+      </nz-form-label>
+      <nz-form-control [nzSm]="20">
+        <input nz-input formControlName="store_url" type="text">
+      </nz-form-control>
+    </nz-form-item>
 
-  <nz-form-item>
-    <nz-form-label [nzSm]="4">
-      qq
-    </nz-form-label>
-    <nz-form-control [nzSm]="20">
-      <input nz-input formControlName="qq" type="text">
-    </nz-form-control>
-  </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4">
+        地址
+      </nz-form-label>
+      <nz-form-control [nzSm]="20">
+        <input nz-input formControlName="address" type="text">
+      </nz-form-control>
+    </nz-form-item>
 
-  <nz-form-item>
-    <nz-form-label [nzSm]="4">
-      电话
-    </nz-form-label>
-    <nz-form-control [nzSm]="20">
-      <input nz-input formControlName="phone" type="text">
-    </nz-form-control>
-  </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4">
+        qq
+      </nz-form-label>
+      <nz-form-control [nzSm]="20">
+        <input nz-input formControlName="qq" type="text">
+      </nz-form-control>
+    </nz-form-item>
 
-  <nz-form-item>
-    <nz-form-label [nzSm]="4">
-      备注
-    </nz-form-label>
-    <nz-form-control [nzSm]="20">
-      <textarea nz-input formControlName="note" type="text"></textarea>
-    </nz-form-control>
-  </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4">
+        电话
+      </nz-form-label>
+      <nz-form-control [nzSm]="20">
+        <input nz-input formControlName="phone" type="text">
+      </nz-form-control>
+    </nz-form-item>
 
-</form>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4">
+        备注
+      </nz-form-label>
+      <nz-form-control [nzSm]="20">
+        <textarea nz-input formControlName="note" type="text"></textarea>
+      </nz-form-control>
+    </nz-form-item>
+
+  </form>
+</nz-spin>
+

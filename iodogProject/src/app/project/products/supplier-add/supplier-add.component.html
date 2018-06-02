@@ -1,0 +1,65 @@
+<form nz-form [formGroup]="formModel" (ngSubmit)="submitForm()">
+  <nz-form-item>
+    <nz-form-label nzRequired [nzSm]="4">
+      供应商名称
+    </nz-form-label>
+    <nz-form-control [nzSm]="20">
+      <input nz-input formControlName="supplier_name" type="text">
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzRequired [nzSm]="4">
+      采购渠道
+    </nz-form-label>
+    <nz-form-control [nzSm]="20">
+      <input nz-input formControlName="buy_way" type="text">
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSm]="4">
+      店铺链接
+    </nz-form-label>
+    <nz-form-control [nzSm]="20">
+      <input nz-input formControlName="store_url" type="text">
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSm]="4">
+      地址
+    </nz-form-label>
+    <nz-form-control [nzSm]="20">
+      <input nz-input formControlName="address" type="text">
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSm]="4">
+      qq
+    </nz-form-label>
+    <nz-form-control [nzSm]="20">
+      <input nz-input formControlName="qq" type="text">
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSm]="4">
+      电话
+    </nz-form-label>
+    <nz-form-control [nzSm]="20">
+      <input nz-input formControlName="phone" type="text">
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSm]="4">
+      备注
+    </nz-form-label>
+    <nz-form-control [nzSm]="20">
+      <textarea nz-input formControlName="note" type="text"></textarea>
+    </nz-form-control>
+  </nz-form-item>
+
+</form>

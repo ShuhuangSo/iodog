@@ -23,6 +23,7 @@ import { SupplierComponent } from './project/products/supplier/supplier.componen
 import { SupplierProductComponent } from './project/products/supplier-product/supplier-product.component';
 import { ListDisplaySettingComponent } from './project/list-display-setting/list-display-setting.component';
 import { ComboComponent } from './project/products/combo/combo.component';
+import { SupplierAddComponent } from './project/products/supplier-add/supplier-add.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { ComboComponent } from './project/products/combo/combo.component';
     SupplierComponent,
     SupplierProductComponent,
     ListDisplaySettingComponent,
-    ComboComponent
+    ComboComponent,
+    SupplierAddComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +58,8 @@ import { ComboComponent } from './project/products/combo/combo.component';
   entryComponents: [
     AddCountryComponent,
     ProductDisplaySettingComponent,
-    ListDisplaySettingComponent],
+    ListDisplaySettingComponent,
+    SupplierAddComponent],
   providers: [ProductService],
   bootstrap: [AppComponent]
 })

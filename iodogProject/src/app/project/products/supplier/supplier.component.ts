@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ProductService, Supplier} from '../../../shared/product.service';
 import {NzModalService} from 'ng-zorro-antd';
 import {ListDisplaySettingComponent} from '../../list-display-setting/list-display-setting.component';
+import {SupplierAddComponent} from '../supplier-add/supplier-add.component';
 
 @Component({
   selector: 'app-supplier',
@@ -136,6 +137,37 @@ export class SupplierComponent implements OnInit {
   }
 
 
+// 添加供应商
+  addSupplier(): void {
+    const modal = this.modalService.create({
+      nzTitle: '添加供应商',
+      nzMaskClosable: false,
+      nzClosable: true,
+      nzWidth: '800px',
+      nzContent: SupplierAddComponent,
+      nzFooter: [
+        {
+          label: '取消',
+          shape: 'default',
+          onClick: () => modal.destroy()
+        },
+        {
+          label: '确认',
+          type: 'primary',
+          onClick: (componentInstance) => {
+            componentInstance.destroyModal();
+          }
+        },
+      ]
+    });
 
+    // 模态框返回数据
+    modal.afterClose.subscribe((result) => {
+      if (result) {
+        console.log(result);
+      }
+    });
+
+  }
 
 }

@@ -284,7 +284,9 @@ export class ProductService {
     return this.products;
   }
 
-  // 获取供应商列表
+  /**
+  * 获取供应商列表
+  * */
   getSuppliers(): Observable<any> {
 
     return this.http.get('/api/suppliers');

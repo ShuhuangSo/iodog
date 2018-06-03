@@ -38,7 +38,9 @@ export class SupplierComponent implements OnInit {
               private modalService: NzModalService) { }
 
   ngOnInit() {
-    this.supplier = this.productService.getSuppliers();
+    this.productService.getSuppliers().subscribe(
+      sup => this.supplier = sup
+    );
 
     // 取出本地存储自定义设置信息
     const display_setting = localStorage.getItem('supplier_list_display');

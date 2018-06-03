@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {HttpClient} from '@angular/common/http';
+
 
 @Injectable()
 export class ProductService {
@@ -274,7 +277,7 @@ export class ProductService {
     )
   ];
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   // 获取商品列表
   getProducts() {
@@ -282,25 +285,9 @@ export class ProductService {
   }
 
   // 获取供应商列表
-  getSuppliers() {
-    for (let i = 0; i < 55; i++) {
-      this.supplier.push(
-        new Supplier(
-          100 + i,
-          `黑驹${i}`,
-          '1688',
-          '33334342',
-          '13473844736',
-          '佛山龙岗区收到第三档颠三倒四的',
-          '备注内容。。。',
-          'http://www.1688.com/item/1292272131927391',
-          false,
-          true
-        )
-      );
-    }
+  getSuppliers(): Observable<any> {
 
-    return this.supplier;
+    return this.http.get('/api/suppliers');
   }
 
   // 获取组合商品列表

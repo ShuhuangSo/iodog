@@ -287,9 +287,9 @@ export class ProductService {
   /**
   * 获取供应商列表
   * */
-  getSuppliers(): Observable<any> {
+  getSuppliers(status: string): Observable<any> {
 
-    return this.http.get('/api/suppliers');
+    return this.http.get('/api/suppliers/' + status);
   }
 
   // 获取组合商品列表

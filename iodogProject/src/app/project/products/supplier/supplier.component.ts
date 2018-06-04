@@ -19,6 +19,8 @@ export class SupplierComponent implements OnInit {
   checkedNumber = 0; // 已选择的行数量
   operating = false; // 操作loading状态
 
+  status = '1'; // 供应商状态：ALL:全部，1：启用，0：停用
+
   // 自定义显示{是否显示，字段名，显示名称，是否禁用}
   display = [
     {show: true, model_name: 'supplier_name', list_name: '供应商名称', disabled: true},
@@ -38,7 +40,7 @@ export class SupplierComponent implements OnInit {
               private modalService: NzModalService) { }
 
   ngOnInit() {
-    this.productService.getSuppliers().subscribe(
+    this.productService.getSuppliers(this.status).subscribe(
       sup => this.supplier = sup
     );
 
@@ -139,14 +141,17 @@ export class SupplierComponent implements OnInit {
   }
 
 
-// 添加供应商
-  addSupplier(): void {
+// 添加、编辑供应商
+  addSupplier(id: number): void {
     const modal = this.modalService.create({
-      nzTitle: '添加供应商',
+      nzTitle: id ? '编辑供应商' : '添加供应商',
       nzMaskClosable: false,
       nzClosable: true,
       nzWidth: '800px',
       nzContent: SupplierAddComponent,
+      nzComponentParams: {
+        supplier: id ? this.supplier.find((sup => sup.id === id)) : null,
+      },
       nzFooter: [
         {
           label: '取消',
@@ -173,6 +178,13 @@ export class SupplierComponent implements OnInit {
       }
     });
 
+  }
+
+  // 筛选供应商状态
+  changeListStatus(status) {
+    this.productService.getSuppliers(status).subscribe(
+      sup => this.supplier = sup
+    );
   }
 
   // 删除确认

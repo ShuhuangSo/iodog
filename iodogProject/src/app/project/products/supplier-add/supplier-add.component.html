@@ -6,7 +6,7 @@
       </nz-form-label>
       <nz-form-control [nzSm]="20" nzHasFeedback>
         <input nz-input formControlName="supplier_name" type="text">
-        <nz-form-explain *ngIf="getFormControl('supplier_name').dirty && getFormControl('supplier_name').errors|| getFormControl('supplier_name').pending">
+        <nz-form-explain *ngIf="getFormControl('supplier_name').dirty && getFormControl('supplier_name').errors">
           <ng-container *ngIf="getFormControl('supplier_name').hasError('required')">
             请输入供应商名称!
           </ng-container>
@@ -16,16 +16,13 @@
           <ng-container *ngIf="getFormControl('supplier_name').hasError('maxlength')">
             名称最大长度不超过30位
           </ng-container>
-          <ng-container *ngIf="getFormControl('supplier_name').pending">
-            正在核对...
-          </ng-container>
         </nz-form-explain>
       </nz-form-control>
 
     </nz-form-item>
 
     <nz-form-item>
-      <nz-form-label nzRequired [nzSm]="4">
+      <nz-form-label [nzSm]="4">
         采购渠道
       </nz-form-label>
       <nz-form-control [nzSm]="20">

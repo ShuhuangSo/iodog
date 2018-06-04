@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {NzMessageService, NzModalRef} from 'ng-zorro-antd';
 import {Observable} from 'rxjs/Observable';
+import {Supplier} from '../../../shared/product.service';
 
 @Component({
   selector: 'app-supplier-add',
@@ -12,21 +13,39 @@ export class SupplierAddComponent implements OnInit {
   formModel: FormGroup;
   isSpinning = false; // 加载状态
 
+
+  @Input()
+  supplier: Supplier;
+
   constructor(private modal: NzModalRef,
               private message: NzMessageService,
-              fb: FormBuilder) {
-    this.formModel = fb.group({
-      supplier_name: ['', [Validators.required, Validators.maxLength(30)], [this.supplierNameAsyncValidator]],
-      buy_way: ['阿里1688'],
-      store_url: [''],
-      address: [''],
-      qq: [''],
-      phone: [''],
-      note: ['']
-    });
+              private fb: FormBuilder
+              ) {
   }
 
   ngOnInit() {
+    if (!this.supplier) {
+      this.formModel = this.fb.group({
+        supplier_name: ['', [Validators.required, Validators.maxLength(30)], [this.supplierNameAsyncValidator]],
+        buy_way: ['阿里1688'],
+        store_url: [''],
+        address: [''],
+        qq: [''],
+        phone: [''],
+        note: ['']
+      });
+    } else {
+
+      this.formModel = this.fb.group({
+        supplier_name: [this.supplier.supplier_name, [Validators.required, Validators.maxLength(30)], [this.supplierNameAsyncValidator]],
+        buy_way: [this.supplier.buy_way],
+        store_url: [this.supplier.store_url],
+        address: [this.supplier.address],
+        qq: [this.supplier.qq],
+        phone: [this.supplier.phone],
+        note: [this.supplier.note]
+      });
+    }
   }
 
   // 获取FormControl

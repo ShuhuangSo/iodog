@@ -40,8 +40,11 @@ export class SupplierComponent implements OnInit {
               private modalService: NzModalService) { }
 
   ngOnInit() {
+    this.operating = true;
     this.productService.getSuppliers(this.status).subscribe(
-      sup => this.supplier = sup
+      val => this.supplier = val,
+      err => console.log(err),
+      () => this.operating = false
     );
 
     // 取出本地存储自定义设置信息
@@ -79,21 +82,6 @@ export class SupplierComponent implements OnInit {
     this.indeterminate = (!allChecked) && (!allUnChecked);
     this.disabledButton = !this.supplier.some(value => value.checked);
     this.checkedNumber = this.supplier.filter(value => value.checked).length;
-  }
-
-  // 操作数据
-  operateData(): void {
-    this.operating = true;
-    setTimeout(_ => {
-      this.supplier.forEach(value => {
-        if (value.checked) {
-          console.log(value.id);
-        }
-        value.checked = false;
-      });
-      this.refreshStatus();
-      this.operating = false;
-    }, 1000);
   }
 
   // 数据改变回调
@@ -182,8 +170,11 @@ export class SupplierComponent implements OnInit {
 
   // 筛选供应商状态
   changeListStatus(status) {
+    this.operating = true;
     this.productService.getSuppliers(status).subscribe(
-      sup => this.supplier = sup
+      val => this.supplier = val,
+      err => console.log(err),
+      () => this.operating = false
     );
   }
 

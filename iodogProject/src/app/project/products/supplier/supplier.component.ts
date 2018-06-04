@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ProductService, Supplier} from '../../../shared/product.service';
-import {NzModalService} from 'ng-zorro-antd';
+import {NzMessageService, NzModalService} from 'ng-zorro-antd';
 import {ListDisplaySettingComponent} from '../../list-display-setting/list-display-setting.component';
 import {SupplierAddComponent} from '../supplier-add/supplier-add.component';
 
@@ -37,13 +37,17 @@ export class SupplierComponent implements OnInit {
   pageSize = 20;
 
   constructor(private productService: ProductService,
+              private message: NzMessageService,
               private modalService: NzModalService) { }
 
   ngOnInit() {
     this.operating = true;
     this.productService.getSuppliers(this.status).subscribe(
       val => this.supplier = val,
-      err => console.log(err),
+      err => {
+        this.message.create('error', `请求异常 ${err.statusText}`);
+        this.operating = false;
+      },
       () => this.operating = false
     );
 
@@ -162,6 +166,7 @@ export class SupplierComponent implements OnInit {
     // 模态框返回数据
     modal.afterClose.subscribe((result) => {
       if (result) {
+        this.changeListStatus(this.status); // 刷新列表数据
         console.log(result);
       }
     });
@@ -173,7 +178,10 @@ export class SupplierComponent implements OnInit {
     this.operating = true;
     this.productService.getSuppliers(status).subscribe(
       val => this.supplier = val,
-      err => console.log(err),
+      err => {
+        this.message.create('error', `请求异常 ${err.statusText}`);
+        this.operating = false;
+      },
       () => this.operating = false
     );
   }

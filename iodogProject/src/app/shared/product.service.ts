@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 
 @Injectable()
@@ -185,44 +185,7 @@ export class ProductService {
     )
   ]
 
-  private supplier: Supplier[] = [
-    new Supplier(
-      333,
-      '东涛',
-      '1688',
-      '68712172',
-      '13473844736',
-      '深圳市龙岗区收到第三档颠三倒四的',
-      '备注内容。。。',
-      'www.1688.com/item/129731927391',
-      false,
-      true
-    ),
-    new Supplier(
-      435,
-      '乐时购',
-      '1688',
-      '2332323',
-      '13473844736',
-      '广州市龙岗区收到第三档颠三倒四的',
-      '备注内容。。。',
-      'http://www.1688.com/item/12972131927391',
-      false,
-      true
-    ),
-    new Supplier(
-      436,
-      '黑驹',
-      '1688',
-      '33334342',
-      '13473844736',
-      '佛山龙岗区收到第三档颠三倒四的',
-      '备注内容。。。',
-      'http://www.1688.com/item/1292272131927391',
-      false,
-      false
-    )
-  ];
+
 
   private combo: Combo [] = [
     new Combo(
@@ -277,7 +240,11 @@ export class ProductService {
     )
   ];
 
-  constructor(private http: HttpClient) { }
+  // 请求头设置为json格式
+  headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+  constructor(private http: HttpClient) {}
+
 
   // 获取商品列表
   getProducts() {
@@ -288,8 +255,14 @@ export class ProductService {
   * 获取供应商列表
   * */
   getSuppliers(status: string): Observable<any> {
-
     return this.http.get('/api/suppliers/' + status);
+  }
+
+  /**
+   * 新增供应商
+   * */
+  addSupplier(form: any): Observable<any> {
+    return this.http.post('/api/supplier/', JSON.stringify(form), {headers: this.headers});
   }
 
   // 获取组合商品列表

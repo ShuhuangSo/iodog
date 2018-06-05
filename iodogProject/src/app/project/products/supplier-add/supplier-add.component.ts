@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {NzMessageService, NzModalRef} from 'ng-zorro-antd';
 import {Observable} from 'rxjs/Observable';
-import {Supplier} from '../../../shared/product.service';
+import {ProductService, Supplier} from '../../../shared/product.service';
 
 @Component({
   selector: 'app-supplier-add',
@@ -18,6 +18,7 @@ export class SupplierAddComponent implements OnInit {
   supplier: Supplier;
 
   constructor(private modal: NzModalRef,
+              private productService: ProductService,
               private message: NzMessageService,
               private fb: FormBuilder
               ) {
@@ -70,12 +71,21 @@ export class SupplierAddComponent implements OnInit {
   // 确认提交
   destroyModal(): void {
     this.isSpinning = true;
-    setTimeout(() => {
+
       if (this.formModel.valid) {
 
-        this.modal.destroy({ data: 123 });
-        console.log(this.formModel.value);
-        this.message.create('success', '供应商添加成功！');
+        this.productService.addSupplier(this.formModel.value).subscribe(
+          val => console.log(val),
+          err => {
+            this.message.create('error', `请求异常 ${err.statusText}`);
+            this.isSpinning = false;
+          },
+          () => {
+            this.isSpinning = false;
+            this.message.create('success', '供应商添加成功！');
+            this.modal.destroy({ data: 123 });
+          }
+        );
       } else {
         for (const key in this.formModel.controls) {
           this.formModel.controls[ key ].markAsDirty();
@@ -83,8 +93,8 @@ export class SupplierAddComponent implements OnInit {
         }
 
       }
-      this.isSpinning = false;
-    }, 3000);
+
+
 
   }
 

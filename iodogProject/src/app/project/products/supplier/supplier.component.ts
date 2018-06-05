@@ -167,7 +167,7 @@ export class SupplierComponent implements OnInit {
     modal.afterClose.subscribe((result) => {
       if (result) {
         this.changeListStatus(this.status); // 刷新列表数据
-        console.log(result);
+        console.log('1：' + result);
       }
     });
 

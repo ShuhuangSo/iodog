@@ -255,7 +255,7 @@ export class ProductService {
   * 获取供应商列表
   * */
   getSuppliers(status: string): Observable<any> {
-    return this.http.get('/api/suppliers/' + status);
+    return this.http.get('/api/supplier/' + status);
   }
 
   /**
@@ -263,6 +263,13 @@ export class ProductService {
    * */
   addSupplier(form: any): Observable<any> {
     return this.http.post('/api/supplier/', JSON.stringify(form), {headers: this.headers});
+  }
+
+  /**
+   * 修改供应商
+   * */
+  updateSupplier(form: any): Observable<any> {
+    return this.http.put('/api/supplier/', JSON.stringify(form), {headers: this.headers});
   }
 
   // 获取组合商品列表

@@ -26,6 +26,7 @@ export class SupplierAddComponent implements OnInit {
 
   ngOnInit() {
     if (!this.supplier) {
+      // 新增供应商
       this.formModel = this.fb.group({
         supplier_name: ['', [Validators.required, Validators.maxLength(30)], [this.supplierNameAsyncValidator]],
         buy_way: ['阿里1688'],
@@ -36,15 +37,17 @@ export class SupplierAddComponent implements OnInit {
         note: ['']
       });
     } else {
-
+      // 修改供应商
       this.formModel = this.fb.group({
+        id: [this.supplier.id],
         supplier_name: [this.supplier.supplier_name, [Validators.required, Validators.maxLength(30)], [this.supplierNameAsyncValidator]],
         buy_way: [this.supplier.buy_way],
         store_url: [this.supplier.store_url],
         address: [this.supplier.address],
         qq: [this.supplier.qq],
         phone: [this.supplier.phone],
-        note: [this.supplier.note]
+        note: [this.supplier.note],
+        status: [this.supplier.status],
       });
     }
   }
@@ -73,19 +76,36 @@ export class SupplierAddComponent implements OnInit {
     this.isSpinning = true;
 
       if (this.formModel.valid) {
+        // 新增供应商
+        if (!this.supplier) {
+          this.productService.addSupplier(this.formModel.value).subscribe(
+            val => console.log(val),
+            err => {
+              this.message.create('error', `请求异常 ${err.statusText}`);
+              this.isSpinning = false;
+            },
+            () => {
+              this.isSpinning = false;
+              this.message.create('success', '供应商添加成功！');
+              this.modal.destroy({ data: 123 });
+            }
+          );
+        } else {
+          // 修改供应商
+          this.productService.updateSupplier(this.formModel.value).subscribe(
+            val => console.log(val),
+            err => {
+              this.message.create('error', `请求异常 ${err.statusText}`);
+              this.isSpinning = false;
+            },
+            () => {
+              this.isSpinning = false;
+              this.message.create('success', '供应商修改成功！');
+              this.modal.destroy({data: 123});
+            }
+          );
+        }
 
-        this.productService.addSupplier(this.formModel.value).subscribe(
-          val => console.log(val),
-          err => {
-            this.message.create('error', `请求异常 ${err.statusText}`);
-            this.isSpinning = false;
-          },
-          () => {
-            this.isSpinning = false;
-            this.message.create('success', '供应商添加成功！');
-            this.modal.destroy({ data: 123 });
-          }
-        );
       } else {
         for (const key in this.formModel.controls) {
           this.formModel.controls[ key ].markAsDirty();

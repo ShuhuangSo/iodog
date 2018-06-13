@@ -29,8 +29,11 @@
             [nzTitle] = "titleTemp"
             [nzShowTotal] = "totalItemsTemp"
             [nzNoResult] = "noResultTemp"
-            [nzPageSizeOptions]="[20,50,100]"
+            nzFrontPagination="false"
+            [nzPageSizeOptions]="[1,2,100]"
+            [nzTotal]="totalcount"
             (nzPageSizeChange) = "pageSizeChange($event)"
+            (nzPageIndexChange) = "pageIndexChange($event)"
             (nzCurrentPageDataChange)="currentPageDataChange($event)"
             [nzData]="supplier" [(nzPageSize)]=pageSize>
 

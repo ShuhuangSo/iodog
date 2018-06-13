@@ -35,21 +35,25 @@ export class SupplierComponent implements OnInit {
 
   // 默认一页显示条数
   pageSize = 20;
+  totalcount = 0;
 
   constructor(private productService: ProductService,
               private message: NzMessageService,
               private modalService: NzModalService) { }
 
   ngOnInit() {
-    this.operating = true;
-    this.productService.getSuppliers(this.status).subscribe(
-      val => this.supplier = val,
-      err => {
-        this.message.create('error', `请求异常 ${err.statusText}`);
-        this.operating = false;
-      },
-      () => this.operating = false
-    );
+    // this.operating = true;
+    // this.productService.getSuppliers(this.status).subscribe(
+    //   val => {
+    //     this.supplier = val.results;
+    //     this.totalcount = val.count;
+    //   },
+    //   err => {
+    //     this.message.create('error', `请求异常 ${err.statusText}`);
+    //     this.operating = false;
+    //   },
+    //   () => this.operating = false
+    // );
 
     // 取出本地存储自定义设置信息
     const display_setting = localStorage.getItem('supplier_list_display');
@@ -62,14 +66,58 @@ export class SupplierComponent implements OnInit {
     if (pagsize_setting && pagsize_setting !== 'undefined' && pagsize_setting !== 'null') {
       this.pageSize = Number(pagsize_setting);
     }
+
+    this.operating = true;
+    this.productService.getAllSuppliers(1, this.pageSize).subscribe(
+      val => {
+        this.supplier = val.results;
+        this.totalcount = val.count;
+      },
+      err => {
+        this.message.create('error', `请求异常 ${err.statusText}`);
+        this.operating = false;
+      },
+      () => this.operating = false
+    );
+
   }
 
-  // 每页显示数据改变回调
+  // 每页显示数改变回调
   pageSizeChange(pageSize) {
 
     // 将一页显示数存储到本地
     localStorage.setItem('supplier_list_pagesize', pageSize)
     console.log(pageSize);
+
+    this.operating = true;
+    this.productService.getAllSuppliers(1, pageSize).subscribe(
+      val => {
+        this.supplier = val.results;
+        this.totalcount = val.count;
+      },
+      err => {
+        this.message.create('error', `请求异常 ${err.statusText}`);
+        this.operating = false;
+      },
+      () => this.operating = false
+    );
+
+  }
+
+  // 页码改变回调
+  pageIndexChange(page) {
+    this.operating = true;
+    this.productService.getAllSuppliers(page, this.pageSize).subscribe(
+      val => {
+        this.supplier = val.results;
+        this.totalcount = val.count;
+      },
+      err => {
+        this.message.create('error', `请求异常 ${err.statusText}`);
+        this.operating = false;
+      },
+      () => this.operating = false
+    );
   }
 
   // 处理全选/全不选

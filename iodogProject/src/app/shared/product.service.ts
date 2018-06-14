@@ -254,16 +254,8 @@ export class ProductService {
   /**
   * 获取供应商列表
   * */
-  getSuppliers(status: string): Observable<any> {
-    return this.http.get('/api/suppliers/' + status);
-  }
-
-  /**
-   * 获取全部供应商列表
-   * */
-  getAllSuppliers(page: number, page_size: number): Observable<any> {
-    console.log(`/api/suppliers/page=${page}&page_size=${page_size}`);
-    return this.http.get(`/api/suppliers/?page=${page}&page_size=${page_size}`);
+  getSuppliers(params: string): Observable<any> {
+    return this.http.get('/api/suppliers' + params);
   }
 
   /**

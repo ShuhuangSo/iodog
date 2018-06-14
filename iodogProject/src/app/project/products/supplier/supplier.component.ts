@@ -19,7 +19,8 @@ export class SupplierComponent implements OnInit {
   checkedNumber = 0; // 已选择的行数量
   operating = false; // 操作loading状态
 
-  status = '1'; // 供应商状态：ALL:全部，1：启用，0：停用
+  status = 'true'; // 供应商状态：ALL:全部，1：启用，0：停用
+  search = '';
 
   // 自定义显示{是否显示，字段名，显示名称，是否禁用}
   display = [
@@ -35,25 +36,13 @@ export class SupplierComponent implements OnInit {
 
   // 默认一页显示条数
   pageSize = 20;
-  totalcount = 0;
+  totalCount = 0;
 
   constructor(private productService: ProductService,
               private message: NzMessageService,
               private modalService: NzModalService) { }
 
   ngOnInit() {
-    // this.operating = true;
-    // this.productService.getSuppliers(this.status).subscribe(
-    //   val => {
-    //     this.supplier = val.results;
-    //     this.totalcount = val.count;
-    //   },
-    //   err => {
-    //     this.message.create('error', `请求异常 ${err.statusText}`);
-    //     this.operating = false;
-    //   },
-    //   () => this.operating = false
-    // );
 
     // 取出本地存储自定义设置信息
     const display_setting = localStorage.getItem('supplier_list_display');
@@ -67,11 +56,13 @@ export class SupplierComponent implements OnInit {
       this.pageSize = Number(pagsize_setting);
     }
 
+    // 向服务器获取供应商列表数据
     this.operating = true;
-    this.productService.getAllSuppliers(1, this.pageSize).subscribe(
+    const params = `/?status=${this.status}&page=1&page_size=${this.pageSize}`;
+    this.productService.getSuppliers(params).subscribe(
       val => {
         this.supplier = val.results;
-        this.totalcount = val.count;
+        this.totalCount = val.count;
       },
       err => {
         this.message.create('error', `请求异常 ${err.statusText}`);
@@ -80,6 +71,22 @@ export class SupplierComponent implements OnInit {
       () => this.operating = false
     );
 
+  }
+
+  // 获取数据
+  getSuppliers(params) {
+    this.operating = true;
+    this.productService.getSuppliers(params).subscribe(
+      val => {
+        this.supplier = val.results;
+        this.totalCount = val.count;
+      },
+      err => {
+        this.message.create('error', `请求异常 ${err.statusText}`);
+        this.operating = false;
+      },
+      () => this.operating = false
+    );
   }
 
   // 每页显示数改变回调
@@ -89,35 +96,16 @@ export class SupplierComponent implements OnInit {
     localStorage.setItem('supplier_list_pagesize', pageSize)
     console.log(pageSize);
 
-    this.operating = true;
-    this.productService.getAllSuppliers(1, pageSize).subscribe(
-      val => {
-        this.supplier = val.results;
-        this.totalcount = val.count;
-      },
-      err => {
-        this.message.create('error', `请求异常 ${err.statusText}`);
-        this.operating = false;
-      },
-      () => this.operating = false
-    );
+    const params = `/?status=${this.status}&page=1&page_size=${pageSize}&search=${this.search}`;
+    this.getSuppliers(params);
+
 
   }
 
   // 页码改变回调
   pageIndexChange(page) {
-    this.operating = true;
-    this.productService.getAllSuppliers(page, this.pageSize).subscribe(
-      val => {
-        this.supplier = val.results;
-        this.totalcount = val.count;
-      },
-      err => {
-        this.message.create('error', `请求异常 ${err.statusText}`);
-        this.operating = false;
-      },
-      () => this.operating = false
-    );
+    const params = `/?status=${this.status}&page=${page}&page_size=${this.pageSize}&search=${this.search}`;
+    this.getSuppliers(params);
   }
 
   // 处理全选/全不选
@@ -223,15 +211,14 @@ export class SupplierComponent implements OnInit {
 
   // 筛选供应商状态
   changeListStatus(status) {
-    this.operating = true;
-    this.productService.getSuppliers(status).subscribe(
-      val => this.supplier = val,
-      err => {
-        this.message.create('error', `请求异常 ${err.statusText}`);
-        this.operating = false;
-      },
-      () => this.operating = false
-    );
+    const params = `/?status=${status}&page=1&page_size=${this.pageSize}&search=${this.search}`;
+    this.getSuppliers(params);
+  }
+
+  // 搜索供应商
+  searchSupplier() {
+    const params = `/?status=${this.status}&page=1&page_size=${this.pageSize}&search=${this.search}`;
+    this.getSuppliers(params);
   }
 
   // 删除确认

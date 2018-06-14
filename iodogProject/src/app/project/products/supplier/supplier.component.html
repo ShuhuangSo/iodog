@@ -2,10 +2,10 @@
 
   <div class="search">
     <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
-      <input type="text" nz-input placeholder="请输入供应商名称">
+      <input [(ngModel)]='search' (keyup.enter)="searchSupplier()" type="text" nz-input placeholder="请输入供应商名称">
     </nz-input-group>
     <ng-template #suffixIconButton>
-      <button nz-button nzType="primary" nzSearch><i class="anticon anticon-search"></i></button>
+      <button nz-button nzType="primary" nzSearch (click)="searchSupplier()"><i class="anticon anticon-search"></i></button>
     </ng-template>
   </div>
 
@@ -15,8 +15,8 @@
       (ngModelChange)="changeListStatus($event)"
       [nzSize]="'small'">
       <label nz-radio-button nzValue="ALL">全部</label>
-      <label nz-radio-button nzValue="1">启用</label>
-      <label nz-radio-button nzValue="0">停用</label>
+      <label nz-radio-button nzValue="true">启用</label>
+      <label nz-radio-button nzValue="false">停用</label>
     </nz-radio-group>
   </div>
 
@@ -31,7 +31,7 @@
             [nzNoResult] = "noResultTemp"
             nzFrontPagination="false"
             [nzPageSizeOptions]="[1,2,100]"
-            [nzTotal]="totalcount"
+            [nzTotal]="totalCount"
             (nzPageSizeChange) = "pageSizeChange($event)"
             (nzPageIndexChange) = "pageIndexChange($event)"
             (nzCurrentPageDataChange)="currentPageDataChange($event)"

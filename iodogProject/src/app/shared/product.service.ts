@@ -262,14 +262,21 @@ export class ProductService {
    * 新增供应商
    * */
   addSupplier(form: any): Observable<any> {
-    return this.http.post('/api/supplier/', JSON.stringify(form), {headers: this.headers});
+    return this.http.post('/api/suppliers/', JSON.stringify(form), {headers: this.headers});
   }
 
   /**
    * 修改供应商
    * */
   updateSupplier(form: any): Observable<any> {
-    return this.http.put('/api/supplier/', JSON.stringify(form), {headers: this.headers});
+    return this.http.put(`/api/suppliers/${form.id}/`, JSON.stringify(form), {headers: this.headers});
+  }
+
+  /**
+   * 删除供应商
+   * */
+  deleteSupplier(params: string): Observable<any> {
+    return this.http.delete(`/api/suppliers/${params}/`);
   }
 
   // 获取组合商品列表

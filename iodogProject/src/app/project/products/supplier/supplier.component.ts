@@ -19,8 +19,10 @@ export class SupplierComponent implements OnInit {
   checkedNumber = 0; // 已选择的行数量
   operating = false; // 操作loading状态
 
-  status = 'true'; // 供应商状态：ALL:全部，1：启用，0：停用
-  search = '';
+  status = 'true'; // 供应商状态：ALL:全部，true：启用，false：停用
+  search = '';  // 搜索值
+  pageSize = 20;  // 默认一页显示条数
+  totalCount = 0;  // 供应商总数
 
   // 自定义显示{是否显示，字段名，显示名称，是否禁用}
   display = [
@@ -33,10 +35,6 @@ export class SupplierComponent implements OnInit {
     {show: false, model_name: 'note', list_name: '备注', disabled: false},
     {show: true, model_name: 'status', list_name: '状态', disabled: false},
     ];
-
-  // 默认一页显示条数
-  pageSize = 20;
-  totalCount = 0;
 
   constructor(private productService: ProductService,
               private message: NzMessageService,
@@ -73,7 +71,9 @@ export class SupplierComponent implements OnInit {
 
   }
 
-  // 获取数据
+  /**
+   * 获取供应商列表数据（供调用）
+   * */
   getSuppliers(params) {
     this.operating = true;
     this.productService.getSuppliers(params).subscribe(
@@ -89,7 +89,9 @@ export class SupplierComponent implements OnInit {
     );
   }
 
-  // 每页显示数改变回调
+  /**
+   * 每页显示条数改变回调
+   * */
   pageSizeChange(pageSize) {
 
     // 将一页显示数存储到本地
@@ -102,7 +104,9 @@ export class SupplierComponent implements OnInit {
 
   }
 
-  // 页码改变回调
+  /**
+   * 页码改变回调
+   * */
   pageIndexChange(page) {
     const params = `/?status=${this.status}&page=${page}&page_size=${this.pageSize}&search=${this.search}`;
     this.getSuppliers(params);
@@ -135,7 +139,9 @@ export class SupplierComponent implements OnInit {
       return dp[0].show;
   }
 
-  // 自定义显示设置
+  /**
+   * 自定义列显示设置
+   * */
   setDisplay(): void {
     const modal = this.modalService.create({
       nzTitle: '自定义显示列',
@@ -169,7 +175,9 @@ export class SupplierComponent implements OnInit {
   }
 
 
-// 添加、编辑供应商
+  /**
+   * 添加、编辑供应商
+   * */
   addSupplier(id: number): void {
     const modal = this.modalService.create({
       nzTitle: id ? '编辑供应商' : '添加供应商',
@@ -209,40 +217,57 @@ export class SupplierComponent implements OnInit {
 
   }
 
-  // 筛选供应商状态
+  /**
+   * 筛选供应商启用状态
+   * */
   changeListStatus(status) {
     const params = `/?status=${status}&page=1&page_size=${this.pageSize}&search=${this.search}`;
     this.getSuppliers(params);
   }
 
-  // 搜索供应商
+  /**
+   * 搜索供应商
+   * */
   searchSupplier() {
     const params = `/?status=${this.status}&page=1&page_size=${this.pageSize}&search=${this.search}`;
     this.getSuppliers(params);
   }
 
-  // 删除确认
+  /**
+   * 删除供应商
+   * */
   deleteConfirm(id): void {
     this.modalService.confirm({
       nzTitle: '<i>是否确认要删除?</i>',
       nzContent: '<b>一旦删除将无法恢复</b>',
       nzOnOk: () => {
         this.operating = true;
-        setTimeout(_ => {
-          if (id) {
-            console.log(id);
-          } else {
+
+          if (id) {  // 单个删除
+            this.productService.deleteSupplier(id).subscribe(
+              val => {
+                console.log(val);
+              },
+              err => {
+                this.message.create('error', `请求异常 ${err.statusText}`);
+                this.operating = false;
+              },
+              () => {
+                this.message.create('success', '删除成功！');
+                this.operating = false;
+                this.changeListStatus(this.status);
+              }
+            );
+          } else {  // 批量删除
             this.supplier.forEach(value => {
               if (value.checked) {
                 console.log(value.id);
+                this.operating = false;
               }
               value.checked = false;
             });
           }
           this.refreshStatus();
-          this.operating = false;
-        }, 2000);
-
       }
     });
   }

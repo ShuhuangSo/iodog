@@ -87,7 +87,7 @@ export class SupplierAddComponent implements OnInit {
             () => {
               this.isSpinning = false;
               this.message.create('success', '供应商添加成功！');
-              this.modal.destroy({ data: 123 });
+              this.modal.destroy({ data: 'ok' });
             }
           );
         } else {

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpParams} from '@angular/common/http/src/params';
 
 
 @Injectable()
@@ -255,8 +256,9 @@ export class ProductService {
   * 获取供应商列表
   * */
   getSuppliers(params: string): Observable<any> {
-    return this.http.get('/api/suppliers' + params);
+    return this.http.get(`/api/suppliers/?${params}`);
   }
+
 
   /**
    * 新增供应商

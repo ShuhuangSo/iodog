@@ -56,11 +56,15 @@ export class SupplierComponent implements OnInit {
 
     // 向服务器获取供应商列表数据
     this.operating = true;
-    const params = `/?status=${this.status}&page=1&page_size=${this.pageSize}`;
-    this.productService.getSuppliers(params).subscribe(
+    const urlparams = new URLSearchParams();
+    urlparams.append('status', this.status);
+    urlparams.append('page_size', this.pageSize.toString());
+
+    this.productService.getSuppliers(urlparams.toString()).subscribe(
       val => {
         this.supplier = val.results;
         this.totalCount = val.count;
+        console.log(val);
       },
       err => {
         this.message.create('error', `请求异常 ${err.statusText}`);
@@ -98,8 +102,16 @@ export class SupplierComponent implements OnInit {
     localStorage.setItem('supplier_list_pagesize', pageSize)
     console.log(pageSize);
 
-    const params = `/?status=${this.status}&page=1&page_size=${pageSize}&search=${this.search}`;
-    this.getSuppliers(params);
+    const urlparams = new URLSearchParams();
+    if (this.status !== 'ALL') {
+      urlparams.append('status', this.status);
+    }
+    urlparams.append('page_size', pageSize.toString());
+    if (this.search) {
+      urlparams.append('search', this.search);
+    }
+
+    this.getSuppliers(urlparams);
 
 
   }
@@ -108,8 +120,17 @@ export class SupplierComponent implements OnInit {
    * 页码改变回调
    * */
   pageIndexChange(page) {
-    const params = `/?status=${this.status}&page=${page}&page_size=${this.pageSize}&search=${this.search}`;
-    this.getSuppliers(params);
+    const urlparams = new URLSearchParams();
+    if (this.status !== 'ALL') {
+      urlparams.append('status', this.status);
+    }
+    urlparams.append('page_size', this.pageSize.toString());
+    if (this.search) {
+      urlparams.append('search', this.search);
+    }
+    urlparams.append('page', page);
+
+    this.getSuppliers(urlparams);
   }
 
   // 处理全选/全不选
@@ -221,16 +242,30 @@ export class SupplierComponent implements OnInit {
    * 筛选供应商启用状态
    * */
   changeListStatus(status) {
-    const params = `/?status=${status}&page=1&page_size=${this.pageSize}&search=${this.search}`;
-    this.getSuppliers(params);
+    const urlparams = new URLSearchParams();
+    if (status !== 'ALL') {
+      urlparams.append('status', status);
+    }
+    urlparams.append('page_size', this.pageSize.toString());
+    if (this.search) {
+      urlparams.append('search', this.search);
+    }
+    this.getSuppliers(urlparams);
   }
 
   /**
    * 搜索供应商
    * */
   searchSupplier() {
-    const params = `/?status=${this.status}&page=1&page_size=${this.pageSize}&search=${this.search}`;
-    this.getSuppliers(params);
+    const urlparams = new URLSearchParams();
+    if (this.status !== 'ALL') {
+      urlparams.append('status', this.status);
+    }
+    urlparams.append('page_size', this.pageSize.toString());
+    if (this.search) {
+      urlparams.append('search', this.search);
+    }
+    this.getSuppliers(urlparams);
   }
 
   /**

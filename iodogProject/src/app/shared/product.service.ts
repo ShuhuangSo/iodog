@@ -264,35 +264,35 @@ export class ProductService {
    * 新增供应商
    * */
   addSupplier(form: any): Observable<any> {
-    return this.http.post('/api/suppliers/', JSON.stringify(form), {headers: this.headers});
+    return this.http.post('/api/suppliers/', JSON.stringify(form), {headers: this.headers, observe: 'response'});
   }
 
   /**
    * 修改供应商
    * */
   updateSupplier(form: any): Observable<any> {
-    return this.http.put(`/api/suppliers/${form.id}/`, JSON.stringify(form), {headers: this.headers});
+    return this.http.put(`/api/suppliers/${form.id}/`, JSON.stringify(form), {headers: this.headers, observe: 'response'});
   }
 
   /**
    * 修改供应商状态
    * */
   changeSupplierStatus(id: number, status: boolean): Observable<any> {
-    return this.http.patch(`/api/suppliers/${id}/`, {'status': status}, {headers: this.headers});
+    return this.http.patch(`/api/suppliers/${id}/`, {'status': status}, {headers: this.headers, observe: 'response'});
   }
 
   /**
    * 删除供应商
    * */
   deleteSupplier(params: string): Observable<any> {
-    return this.http.delete(`/api/suppliers/${params}/`);
+    return this.http.delete(`/api/suppliers/${params}/`, {observe: 'response'});
   }
 
   /**
    * 批量删除供应商
    * */
   bulkDeleteSupplier(params: any): Observable<any> {
-    return this.http.post(`/api/suppliers-bulk/`, JSON.stringify(params), {headers: this.headers});
+    return this.http.post(`/api/suppliers-bulk/`, JSON.stringify(params), {headers: this.headers, observe: 'response'});
   }
 
   // 获取组合商品列表

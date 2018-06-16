@@ -259,16 +259,18 @@ export class SupplierComponent implements OnInit {
   changeStatus(id: number, status: boolean) {
     this.productService.changeSupplierStatus(id, !status).subscribe(
       val => {
-        console.log(val);
+        console.log(val.status);
+        if (val.status === 200) {
+          this.message.create('success', status ? '供应商已停用！' : '供应商已启用！');
+          this.operating = false;
+          this.listFilter(); // 刷新数据
+        } else {
+          this.message.create('error', `请求异常 ${val.status}`);
+        }
       },
       err => {
         this.message.create('error', `请求异常 ${err.statusText}`);
         this.operating = false;
-      },
-      () => {
-        this.message.create('success', status ? '供应商已停用！' : '供应商已启用！');
-        this.operating = false;
-        this.listFilter(); // 刷新数据
       });
   }
 
@@ -285,16 +287,18 @@ export class SupplierComponent implements OnInit {
           if (id) {  // 单个删除
             this.productService.deleteSupplier(id).subscribe(
               val => {
-                console.log(val);
+                console.log(val.status);
+                if (val.status === 204) {
+                  this.message.create('success', '删除成功！');
+                  this.listFilter(); // 刷新数据
+                } else {
+                  this.message.create('error', `请求异常 ${val.statusText}`);
+                }
+                this.operating = false;
               },
               err => {
                 this.message.create('error', `请求异常 ${err.statusText}`);
                 this.operating = false;
-              },
-              () => {
-                this.message.create('success', '删除成功！');
-                this.operating = false;
-                this.listFilter(); // 刷新数据
               }
             );
           } else {  // 批量删除
@@ -308,16 +312,18 @@ export class SupplierComponent implements OnInit {
             console.log(ids);
             this.productService.bulkDeleteSupplier(ids).subscribe(
               val => {
-                console.log(val);
+                console.log(val.status);
+                if (val.status === 204) {
+                  this.message.create('success', '删除成功！');
+                  this.listFilter(); // 刷新数据
+                } else {
+                  this.message.create('error', `请求异常 ${val.statusText}`);
+                }
+                this.operating = false;
               },
               err => {
                 this.message.create('error', `请求异常 ${err.statusText}`);
                 this.operating = false;
-              },
-              () => {
-                this.message.create('success', '删除成功！');
-                this.operating = false;
-                this.listFilter(); // 刷新数据
               }
             );
           }

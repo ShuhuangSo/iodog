@@ -79,29 +79,39 @@ export class SupplierAddComponent implements OnInit {
         // 新增供应商
         if (!this.supplier) {
           this.productService.addSupplier(this.formModel.value).subscribe(
-            val => console.log(val),
+            val => {
+              console.log(val.statusText);
+              if (val.status === 201) {
+                this.isSpinning = false;
+                this.message.create('success', '供应商添加成功！');
+                this.modal.destroy({ data: 'ok' });
+              } else {
+                this.message.create('error', `请求异常 ${val.statusText}`);
+                this.isSpinning = false;
+              }
+            },
             err => {
               this.message.create('error', `请求异常 ${err.statusText}`);
               this.isSpinning = false;
-            },
-            () => {
-              this.isSpinning = false;
-              this.message.create('success', '供应商添加成功！');
-              this.modal.destroy({ data: 'ok' });
             }
           );
         } else {
           // 修改供应商
           this.productService.updateSupplier(this.formModel.value).subscribe(
-            val => console.log(val),
+            val => {
+              console.log(val.status);
+              if (val.status === 200) {
+                this.isSpinning = false;
+                this.message.create('success', '供应商修改成功！');
+                this.modal.destroy({data: 'ok'});
+              } else {
+                this.message.create('error', `请求异常 ${val.statusText}`);
+                this.isSpinning = false;
+              }
+            },
             err => {
               this.message.create('error', `请求异常 ${err.statusText}`);
               this.isSpinning = false;
-            },
-            () => {
-              this.isSpinning = false;
-              this.message.create('success', '供应商修改成功！');
-              this.modal.destroy({data: 123});
             }
           );
         }

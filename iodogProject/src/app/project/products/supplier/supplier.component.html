@@ -87,6 +87,8 @@
           <ul nz-menu>
             <li nz-menu-item><i class="anticon anticon-profile"></i>&nbsp;产品列表</li>
             <li nz-menu-item (click)="addSupplier(data.id)"><i class="anticon anticon-edit"></i>&nbsp;编辑</li>
+            <li nz-menu-item (click)="changeStatus(data.id, data.status)" *ngIf="!data.status"><i class="anticon anticon-retweet"></i>&nbsp;启用</li>
+            <li nz-menu-item (click)="changeStatus(data.id, data.status)" *ngIf="data.status"><i class="anticon anticon-retweet"></i>&nbsp;停用</li>
             <li nz-menu-item class="red"><a (click)="deleteConfirm(data.id)"><i class="anticon anticon-delete"></i>&nbsp;删除</a></li>
           </ul>
         </nz-dropdown>

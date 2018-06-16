@@ -254,6 +254,25 @@ export class SupplierComponent implements OnInit {
   }
 
   /**
+   * 启用/停用供应商
+   * */
+  changeStatus(id: number, status: boolean) {
+    this.productService.changeSupplierStatus(id, !status).subscribe(
+      val => {
+        console.log(val);
+      },
+      err => {
+        this.message.create('error', `请求异常 ${err.statusText}`);
+        this.operating = false;
+      },
+      () => {
+        this.message.create('success', status ? '供应商已停用！' : '供应商已启用！');
+        this.operating = false;
+        this.listFilter(); // 刷新数据
+      });
+  }
+
+  /**
    * 删除供应商
    * */
   deleteConfirm(id): void {
@@ -279,13 +298,28 @@ export class SupplierComponent implements OnInit {
               }
             );
           } else {  // 批量删除
+            const ids = [];
             this.supplier.forEach(value => {
               if (value.checked) {
-                console.log(value.id);
-                this.operating = false;
+                ids.push(value.id);
               }
               value.checked = false;
             });
+            console.log(ids);
+            this.productService.bulkDeleteSupplier(ids).subscribe(
+              val => {
+                console.log(val);
+              },
+              err => {
+                this.message.create('error', `请求异常 ${err.statusText}`);
+                this.operating = false;
+              },
+              () => {
+                this.message.create('success', '删除成功！');
+                this.operating = false;
+                this.listFilter(); // 刷新数据
+              }
+            );
           }
           this.refreshStatus();
       }

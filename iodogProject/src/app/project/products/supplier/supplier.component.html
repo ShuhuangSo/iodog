@@ -2,17 +2,17 @@
 
   <div class="search">
     <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
-      <input [(ngModel)]='search' (keyup.enter)="searchSupplier()" type="text" nz-input placeholder="请输入供应商名称">
+      <input [(ngModel)]='search' (keyup.enter)="listFilter()" type="text" nz-input placeholder="请输入供应商名称">
     </nz-input-group>
     <ng-template #suffixIconButton>
-      <button nz-button nzType="primary" nzSearch (click)="searchSupplier()"><i class="anticon anticon-search"></i></button>
+      <button nz-button nzType="primary" nzSearch (click)="listFilter()"><i class="anticon anticon-search"></i></button>
     </ng-template>
   </div>
 
   <div class="search">
     <nz-radio-group
       [(ngModel)]='status'
-      (ngModelChange)="changeListStatus($event)"
+      (ngModelChange)="listFilter()"
       [nzSize]="'small'">
       <label nz-radio-button nzValue="ALL">全部</label>
       <label nz-radio-button nzValue="true">启用</label>

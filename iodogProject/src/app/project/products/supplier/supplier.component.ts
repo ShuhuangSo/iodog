@@ -231,7 +231,7 @@ export class SupplierComponent implements OnInit {
     // 模态框返回数据
     modal.afterClose.subscribe((result) => {
       if (result) {
-        this.changeListStatus(this.status); // 刷新列表数据
+        this.listFilter(); // 刷新列表数据
         console.log('1：' + result);
       }
     });
@@ -239,24 +239,9 @@ export class SupplierComponent implements OnInit {
   }
 
   /**
-   * 筛选供应商启用状态
+   * 供应商筛选、搜索
    * */
-  changeListStatus(status) {
-    const urlparams = new URLSearchParams();
-    if (status !== 'ALL') {
-      urlparams.append('status', status);
-    }
-    urlparams.append('page_size', this.pageSize.toString());
-    if (this.search) {
-      urlparams.append('search', this.search);
-    }
-    this.getSuppliers(urlparams);
-  }
-
-  /**
-   * 搜索供应商
-   * */
-  searchSupplier() {
+  listFilter() {
     const urlparams = new URLSearchParams();
     if (this.status !== 'ALL') {
       urlparams.append('status', this.status);
@@ -290,7 +275,7 @@ export class SupplierComponent implements OnInit {
               () => {
                 this.message.create('success', '删除成功！');
                 this.operating = false;
-                this.changeListStatus(this.status);
+                this.listFilter(); // 刷新数据
               }
             );
           } else {  // 批量删除

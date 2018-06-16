@@ -30,7 +30,7 @@
             [nzShowTotal] = "totalItemsTemp"
             [nzNoResult] = "noResultTemp"
             nzFrontPagination="false"
-            [nzPageSizeOptions]="[1,2,100]"
+            [nzPageSizeOptions]="[20,50,100]"
             [nzTotal]="totalCount"
             (nzPageSizeChange) = "pageSizeChange($event)"
             (nzPageIndexChange) = "pageIndexChange($event)"
@@ -62,7 +62,7 @@
     <tr *ngFor="let data of basicTable.data">
       <td nzShowCheckbox [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatus($event)"></td>
       <td>
-        {{data.supplier_name}}
+        <a (click)="addSupplier(data.id)">{{data.supplier_name}}</a>
       </td>
       <td *ngIf="checkDisplay('buy_way')">
         {{data.buy_way}}

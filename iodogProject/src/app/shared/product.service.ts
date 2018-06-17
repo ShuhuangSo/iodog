@@ -295,6 +295,13 @@ export class ProductService {
     return this.http.post(`/api/suppliers-bulk/`, JSON.stringify(params), {headers: this.headers, observe: 'response'});
   }
 
+  /**
+   * 检查供应商名称是否存在
+   * */
+  checkSupplier(params: any): Observable<any> {
+    return this.http.post(`/api/suppliers-check/`, JSON.stringify(params), {headers: this.headers, observe: 'response'});
+  }
+
   // 获取组合商品列表
   getCombo() {
     return this.combo;

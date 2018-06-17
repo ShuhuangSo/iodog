@@ -58,18 +58,23 @@ export class SupplierAddComponent implements OnInit {
   }
 
   // 异步校验供应商名称
-  supplierNameAsyncValidator = (control: FormControl): any => {
-    return Observable.create(function (observer) {
-      setTimeout(() => {
-        if (control.value === '东涛') {
-          observer.next({ error: true, duplicated: true });
-        } else {
-          observer.next(null);
-        }
-        observer.complete();
-      }, 1000);
-    });
-  }
+  supplierNameAsyncValidator = (control: FormControl) => Observable.create((observer) => {
+    setTimeout(() => {
+      this.productService.checkSupplier(control.value).subscribe(
+        value => {
+          console.log(value.status);
+          if (value.status === 200) {
+            observer.next({ error: true, duplicated: true });
+          } else {
+            observer.next(null);
+          }
+        },
+        err => console.log(err),
+        () => observer.complete()
+      );
+    }, 500);
+
+  })
 
   // 确认提交
   destroyModal(): void {

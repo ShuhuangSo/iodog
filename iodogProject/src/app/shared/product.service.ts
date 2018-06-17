@@ -296,6 +296,13 @@ export class ProductService {
   }
 
   /**
+   * 批量启用/停用供应商
+   * */
+  bulkChangeSupplierStatus(params: any): Observable<any> {
+    return this.http.patch(`/api/suppliers-bulk/`, JSON.stringify(params), {headers: this.headers, observe: 'response'});
+  }
+
+  /**
    * 检查供应商名称是否存在
    * */
   checkSupplier(params: any): Observable<any> {

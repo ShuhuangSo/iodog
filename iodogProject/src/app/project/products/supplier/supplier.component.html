@@ -109,8 +109,18 @@
     <div class="operating">
 
       <button nz-button [nzType]="'primary'" (click)="addSupplier()"><i class="anticon anticon-plus"></i>新增供应商</button>
-      <button nz-button [disabled]="disabledButton"><i class="anticon anticon-edit"></i>批量编辑</button>
-      <button nz-button [nzType]="'danger'" [disabled]="disabledButton" (click)="deleteConfirm()"><i class="anticon anticon-delete"></i>删除</button>
+      <nz-dropdown [nzTrigger]="'click'">
+        <button nz-button nz-dropdown >
+          <i class="anticon anticon-edit"></i>
+          批量操作
+          <i class="anticon anticon-down"></i>
+        </button>
+        <ul nz-menu>
+          <li nz-menu-item [nzDisabled]="disabledButton" (click)="bulkChangeStatus(true)"><i class="anticon anticon-smile-o"></i>&nbsp;批量启用</li>
+          <li nz-menu-item [nzDisabled]="disabledButton" (click)="bulkChangeStatus(false)"><i class="anticon anticon-frown-o"></i>&nbsp;批量停用</li>
+          <li nz-menu-item [nzDisabled]="disabledButton" (click)="deleteConfirm()"><i class="anticon anticon-delete"></i>&nbsp;批量删除</li>
+        </ul>
+      </nz-dropdown>
 
       <button nz-button class="at_right" (click)="setDisplay()"><i class="anticon anticon-setting"></i>自定义</button>
 

@@ -64,7 +64,6 @@ export class SupplierComponent implements OnInit {
       val => {
         this.supplier = val.results;
         this.totalCount = val.count;
-        console.log(val);
       },
       err => {
         this.message.create('error', `请求异常 ${err.statusText}`);
@@ -275,6 +274,37 @@ export class SupplierComponent implements OnInit {
   }
 
   /**
+   * 批量启用/停用供应商
+   * */
+  bulkChangeStatus(status: boolean) {
+    const ids = [];
+    this.supplier.forEach(value => {
+      if (value.checked) {
+        ids.push(value.id);
+      }
+      value.checked = false;
+    });
+    const params = new BulkParams(ids, status);
+    this.operating = true;
+    this.productService.bulkChangeSupplierStatus(params).subscribe(
+      val => {
+        console.log(val.status);
+        if (val.status === 200) {
+          this.message.create('success', !status ? '供应商已停用！' : '供应商已启用！');
+          this.operating = false;
+          this.listFilter(); // 刷新数据
+        } else {
+          this.message.create('error', `请求异常 ${val.status}`);
+        }
+      },
+      err => {
+        this.message.create('error', `请求异常 ${err.statusText}`);
+        this.operating = false;
+      });
+    this.refreshStatus();
+  }
+
+  /**
    * 删除供应商
    * */
   deleteConfirm(id): void {
@@ -334,3 +364,14 @@ export class SupplierComponent implements OnInit {
 
 
 }
+
+/**
+ *  批量操作传递数据
+ * */
+class BulkParams {
+  constructor(
+    public ids: any,
+    public status: boolean
+  ) {}
+}
+

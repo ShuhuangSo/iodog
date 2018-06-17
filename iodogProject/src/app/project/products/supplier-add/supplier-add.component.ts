@@ -62,7 +62,6 @@ export class SupplierAddComponent implements OnInit {
     setTimeout(() => {
       this.productService.checkSupplier(control.value).subscribe(
         value => {
-          console.log(value.status);
           if (value.status === 200) {
             observer.next({ error: true, duplicated: true });
           } else {
@@ -85,7 +84,6 @@ export class SupplierAddComponent implements OnInit {
         if (!this.supplier) {
           this.productService.addSupplier(this.formModel.value).subscribe(
             val => {
-              console.log(val.statusText);
               if (val.status === 201) {
                 this.isSpinning = false;
                 this.message.create('success', '供应商添加成功！');
@@ -104,7 +102,6 @@ export class SupplierAddComponent implements OnInit {
           // 修改供应商
           this.productService.updateSupplier(this.formModel.value).subscribe(
             val => {
-              console.log(val.status);
               if (val.status === 200) {
                 this.isSpinning = false;
                 this.message.create('success', '供应商修改成功！');

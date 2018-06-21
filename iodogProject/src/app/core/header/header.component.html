@@ -39,4 +39,15 @@
     </button>
   </div>
 
+  <div>
+    <nz-dropdown [nzPlacement]="'bottomCenter'">
+      <button nz-button nz-dropdown>{{this.getUser()}} <i class="anticon anticon-down"></i></button>
+
+      <ul nz-menu>
+        <li nz-menu-item (click)="log('1st menu item')">用户设置</li>
+        <li nz-menu-item (click)="logout()">退出</li>
+      </ul>
+    </nz-dropdown>
+  </div>
+
 </div>

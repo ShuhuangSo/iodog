@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
+import {UsersService} from '../../shared/users.service';
 
 @Component({
   selector: 'app-login',
@@ -15,11 +16,13 @@ export class LoginComponent implements OnInit {
   error_status: Boolean = false;
   isLogging: Boolean = false;
 
-  constructor(fb: FormBuilder, private router: Router) {
+  constructor(fb: FormBuilder,
+              private router: Router,
+              private usersService: UsersService
+  ) {
     this.validateForm = fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
-      remember: [false]
     });
   }
 
@@ -40,13 +43,28 @@ export class LoginComponent implements OnInit {
     if (this.validateForm.valid) {
       this.isLogging = true;
       this.error_status = false;
-      setTimeout(_ => {
-        // this.router.navigate(['/home']);
-        this.isLogging = false;
-        this.error_status = true;
-        this.error_message = '用户名或密码错误';
-      }, 5000);
-      console.log(this.validateForm.value);
+
+      this.usersService.userLogin(this.validateForm.value).subscribe(
+        value => {
+          console.log(value)
+          if (value.status === 200) {
+            // 登陆验证成功，保存token和用户名
+            localStorage.setItem('auth_token', value.body.token);
+            localStorage.setItem('username', this.validateForm.value.username);
+            this.router.navigate(['home']);
+          } else {
+            console.log('else' + value.body);
+          }
+        },
+        err => {
+          console.log(err.error.non_field_errors)
+          this.error_status = true;
+          this.error_message = err.error.non_field_errors;
+          this.isLogging = false;
+        },
+        () => this.isLogging = false
+      );
+
     }
   }
 

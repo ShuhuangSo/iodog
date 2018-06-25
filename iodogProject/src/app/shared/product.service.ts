@@ -1,192 +1,10 @@
 import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {HttpParams} from '@angular/common/http/src/params';
 
 
 @Injectable()
 export class ProductService {
-
-  private products: Product[] = [
-    new Product(
-      123,
-      'N332BK',
-      '平纹真皮 三星A8 2018【黑色】',
-      '/image/123.jpg',
-      'ON_SALE',
-      11,
-      '2018-05-23 21:59:59',
-      'phone case',
-      20,
-      10,
-      0.9,
-      55,
-      false,
-      false,
-      false,
-      'no-brand',
-      'no-model',
-      0.3,
-      'www.1688.com/itm/12312371974',
-      false
-    ),
-    new Product(
-      124,
-      'N334BK',
-      '平纹真皮 三星A9 2019【黑色】',
-      '/image/124.jpg',
-      'OFFLINE',
-      13,
-      '2018-05-24 21:59:59',
-      'phone case',
-      20,
-      10,
-      0.9,
-      55,
-      false,
-      false,
-      false,
-      'no-brand',
-      'no-model',
-      0.3,
-      'www.1688.com/itm/12312371975',
-      false
-    ),
-    new Product(
-      125,
-      'N534BK',
-      '平纹真皮 三星A9 2019【黑色】',
-      '/image/124.jpg',
-      'CLEAN',
-      13,
-      '2018-05-24 21:59:59',
-      'phone case',
-      20,
-      10,
-      0.9,
-      55,
-      false,
-      false,
-      false,
-      'no-brand',
-      'no-model',
-      0.3,
-      'www.1688.com/itm/12312371975',
-      false
-    ),
-    new Product(
-      126,
-      'N534BK',
-      '平纹真皮 三星A9 2019【黑色】',
-      '/image/124.jpg',
-      'UNKNOW',
-      13,
-      '2018-05-24 21:59:59',
-      'phone case',
-      20,
-      10,
-      0.9,
-      55,
-      false,
-      false,
-      false,
-      'no-brand',
-      'no-model',
-      0.3,
-      'www.1688.com/itm/12312371975',
-      false
-    ),
-    new Product(
-      127,
-      'N332BK',
-      '平纹真皮 三星A8 2018【黑色】',
-      '/image/123.jpg',
-      'ON_SALE',
-      11,
-      '2018-05-23 21:59:59',
-      'phone case',
-      20,
-      10,
-      0.9,
-      55,
-      false,
-      false,
-      false,
-      'no-brand',
-      'no-model',
-      0.3,
-      'www.1688.com/itm/12312371974',
-      false
-    ),
-    new Product(
-      128,
-      'N334BK',
-      '平纹真皮 三星A9 2019【黑色】',
-      '/image/124.jpg',
-      'OFFLINE',
-      13,
-      '2018-05-24 21:59:59',
-      'phone case',
-      20,
-      10,
-      0.9,
-      55,
-      false,
-      false,
-      false,
-      'no-brand',
-      'no-model',
-      0.3,
-      'www.1688.com/itm/12312371975',
-      false
-    ),
-    new Product(
-      129,
-      'N534BK',
-      '平纹真皮 三星A9 2019【黑色】',
-      '/image/124.jpg',
-      'CLEAN',
-      13,
-      '2018-05-24 21:59:59',
-      'phone case',
-      20,
-      10,
-      0.9,
-      55,
-      false,
-      false,
-      false,
-      'no-brand',
-      'no-model',
-      0.3,
-      'www.1688.com/itm/12312371975',
-      false
-    ),
-    new Product(
-      130,
-      'N534BK',
-      '平纹真皮平纹真皮平纹真皮 三星A9 2019【黑色】',
-      '/image/124.jpg',
-      'UNKNOW',
-      13,
-      '2018-05-24 21:59:59',
-      'phone case',
-      20,
-      10,
-      0.9,
-      55,
-      false,
-      false,
-      false,
-      'no-brand',
-      'no-model',
-      0.3,
-      'www.1688.com/itm/12312371975',
-      false
-    )
-  ]
-
-
 
   private combo: Combo [] = [
     new Combo(
@@ -246,10 +64,11 @@ export class ProductService {
 
   constructor(private http: HttpClient) {}
 
-
-  // 获取商品列表
-  getProducts() {
-    return this.products;
+  /**
+   * 获取商品列表
+   * */
+  getProducts(params: string): Observable<any>  {
+    return this.http.get(`/api/products/?${params}`);
   }
 
   /**
@@ -340,12 +159,51 @@ export class Product {
     public brand_model: string, // 品牌型号
     public declared_value: number, // 申报价值，USD
     public url: string, // 商品URL
+    public product_reg_product: RegProduct[],
+    public product_sup_product: SupplierProduct[],
     public checked: boolean // 数据选择状态
 
   ) {
 
   }
 }
+
+// 注册商品信息
+export class RegProduct {
+  constructor(
+    public id: number, // id
+    public logistics_company: string, // 物流公司
+    public reg_length: number, // 确认长
+    public reg_heigth: number, // 确认高
+    public reg_weight: number, // 确认重
+    public reg_volume: number, // 确认体积
+    public is_active: boolean, // 是否有效
+    public reg_product_reg_country: RegCountry[]
+  ) {}
+}
+
+// 注册国家
+export class RegCountry {
+  constructor(
+    public id: number, // id
+    public country_code: string, // 国家编码
+    public import_value: number, // 申报价值
+    public import_rate: number, // 税率
+    public reg_status: boolean, // 注册状态
+  ) {}
+}
+
+// 供应商产品
+export class SupplierProduct {
+  constructor(
+    public id: number, // id
+    public buy_url: string, // 采购链接
+    public primary_supplier: boolean, // 是否默认供应商
+    public create_time: string, // 创建时间
+    public supplier: string, // 供应商名称
+  ) {}
+}
+
 // 供应商
 export class Supplier {
   constructor(

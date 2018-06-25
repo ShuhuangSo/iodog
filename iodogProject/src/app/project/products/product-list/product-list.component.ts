@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Product, ProductService} from '../../../shared/product.service';
 import {sliceName} from '../../../utils/tools';
-import {NzModalService} from 'ng-zorro-antd';
+import {NzMessageService, NzModalService} from 'ng-zorro-antd';
 import {ProductDisplaySettingComponent} from '../product-display-setting/product-display-setting.component';
 
 @Component({
@@ -11,6 +11,7 @@ import {ProductDisplaySettingComponent} from '../product-display-setting/product
 })
 export class ProductListComponent implements OnInit {
    product: Product[]; // 产品数据
+
 
   // 自定义显示
   display = {
@@ -34,17 +35,37 @@ export class ProductListComponent implements OnInit {
 
   nameFormat = sliceName; // 格式化显示长度
 
+  status = 'true'; // 供应商状态：ALL:全部，true：启用，false：停用
+  search = '';  // 搜索值
+  pageSize = 20;  // 默认一页显示条数
+  totalCount = 0;  // 产品总数
+
   constructor(private productService: ProductService,
+              private message: NzMessageService,
               private modalService: NzModalService) { }
 
   ngOnInit() {
-    this.product = this.productService.getProducts();
 
     // 取出本地存储自定义设置信息
     const display_setting = localStorage.getItem('product_list_display');
     if (display_setting && display_setting !== 'undefined' && display_setting !== 'null') {
       this.display = JSON.parse(display_setting);
     }
+
+    this.operating = true;
+    this.productService.getProducts('status=').subscribe(
+      val => {
+        this.product = val.results;
+        this.totalCount = val.count;
+        console.log(this.product)
+      },
+      err => {
+        this.message.create('error', `请求异常 ${err.statusText}`);
+        this.operating = false;
+      },
+      () => this.operating = false
+    );
+
   }
 
   // 处理全选/全不选

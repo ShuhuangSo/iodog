@@ -40,7 +40,8 @@ export class SupplierAddComponent implements OnInit {
       // 修改供应商
       this.formModel = this.fb.group({
         id: [this.supplier.id],
-        supplier_name: [this.supplier.supplier_name, [Validators.required, Validators.maxLength(30)], [this.supplierNameAsyncValidator]],
+        supplier_name: [this.supplier.supplier_name, [Validators.required, Validators.maxLength(30)],
+                        this.supplier ? null : [this.supplierNameAsyncValidator]], // 如果是编辑模式，则取消供应商名称异步校验
         buy_way: [this.supplier.buy_way],
         store_url: [this.supplier.store_url],
         address: [this.supplier.address],
@@ -77,9 +78,9 @@ export class SupplierAddComponent implements OnInit {
 
   // 确认提交
   destroyModal(): void {
-    this.isSpinning = true;
 
       if (this.formModel.valid) {
+        this.isSpinning = true;
         // 新增供应商
         if (!this.supplier) {
           this.productService.addSupplier(this.formModel.value).subscribe(

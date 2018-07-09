@@ -19,3 +19,12 @@
 nz-input-group {
   width: 300px;
 }
+
+nz-radio-group {
+  margin-right: 20px;
+}
+
+.ant-table-thead > tr > th, .ant-table-tbody > tr > td {
+  padding: 12px;
+}
+

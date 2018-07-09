@@ -1,59 +1,64 @@
 <div class="search">
-  <nz-radio-group>
-    <label nz-radio-button nzValue="A">SKU编号</label>
-    <label nz-radio-button nzValue="B">中文名称</label>
-    <label nz-radio-button nzValue="C">虚拟SKU</label>
-    <label nz-radio-button nzValue="D">供应商</label>
 
     <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
-      <input type="text" nz-input placeholder="请选择项目搜索">
+      <input [(ngModel)]='search' (keyup.enter)="listFilter()" type="text" nz-input placeholder="SKU | 产品名称搜索">
     </nz-input-group>
     <ng-template #suffixIconButton>
-      <button nz-button nzType="primary" nzSearch><i class="anticon anticon-search"></i>搜索</button>
+      <button nz-button nzType="primary" nzSearch (click)="listFilter()"><i class="anticon anticon-search"></i></button>
     </ng-template>
-  </nz-radio-group>
 </div>
 
 <div class="search">
-  <nz-radio-group [nzSize]="'small'">
-    <label nz-radio-button nzValue="A">全部</label>
-    <label nz-radio-button nzValue="B">正常</label>
-    <label nz-radio-button nzValue="C">清仓中</label>
-    <label nz-radio-button nzValue="D">停售</label>
-    <label nz-radio-button nzValue="E">自动创建</label>
+  <nz-radio-group
+    [(ngModel)]='p_status'
+    (ngModelChange)="listFilter()"
+    [nzSize]="'small'">
+    <label nz-radio-button nzValue="ALL">全部</label>
+    <label nz-radio-button nzValue="ON_SALE">正常</label>
+    <label nz-radio-button nzValue="CLEAN">清仓中</label>
+    <label nz-radio-button nzValue="OFFLINE">停售</label>
+    <label nz-radio-button nzValue="UNKNOWN">自动创建</label>
   </nz-radio-group>
-</div>
 
-<div class="search">
-  <nz-radio-group [nzSize]="'small'">
-    <label nz-radio-button nzValue="A">全部</label>
-    <label nz-radio-button nzValue="B">已发布</label>
+  <nz-radio-group
+    [(ngModel)]='r_status'
+    (ngModelChange)="listFilter()"
+    [nzSize]="'small'">
+    <label nz-radio-button nzValue="ALL">全部</label>
+    <label nz-radio-button nzValue="PUBLISH">已发布</label>
     <label nz-radio-button nzValue="C">待审核</label>
     <label nz-radio-button nzValue="D">注册中</label>
     <label nz-radio-button nzValue="E">审核失败</label>
   </nz-radio-group>
 </div>
 
+
   <nz-table #basicTable
             nzBordered
             nzShowSizeChanger="true"
+            [nzLoading] = "operating"
+            nzLoadingDelay="500"
             [nzTitle] = "titleTemp"
             [nzShowTotal] = "totalItemsTemp"
             [nzNoResult] = "noResultTemp"
+            nzFrontPagination="false"
             [nzPageSizeOptions]="[20,50,100]"
+            [nzTotal]="totalCount"
+            (nzPageSizeChange) = "pageSizeChange($event)"
+            (nzPageIndexChange) = "pageIndexChange($event)"
             (nzCurrentPageDataChange)="currentPageDataChange($event)"
-            [nzData]="product" nzPageSize="5">
+            [nzData]="product" [(nzPageSize)]=pageSize>
 
     <thead>
     <tr>
-      <th nzWidth="30px"
+      <th nzWidth="26px"
           nzShowCheckbox
           [(nzChecked)]="allChecked"
           [nzIndeterminate]="indeterminate"
           (nzCheckedChange)="checkAll($event)"
       >
       </th>
-      <th nzWidth="85px" *ngIf="display.image">缩略图</th>
+      <th nzWidth="60px" *ngIf="display.image">缩略图</th>
       <th nzWidth="300px">SKU/中文名称</th>
       <th *ngIf="display.status">产品状态</th>
       <th nzWidth="120px" *ngIf="display.reg_status">注册状态</th>
@@ -73,7 +78,7 @@
       </td>
       <td>
           <div>{{data.sku}}</div>
-          <div>{{nameFormat(data.cn_name,20)}}</div>
+          <div>{{nameFormat(data.cn_name,30)}}</div>
       </td>
 
       <td [ngSwitch]="data.status" *ngIf="display.status">
@@ -116,7 +121,7 @@
 
           <ul nz-menu>
             <li nz-menu-item><i class="anticon anticon-barcode"></i>&nbsp;打印标签</li>
-            <li nz-menu-item><i class="anticon anticon-edit"></i>&nbsp;编辑</li>
+            <li nz-menu-item (click)="editProduct(data.id)"><i class="anticon anticon-edit"></i>&nbsp;编辑</li>
             <li nz-menu-item><i class="anticon anticon-idcard"></i>&nbsp;添加注册</li>
             <li nz-menu-item class="red"><i class="anticon anticon-delete"></i>&nbsp;删除</li>
           </ul>

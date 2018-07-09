@@ -1,5 +1,18 @@
-
+<nz-spin [nzSpinning]="isSpinning">
   <form nz-form [formGroup]="formModel">
+    <!--物流公司-->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSm]="6">
+        物流公司
+      </nz-form-label>
+      <nz-form-control [nzSm]="14">
+        <nz-select formControlName="logistics_company" >
+          <nz-option nzValue="万邑通" nzLabel="万邑通"></nz-option>
+
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+
     <!--产品名称-->
     <nz-form-item>
       <nz-form-label nzRequired [nzSm]="6">
@@ -7,7 +20,7 @@
       </nz-form-label>
       <nz-form-control [nzSm]="14">
         <nz-select formControlName="country_code" >
-          <nz-option *ngFor="let d of regInfo" nzLabel ={{d.country_name}} nzValue = {{d.country_code}}></nz-option>
+          <nz-option *ngFor="let d of regInfo" [nzDisabled]="checkCountry(d.country_code)" nzLabel ={{d.country_name}} nzValue = {{d.country_code}}></nz-option>
 
         </nz-select>
       </nz-form-control>
@@ -26,3 +39,5 @@
     </nz-form-item>
 
   </form>
+</nz-spin>
+

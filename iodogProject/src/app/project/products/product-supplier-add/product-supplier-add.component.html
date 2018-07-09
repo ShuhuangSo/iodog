@@ -1,0 +1,40 @@
+<nz-spin [nzSpinning]="isSpinning">
+  <form nz-form [formGroup]="formModel">
+    <!--供应商-->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSm]="4">
+        供应商
+      </nz-form-label>
+      <nz-form-control [nzSm]="20">
+        <nz-select
+          formControlName="supplier"
+          nzPlaceHolder="请选择供应商"
+          nzAllowClear
+          nzShowSearch
+          [nzServerSearch]="true"
+          (nzOnSearch)="onSearch($event)">
+          <ng-container *ngFor="let o of optionList">
+            <nz-option *ngIf="!isLoading" [nzDisabled]="checkSupplier(o.supplier_name)" [nzValue]="o.id" [nzLabel]="o.supplier_name"></nz-option>
+          </ng-container>
+          <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
+            <i class="anticon anticon-loading anticon-spin loading-icon"></i> 正在加载...
+          </nz-option>
+
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+
+    <!--采购URL-->
+    <nz-form-item>
+      <nz-form-label [nzSm]="4">
+        采购链接
+      </nz-form-label>
+      <nz-form-control [nzSm]="20">
+        <input nz-input formControlName="buy_url" type="text">
+      </nz-form-control>
+    </nz-form-item>
+
+  </form>
+</nz-spin>
+
+

@@ -72,6 +72,34 @@ export class ProductService {
   }
 
   /**
+   * 获取商品详情
+   * */
+  getProductById(id: number): Observable<any>  {
+    return this.http.get(`/api/products/${id}`);
+  }
+
+  /**
+   * 修改商品
+   * */
+  updateProduct(form: any): Observable<any> {
+    return this.http.patch(`/api/products/${form.id}/`, JSON.stringify(form), {observe: 'response'});
+  }
+
+  /**
+   * 检查虚拟sku是否存在
+   * */
+  checkVsku(params: any): Observable<any> {
+    return this.http.post(`/api/vsku-check/`, JSON.stringify(params), {observe: 'response'});
+  }
+
+  /**
+   * 新增注册国家、产品
+   * */
+  regProduct(form: any): Observable<any> {
+    return this.http.post('/api/reg-product/', JSON.stringify(form), {observe: 'response'});
+  }
+
+  /**
   * 获取供应商列表
   * */
   getSuppliers(params: string): Observable<any> {
@@ -128,6 +156,34 @@ export class ProductService {
     return this.http.post(`/api/suppliers-check/`, JSON.stringify(params), {headers: this.headers, observe: 'response'});
   }
 
+  /**
+   * 新增供应商关联产品
+   * */
+  addSupplierProduct(form: any): Observable<any> {
+    return this.http.post('api/supplier-product/', JSON.stringify(form), {observe: 'response'});
+  }
+
+  /**
+   * 删除供应商关联产品
+   * */
+  deleteSupplierProduct(params: string): Observable<any> {
+    return this.http.delete(`api/supplier-product/${params}/`, {observe: 'response'});
+  }
+
+  /**
+   * 修改供应商关联产品
+   * */
+  updateSupplierProduct(form: any): Observable<any> {
+    return this.http.put(`api/supplier-product/${form.id}/`, JSON.stringify(form), {observe: 'response'});
+  }
+
+  /**
+   * 设置默认供应商
+   * */
+  setDefaultSupplier(params: any): Observable<any> {
+    return this.http.post(`api/set-default-supplier/`, JSON.stringify(params), {observe: 'response'});
+  }
+
   // 获取组合商品列表
   getCombo() {
     return this.combo;
@@ -161,11 +217,18 @@ export class Product {
     public url: string, // 商品URL
     public product_reg_product: RegProduct[],
     public product_sup_product: SupplierProduct[],
+    public product_vsku: Vsku[],
     public checked: boolean // 数据选择状态
 
   ) {
 
   }
+}
+
+export class Vsku {
+  constructor(
+    public vsku: string
+  ) {}
 }
 
 // 注册商品信息
@@ -174,6 +237,7 @@ export class RegProduct {
     public id: number, // id
     public logistics_company: string, // 物流公司
     public reg_length: number, // 确认长
+    public reg_width: number, // 确认宽
     public reg_heigth: number, // 确认高
     public reg_weight: number, // 确认重
     public reg_volume: number, // 确认体积

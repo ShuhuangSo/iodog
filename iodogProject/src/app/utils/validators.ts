@@ -10,3 +10,13 @@ export function emailValidator(control: FormControl): { [s: string]: boolean } {
     return { error: true, email: true };
   }
 }
+
+// 价格校验
+export function priceValidator(control: FormControl): { [s: string]: boolean } {
+  const PRICE_REGEXP = /^\d+(\.\d+)?$/;
+  if (!control.value) {
+    return null;
+  } else if (!PRICE_REGEXP.test(control.value)) {
+    return { error: true, price: true };
+  }
+}

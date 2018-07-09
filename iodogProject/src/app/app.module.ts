@@ -3,7 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import { NgZorroAntdModule } from 'ng-zorro-antd';
+import {NgZorroAntdModule} from 'ng-zorro-antd';
 import { AppComponent } from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import { LoginComponent } from './core/login/login.component';
@@ -26,6 +26,8 @@ import { ListDisplaySettingComponent } from './project/list-display-setting/list
 import { ComboComponent } from './project/products/combo/combo.component';
 import { SupplierAddComponent } from './project/products/supplier-add/supplier-add.component';
 import {UsersService} from './shared/users.service';
+import { ProductSupplierAddComponent } from './project/products/product-supplier-add/product-supplier-add.component';
+import { ProductSupplierEditComponent } from './project/products/product-supplier-edit/product-supplier-edit.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,9 @@ import {UsersService} from './shared/users.service';
     SupplierProductComponent,
     ListDisplaySettingComponent,
     ComboComponent,
-    SupplierAddComponent
+    SupplierAddComponent,
+    ProductSupplierAddComponent,
+    ProductSupplierEditComponent
   ],
   imports: [
     BrowserModule,
@@ -58,10 +62,14 @@ import {UsersService} from './shared/users.service';
     NgZorroAntdModule.forRoot()
   ],
   entryComponents: [
-    AddCountryComponent,
-    ProductDisplaySettingComponent,
-    ListDisplaySettingComponent,
-    SupplierAddComponent],
+    AddCountryComponent, // 添加注册国家
+    ProductDisplaySettingComponent, // 产品列表自定义显示
+    ListDisplaySettingComponent, // 自定义显示
+    SupplierAddComponent, // 添加、编辑供应商
+    ProductDetailComponent, // 商品详情
+    ProductSupplierAddComponent, // 商品添加关联供应商
+    ProductSupplierEditComponent // 编辑关联供应商
+  ],
   providers: [
     ProductService,
     UsersService,

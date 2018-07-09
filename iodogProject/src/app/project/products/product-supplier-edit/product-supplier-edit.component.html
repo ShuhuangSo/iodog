@@ -1,0 +1,24 @@
+<nz-spin [nzSpinning]="isSpinning">
+  <form nz-form [formGroup]="formModel">
+    <!--供应商-->
+    <nz-form-item>
+      <nz-form-label [nzSm]="4">
+        供应商
+      </nz-form-label>
+      <nz-form-control [nzSm]="8">
+        <nz-tag [nzColor]="'cyan'">{{ this.product_supplier?.supplier }}</nz-tag>
+      </nz-form-control>
+    </nz-form-item>
+
+    <!--采购URL-->
+    <nz-form-item>
+      <nz-form-label [nzSm]="4">
+        采购链接
+      </nz-form-label>
+      <nz-form-control [nzSm]="20">
+        <input nz-input formControlName="buy_url" type="text">
+      </nz-form-control>
+    </nz-form-item>
+
+  </form>
+</nz-spin>

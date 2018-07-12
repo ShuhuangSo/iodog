@@ -3,7 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {NgZorroAntdModule} from 'ng-zorro-antd';
+import {NgZorroAntdModule, NZ_MESSAGE_CONFIG} from 'ng-zorro-antd';
 import { AppComponent } from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import { LoginComponent } from './core/login/login.component';
@@ -28,6 +28,7 @@ import { SupplierAddComponent } from './project/products/supplier-add/supplier-a
 import {UsersService} from './shared/users.service';
 import { ProductSupplierAddComponent } from './project/products/product-supplier-add/product-supplier-add.component';
 import { ProductSupplierEditComponent } from './project/products/product-supplier-edit/product-supplier-edit.component';
+import { ComboAddComponent } from './project/products/combo-add/combo-add.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { ProductSupplierEditComponent } from './project/products/product-supplie
     ComboComponent,
     SupplierAddComponent,
     ProductSupplierAddComponent,
-    ProductSupplierEditComponent
+    ProductSupplierEditComponent,
+    ComboAddComponent
   ],
   imports: [
     BrowserModule,
@@ -68,7 +70,8 @@ import { ProductSupplierEditComponent } from './project/products/product-supplie
     SupplierAddComponent, // 添加、编辑供应商
     ProductDetailComponent, // 商品详情
     ProductSupplierAddComponent, // 商品添加关联供应商
-    ProductSupplierEditComponent // 编辑关联供应商
+    ProductSupplierEditComponent, // 编辑关联供应商
+    ComboAddComponent // 添加、编辑组合sku
   ],
   providers: [
     ProductService,

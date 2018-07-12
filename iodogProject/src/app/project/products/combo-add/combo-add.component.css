@@ -1,0 +1,10 @@
+
+
+.editable-cell-icon:hover,
+.editable-cell-icon-check:hover {
+  color: #108ee9;
+}
+
+.editable-cell input {
+  width: 80px;
+}

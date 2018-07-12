@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {Combo, ComboInsideSKU, ProductService} from '../../../shared/product.service';
-import {NzModalService} from 'ng-zorro-antd';
+import {Combo, ProductService} from '../../../shared/product.service';
+import {NzMessageService, NzModalService} from 'ng-zorro-antd';
 import {ListDisplaySettingComponent} from '../../list-display-setting/list-display-setting.component';
+import {ComboAddComponent} from '../combo-add/combo-add.component';
 
 @Component({
   selector: 'app-combo',
@@ -18,6 +19,11 @@ export class ComboComponent implements OnInit {
   checkedNumber = 0; // 已选择的行数量
   operating = false; // 操作loading状态
 
+  status = 'true'; // 组合sku状态：ALL:全部，true：启用，false：停用
+  search = '';  // 搜索值
+  pageSize = 20;  // 默认一页显示条数
+  totalCount = 0;  // 组合sku总数
+
   // 自定义显示{是否显示，字段名，显示名称，是否禁用}
   display = [
     {show: true, model_name: 'combo_code', list_name: '组合sku/名称', disabled: true},
@@ -29,16 +35,34 @@ export class ComboComponent implements OnInit {
   ];
 
   constructor(private productService: ProductService,
+              private message: NzMessageService,
               private modalService: NzModalService) { }
 
   ngOnInit() {
-    this.combo = this.productService.getCombo();
 
     // 取出本地存储自定义设置信息
     const display_setting = localStorage.getItem('combo_list_display');
     if (display_setting && display_setting !== 'undefined' && display_setting !== 'null') {
       this.display = JSON.parse(display_setting);
     }
+
+    // 向服务器获取供应商列表数据
+    this.operating = true;
+    const urlparams = new URLSearchParams();
+    urlparams.append('combo_status', this.status);
+    urlparams.append('page_size', this.pageSize.toString());
+
+    this.productService.getCombopacks(urlparams.toString()).subscribe(
+      val => {
+        this.combo = val.results;
+        this.totalCount = val.count;
+      },
+      err => {
+        this.message.create('error', `请求异常 ${err.statusText}`);
+        this.operating = false;
+      },
+      () => this.operating = false
+    );
   }
 
   // 处理全选/全不选
@@ -111,6 +135,122 @@ export class ComboComponent implements OnInit {
         localStorage.setItem('combo_list_display', JSON.stringify(result.data));
         this.display = result.data;
         console.log(this.display);
+      }
+    });
+
+  }
+
+
+  /**
+   * 获取组合sku列表数据（供调用）
+   * */
+  getCombos(params) {
+    this.operating = true;
+    this.productService.getCombopacks(params).subscribe(
+      val => {
+        this.combo = val.results;
+        this.totalCount = val.count;
+      },
+      err => {
+        this.message.create('error', `请求异常 ${err.statusText}`);
+        this.operating = false;
+      },
+      () => this.operating = false
+    );
+  }
+
+
+  /**
+   * 每页显示条数改变回调
+   * */
+  pageSizeChange(pageSize) {
+
+    // 将一页显示数存储到本地
+    localStorage.setItem('combo_list_pagesize', pageSize)
+    console.log(pageSize);
+
+    const urlparams = new URLSearchParams();
+    if (this.status !== 'ALL') {
+      urlparams.append('combo_status', this.status);
+    }
+    urlparams.append('page_size', pageSize.toString());
+    if (this.search) {
+      urlparams.append('search', this.search);
+    }
+
+    this.getCombos(urlparams);
+
+
+  }
+
+  /**
+   * 页码改变回调
+   * */
+  pageIndexChange(page) {
+    const urlparams = new URLSearchParams();
+    if (this.status !== 'ALL') {
+      urlparams.append('combo_status', this.status);
+    }
+    urlparams.append('page_size', this.pageSize.toString());
+    if (this.search) {
+      urlparams.append('search', this.search);
+    }
+    urlparams.append('page', page);
+
+    this.getCombos(urlparams);
+  }
+
+  /**
+   * 组合sku筛选、搜索
+   * */
+  listFilter() {
+    const urlparams = new URLSearchParams();
+    if (this.status !== 'ALL') {
+      urlparams.append('combo_status', this.status);
+    }
+    urlparams.append('page_size', this.pageSize.toString());
+    if (this.search) {
+      urlparams.append('search', this.search);
+    }
+    this.getCombos(urlparams);
+  }
+
+  /**
+   * 添加、编辑组合sku
+   * */
+  addCombo(id: number): void {
+    const modal = this.modalService.create({
+      nzTitle: id ? '编辑组合' : '添加组合',
+      nzMaskClosable: false,
+      nzClosable: true,
+      nzWidth: '900px',
+      nzContent: ComboAddComponent,
+      nzComponentParams: {
+        combo: id ? this.combo.find((cob => cob.id === id)) : null,
+      },
+      nzFooter: [
+        {
+          label: '取消',
+          shape: 'default',
+          onClick: () => modal.destroy()
+        },
+        {
+          label: '确认',
+          type: 'primary',
+          loading: ((componentInstance) => {
+            return componentInstance.isSpinning;
+          }),
+          onClick: (componentInstance) => {
+            componentInstance.destroyModal();
+          }
+        },
+      ]
+    });
+
+    // 模态框返回数据
+    modal.afterClose.subscribe((result) => {
+      if (result) {
+        this.listFilter(); // 刷新列表数据
       }
     });
 

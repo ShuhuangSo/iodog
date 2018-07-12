@@ -2,18 +2,21 @@
 
   <div class="search">
     <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
-      <input type="text" nz-input placeholder="请输入组合名称">
+      <input [(ngModel)]='search' (keyup.enter)="listFilter()" type="text" nz-input placeholder="搜索 组合SKU | 组合名称 | 产品SKU">
     </nz-input-group>
     <ng-template #suffixIconButton>
-      <button nz-button nzType="primary" nzSearch><i class="anticon anticon-search"></i></button>
+      <button nz-button nzType="primary" nzSearch (click)="listFilter()"><i class="anticon anticon-search"></i></button>
     </ng-template>
   </div>
 
   <div class="search">
-    <nz-radio-group [nzSize]="'small'">
-      <label nz-radio-button nzValue="A">全部</label>
-      <label nz-radio-button nzValue="B">启用</label>
-      <label nz-radio-button nzValue="C">停用</label>
+    <nz-radio-group
+      [(ngModel)]='status'
+      (ngModelChange)="listFilter()"
+      [nzSize]="'small'">
+      <label nz-radio-button nzValue="ALL">全部</label>
+      <label nz-radio-button nzValue="true">启用</label>
+      <label nz-radio-button nzValue="false">停用</label>
     </nz-radio-group>
   </div>
 
@@ -21,13 +24,18 @@
   <nz-table #basicTable
             nzBordered
             nzShowSizeChanger="true"
+            [nzLoading] = "operating"
             [nzWidthConfig]="['30px','200px','60px',null,'100px','100px',null,'50px','100px']"
             [nzTitle] = "titleTemp"
             [nzShowTotal] = "totalItemsTemp"
             [nzNoResult] = "noResultTemp"
+            nzFrontPagination="false"
             [nzPageSizeOptions]="[20,50,100]"
+            [nzTotal]="totalCount"
+            (nzPageSizeChange) = "pageSizeChange($event)"
+            (nzPageIndexChange) = "pageIndexChange($event)"
             (nzCurrentPageDataChange)="currentPageDataChange($event)"
-            [nzData]="combo" nzPageSize="5">
+            [nzData]="combo" [(nzPageSize)]=pageSize>
 
     <thead>
     <tr>
@@ -49,7 +57,7 @@
     </tr>
 
     <tr>
-      <th>缩略图</th>
+      <th>缩图</th>
       <th>库存SKU<nz-divider nzType="vertical"></nz-divider>捆绑数量<nz-divider nzType="vertical"></nz-divider>中文名称</th>
     </tr>
 
@@ -57,38 +65,41 @@
 
     <tbody  *ngFor="let data of basicTable.data">
 
-      <tr *ngFor="let s of data.skus; index as i" >
-        <td *ngIf="i===0" [attr.rowspan]="data.skus.length" nzShowCheckbox [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatus($event)"></td>
-        <td *ngIf="i===0" [attr.rowspan]="data.skus.length">
-          <div>{{data.combo_code}}</div>
+      <tr *ngFor="let s of data.combo_pack_sku; index as i" >
+        <td *ngIf="i===0" [attr.rowspan]="data.combo_pack_sku.length" nzShowCheckbox [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatus($event)"></td>
+        <td *ngIf="i===0" [attr.rowspan]="data.combo_pack_sku.length">
+          <div class="green">{{data.combo_code}}</div>
           <div>{{data.combo_name}}</div>
         </td>
         <td>
           <img src="http://placehold.it/40x40">
         </td>
         <td>
-          <div>{{s.sku}}x <span class="green">{{s.quanlity}}</span></div>
-          <div>{{s.name}}</div>
+          <div>{{s.sku}}x <span class="green">{{s.quantity}}</span></div>
+          <div>{{s.cn_name}}</div>
         </td>
 
         <td *ngIf="i===0 && checkDisplay('combo_cost')"
-            [attr.rowspan]="data.skus.length">
-          11元
+            [attr.rowspan]="data.combo_pack_sku.length">
+          {{data.cost}}元
         </td>
 
-        <td *ngIf="i===0 && checkDisplay('combo_weight')" [attr.rowspan]="data.skus.length">120g</td>
-        <td *ngIf="i===0 && checkDisplay('create_time')" [attr.rowspan]="data.skus.length">{{data.create_time}}</td>
-
-        <td *ngIf="i===0 && checkDisplay('status')" [attr.rowspan]="data.skus.length">
-          <nz-tag [nzColor]="'green'" *ngIf="data.status">启用</nz-tag>
-          <nz-tag [nzColor]="'red'" *ngIf="!data.status">停用</nz-tag>
+        <td *ngIf="i===0 && checkDisplay('combo_weight')" [attr.rowspan]="data.combo_pack_sku.length">{{data.weight}}g</td>
+        <td *ngIf="i===0 && checkDisplay('create_time')" [attr.rowspan]="data.combo_pack_sku.length">
+          <div>{{data.create_time | date:'yyyy-MM-dd'}}</div>
+          <div>{{data.create_time | date:'HH:mm:ss'}}</div>
         </td>
-        <td *ngIf="i===0" [attr.rowspan]="data.skus.length">
+
+        <td *ngIf="i===0 && checkDisplay('status')" [attr.rowspan]="data.combo_pack_sku.length">
+          <nz-tag [nzColor]="'green'" *ngIf="data.combo_status">启用</nz-tag>
+          <nz-tag [nzColor]="'red'" *ngIf="!data.combo_status">停用</nz-tag>
+        </td>
+        <td *ngIf="i===0" [attr.rowspan]="data.combo_pack_sku.length">
           <nz-dropdown [nzTrigger]="'click'">
             <button nz-button nz-dropdown [nzSize]="'small'"><span>处理</span> <i class="anticon anticon-down"></i></button>
 
             <ul nz-menu>
-              <li nz-menu-item><i class="anticon anticon-edit"></i>&nbsp;编辑</li>
+              <li nz-menu-item (click)="addCombo(data.id)"><i class="anticon anticon-edit"></i>&nbsp;编辑</li>
               <li nz-menu-item class="red"><i class="anticon anticon-delete"></i>&nbsp;删除</li>
             </ul>
           </nz-dropdown>
@@ -112,7 +123,7 @@
   <ng-template #titleTemp>
     <div class="operating">
 
-      <button nz-button [nzType]="'primary'"><i class="anticon anticon-plus"></i>新增组合SKU</button>
+      <button nz-button [nzType]="'primary'" (click)="addCombo()"><i class="anticon anticon-plus"></i>新增组合SKU</button>
       <button nz-button [disabled]="disabledButton"><i class="anticon anticon-edit"></i>批量编辑</button>
       <button nz-button [nzType]="'danger'" [disabled]="disabledButton"><i class="anticon anticon-delete"></i>删除</button>
 

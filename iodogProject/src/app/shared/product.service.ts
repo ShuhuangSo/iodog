@@ -6,58 +6,6 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 @Injectable()
 export class ProductService {
 
-  private combo: Combo [] = [
-    new Combo(
-      1,
-      'N223BK-S2',
-      '三星S9+钢化膜',
-      '2018-5-31 21:59:59',
-      [
-        new ComboInsideSKU(
-          'N123BK',
-          '平纹真皮左右 三星S9 【黑色】',
-          1,
-          '/image/113.jpg'
-        ),
-        new ComboInsideSKU(
-          'N125CR',
-          '钢化膜 三星S9 【透明】',
-          2,
-          '/image/115.jpg'
-        )
-      ],
-      false,
-      false
-      ),
-    new Combo(
-      2,
-      'N224BK-S1',
-      '三星S7+钢化膜',
-      '2017-5-31 21:59:59',
-      [
-        new ComboInsideSKU(
-          'N222BK',
-          '平纹真皮左右 三星S9 【黑色】',
-          1,
-          '/image/113.jpg'
-        ),
-        new ComboInsideSKU(
-          'N223CR',
-          '钢化膜 三星S9 【透明】',
-          2,
-          '/image/115.jpg'
-        ),
-        new ComboInsideSKU(
-          'N224CR',
-          '钢化膜 三星S9 【透明】',
-          3,
-          '/image/115.jpg'
-        )
-      ],
-      true,
-      false
-    )
-  ];
 
   // 请求头设置为json格式
   headers = new HttpHeaders().set('Content-Type', 'application/json');
@@ -72,10 +20,17 @@ export class ProductService {
   }
 
   /**
-   * 获取商品详情
+   * 获取商品详情by id
    * */
   getProductById(id: number): Observable<any>  {
     return this.http.get(`/api/products/${id}`);
+  }
+
+  /**
+   * 获取商品详情by sku
+   * */
+  getProductBySku(params: string): Observable<any>  {
+    return this.http.get(`api/base-products/?${params}`);
   }
 
   /**
@@ -86,7 +41,7 @@ export class ProductService {
   }
 
   /**
-   * 检查虚拟sku是否存在
+   * 检查虚拟sku(包含组合虚拟sku)是否存在
    * */
   checkVsku(params: any): Observable<any> {
     return this.http.post(`/api/vsku-check/`, JSON.stringify(params), {observe: 'response'});
@@ -97,6 +52,20 @@ export class ProductService {
    * */
   regProduct(form: any): Observable<any> {
     return this.http.post('/api/reg-product/', JSON.stringify(form), {observe: 'response'});
+  }
+
+  /**
+   * 获取组合sku列表
+   * */
+  getCombopacks(params: string): Observable<any> {
+    return this.http.get(`api/combopacks/?${params}`);
+  }
+
+  /**
+   * 修改组合sku
+   * */
+  updateCombopack(form: any): Observable<any> {
+    return this.http.patch(`api/combopacks/${form.id}/`, JSON.stringify(form), {observe: 'response'});
   }
 
   /**
@@ -184,10 +153,6 @@ export class ProductService {
     return this.http.post(`api/set-default-supplier/`, JSON.stringify(params), {observe: 'response'});
   }
 
-  // 获取组合商品列表
-  getCombo() {
-    return this.combo;
-  }
 
 
 }
@@ -290,17 +255,29 @@ export class Combo {
     public combo_code: string,
     public combo_name: string,
     public create_time: string,
-    public skus: ComboInsideSKU[],
-    public status: boolean,
+    public combo_pack_sku: ComboInsideSKU[],
+    public combo_pack_vcombo: Vcombo[],
+    public combo_status: boolean,
+    public cost: number,
+    public weight: number,
     public checked: boolean // 数据选择状态
   ) {}
 }
 // 组合内sku
 export class ComboInsideSKU {
   constructor(
+    public id: number,
     public sku: string,
-    public name: string,
-    public quanlity: number,
-    public image: string
+    public cn_name: string,
+    public quantity: number,
+    public product_id: number,
+    public image: string,
+    public edit: boolean
+  ) {}
+}
+// 虚拟组合sku
+export class Vcombo {
+  constructor(
+    public vsku: string
   ) {}
 }

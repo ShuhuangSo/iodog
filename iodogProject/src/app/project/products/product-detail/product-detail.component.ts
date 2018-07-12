@@ -115,7 +115,7 @@ export class ProductDetailComponent implements OnInit {
     }, 10);
   }
 
-  // 输入回车确认
+  // 输入虚拟sku回车确认
   handleInputConfirm(): void {
     if (this.inputValue) {
       this.vsku_loading = true;
@@ -123,6 +123,7 @@ export class ProductDetailComponent implements OnInit {
         val => {
           if (val.status === 200 || this.tags.indexOf(this.inputValue) !== -1) {
             this.vsku_err_status = true;
+            this.inputElement.nativeElement.focus();
           } else {
             this.tags.push(this.inputValue); // 加入页面显示
             this.inputVisible = false;

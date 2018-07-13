@@ -1,8 +1,9 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {NzMessageService, NzModalRef} from 'ng-zorro-antd';
-import {Combo, ComboInsideSKU, ProductService} from '../../../shared/product.service';
+import {NzMessageService, NzModalRef, NzModalService} from 'ng-zorro-antd';
+import {Combo, ProductService} from '../../../shared/product.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {sliceName} from '../../../utils/tools';
+import {ProductSearchComponent} from '../product-search/product-search.component';
 
 @Component({
   selector: 'app-combo-add',
@@ -40,6 +41,7 @@ export class ComboAddComponent implements OnInit {
 
   constructor(
     private modal: NzModalRef,
+    private modalService: NzModalService,
     private productService: ProductService,
     private message: NzMessageService,
     private fb: FormBuilder
@@ -56,7 +58,7 @@ export class ComboAddComponent implements OnInit {
       this.formModel = this.fb.group({
         id: [this.combo.id],
         combo_code: [this.combo.combo_code, [Validators.required, Validators.maxLength(30)]],
-        combo_name: [this.combo.combo_name],
+        combo_name: [this.combo.combo_name, [Validators.maxLength(50)]],
         remove_combo_sku: [this.remove_combo_sku],
         edit_combo_sku: [this.edit_combo_sku],
         add_combo_sku: [this.add_combo_sku],
@@ -72,12 +74,6 @@ export class ComboAddComponent implements OnInit {
       for (let item of this.combo.combo_pack_sku) {
         this.init_combo_sku.push(item)
       }
-    } else {
-      // 新增组合
-      this.formModel = this.fb.group({
-        combo_code: ['', [Validators.required, Validators.maxLength(30)]],
-        combo_name: ['']
-      });
     }
   }
 
@@ -214,12 +210,12 @@ export class ComboAddComponent implements OnInit {
         urlparams.append('sku', this.add_product_formModel.value.sku.trim());
         this.productService.getProductBySku(urlparams.toString()).subscribe(
           val => {
-            if (val.length) {
+            if (val.results.length) {
               this.combo.combo_pack_sku = [ ...this.combo.combo_pack_sku, {
-                product_id: val[0].id,
-                sku: val[0].sku,
-                cn_name: val[0].cn_name,
-                image: val[0].image,
+                product_id: val.results[0].id,
+                sku: val.results[0].sku,
+                cn_name: val.results[0].cn_name,
+                image: val.results[0].image,
                 quantity: this.add_product_formModel.value.quantity,
                 id: null,
                 edit: false
@@ -243,6 +239,46 @@ export class ComboAddComponent implements OnInit {
   }
 
   /**
+   * 查找产品
+   * */
+  searchProduct(): void {
+    const modal = this.modalService.create({
+      nzTitle: '快速添加产品',
+      nzMaskClosable: false,
+      nzClosable: true,
+      nzWidth: '800px',
+      nzContent: ProductSearchComponent,
+
+      nzFooter: [
+        {
+          label: '取消',
+          shape: 'default',
+          onClick: () => modal.destroy()
+        },
+        {
+          label: '确认',
+          type: 'primary',
+          loading: ((componentInstance) => {
+            return componentInstance.isSpinning;
+          }),
+          onClick: (componentInstance) => {
+            componentInstance.destroyModal();
+          }
+        },
+      ]
+    });
+
+    // 模态框返回数据
+    modal.afterClose.subscribe((result) => {
+      if (result) {
+        console.log('1：' + result.sku);
+        this.add_product_formModel.patchValue({sku: result.sku});
+      }
+    });
+
+  }
+
+  /**
    * 删除组合内sku
    * */
   deleteSKU(val: string) {
@@ -253,19 +289,25 @@ export class ComboAddComponent implements OnInit {
   destroyModal(): void {
     this.checkVsku()
     this.checkCombosku()
-    console.log(this.formModel.value)
-    this.productService.updateCombopack(this.formModel.value).subscribe(
-      val => {
-        if (val.status === 200) {
-          this.modal.destroy({ data: 'ok' });
-        }
-      },
-      err => {
-        this.message.create('error', `请求异常 ${err.statusText}`);
-        this.isSpinning = false;
-      },
-      () => this.isSpinning = false
-    );
+    if (!this.combo.combo_pack_sku.length) {
+      this.add_err = true;
+      this.err_contect = '组合内SKU不能为空';
+    } else {
+      this.isSpinning = true;
+      this.productService.updateCombopack(this.formModel.value).subscribe(
+        val => {
+          if (val.status === 200) {
+            this.modal.destroy({ data: 'ok' });
+          }
+        },
+        err => {
+          this.message.create('error', `请求异常 ${err.statusText}`);
+          this.isSpinning = false;
+        },
+        () => this.isSpinning = false
+      );
+    }
+
   }
 
 }

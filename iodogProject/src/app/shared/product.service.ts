@@ -34,6 +34,13 @@ export class ProductService {
   }
 
   /**
+   * 获取基础商品列表
+   * */
+  getBaseProduct(params: string): Observable<any>  {
+    return this.http.get(`api/base-products/?${params}`);
+  }
+
+  /**
    * 修改商品
    * */
   updateProduct(form: any): Observable<any> {
@@ -66,6 +73,13 @@ export class ProductService {
    * */
   updateCombopack(form: any): Observable<any> {
     return this.http.patch(`api/combopacks/${form.id}/`, JSON.stringify(form), {observe: 'response'});
+  }
+
+  /**
+   * 新增组合sku
+   * */
+  addCombopack(form: any): Observable<any> {
+    return this.http.post('api/combopacks/', JSON.stringify(form), {observe: 'response'});
   }
 
   /**

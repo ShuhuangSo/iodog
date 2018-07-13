@@ -71,7 +71,8 @@ import { ComboAddComponent } from './project/products/combo-add/combo-add.compon
     ProductDetailComponent, // 商品详情
     ProductSupplierAddComponent, // 商品添加关联供应商
     ProductSupplierEditComponent, // 编辑关联供应商
-    ComboAddComponent // 添加、编辑组合sku
+    ComboAddComponent, // 添加、编辑组合sku
+    ProductSearchComponent // 搜索产品并返回
   ],
   providers: [
     ProductService,

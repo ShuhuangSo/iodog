@@ -3,7 +3,7 @@
     <nz-tabset nzTabPosition="left">
       <nz-tab nzTitle="基本信息">
         <form nz-form [formGroup]="formModel">
-        <nz-form-item>
+        <nz-form-item *ngIf="!this.combo">
           <nz-form-label nzRequired [nzSm]="4">
             组合编码
           </nz-form-label>
@@ -23,6 +23,16 @@
           </nz-form-control>
 
         </nz-form-item>
+
+          <!--组合编码-->
+          <nz-form-item *ngIf="this.combo">
+            <nz-form-label [nzSm]="4">
+              组合编码
+            </nz-form-label>
+            <nz-form-control [nzSm]="8">
+              <nz-tag [nzColor]="'cyan'">{{ this.combo.combo_code }}</nz-tag>
+            </nz-form-control>
+          </nz-form-item>
 
         <nz-form-item>
           <nz-form-label [nzSm]="4">
@@ -104,14 +114,14 @@
 
           <nz-form-item>
             <nz-form-control>
-              <button nz-button nzType="default">
+              <button nz-button nzType="default" (click)="searchProduct()">
                 <i class="anticon anticon-search"></i>查找SKU
               </button>
             </nz-form-control>
           </nz-form-item>
 
         </form>
-        <nz-table #nzTable [nzData]="this.combo.combo_pack_sku">
+        <nz-table #nzTable nzShowPagination="false" [nzData]="this.combo.combo_pack_sku">
 
           <thead>
           <tr>

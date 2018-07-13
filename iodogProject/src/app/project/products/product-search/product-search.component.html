@@ -1,36 +1,61 @@
-<div class="search">
-  <nz-radio-group>
-    <label nz-radio-button nzValue="A">SKU编号</label>
-    <label nz-radio-button nzValue="B">中文名称</label>
-    <label nz-radio-button nzValue="C">虚拟SKU</label>
-    <label nz-radio-button nzValue="D">供应商</label>
 
     <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
-      <input type="text" nz-input placeholder="请选择项目搜索">
+      <input type="text" nz-input [(ngModel)]='search' (keyup.enter)="listFilter()" placeholder="SKU编码 | 产品名称">
     </nz-input-group>
     <ng-template #suffixIconButton>
-      <button nz-button nzType="primary" nzSearch><i class="anticon anticon-search"></i>搜索</button>
+      <i class="anticon anticon-close-circle" (click)="cleanSearch()" *ngIf="search"></i>
+      <button nz-button nzType="primary" nzSearch (click)="listFilter()"><i class="anticon anticon-search"></i>搜索</button>
     </ng-template>
-  </nz-radio-group>
-</div>
 
-<div class="search">
-  <nz-radio-group [nzSize]="'small'">
-    <label nz-radio-button nzValue="A">全部</label>
-    <label nz-radio-button nzValue="B">正常</label>
-    <label nz-radio-button nzValue="C">清仓中</label>
-    <label nz-radio-button nzValue="D">停售</label>
-    <label nz-radio-button nzValue="E">自动创建</label>
-  </nz-radio-group>
-</div>
+    <nz-table
+      #nzTable
+      nzSize="small"
+      [nzScroll]="{ y: '300px' }"
+      [nzWidthConfig]="['80px','150px',null,'60px']"
+      nzShowSizeChanger="true"
+      [nzLoading] = "isSpinning"
+      [nzShowTotal] = "totalItemsTemp"
+      [nzNoResult] = "noResultTemp"
+      nzLoadingDelay="500"
+      nzFrontPagination="false"
+      [nzPageSizeOptions]="[20,50,100]"
+      [nzTotal]="totalCount"
+      (nzPageSizeChange) = "pageSizeChange($event)"
+      (nzPageIndexChange) = "pageIndexChange($event)"
+      [(nzPageSize)]=pageSize
+      [nzData]="product">
 
-<div class="search">
-  <nz-radio-group [nzSize]="'small'">
-    <label nz-radio-button nzValue="A">全部</label>
-    <label nz-radio-button nzValue="B">已发布</label>
-    <label nz-radio-button nzValue="C">待审核</label>
-    <label nz-radio-button nzValue="D">注册中</label>
-    <label nz-radio-button nzValue="E">审核失败</label>
-  </nz-radio-group>
-</div>
+      <thead>
+      <tr>
+        <th>缩略图</th>
+        <th>SKU编号</th>
+        <th>产品名称</th>
+        <th>操作</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr *ngFor="let data of nzTable.data">
+        <td>
+          <img src="http://placehold.it/50x50">
+        </td>
+        <td>{{data.sku}}</td>
+        <td>{{data.cn_name}}</td>
+        <td>
+
+          <a (click)="chooseProduct(data)">选我</a>
+
+        </td>
+      </tr>
+      </tbody>
+    </nz-table>
+
+    <ng-template #totalItemsTemp let-total>
+      总共 {{total}} 个产品
+    </ng-template>
+
+    <ng-template #noResultTemp>
+      <i class="fa fa-child fa-5x"></i>木有！
+    </ng-template>
+
 

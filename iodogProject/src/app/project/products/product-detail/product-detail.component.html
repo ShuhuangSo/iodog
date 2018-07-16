@@ -310,9 +310,10 @@
             <tbody>
             <tr *ngFor="let data of basicTable.data">
               <td>
-                <nz-tag [nzColor]="'green'" *ngIf="data.reg_status=='ON_SALE'">已发布</nz-tag>
-                <nz-tag [nzColor]="'blue'" *ngIf="data.reg_status=='CHECKING'">待审核</nz-tag>
-                <nz-tag [nzColor]="'red'" *ngIf="data.reg_status=='FAIL'">审核不通过</nz-tag>
+                <nz-badge *ngIf="data.reg_status==='ON_SALE'" nzStatus="success" nzText="已发布"></nz-badge>
+                <nz-badge *ngIf="data.reg_status==='CHECKING'" nzStatus="processing" nzText="待审核"></nz-badge>
+                <nz-badge *ngIf="data.reg_status==='REGING'" nzStatus="default" nzText="注册中"></nz-badge>
+                <nz-badge *ngIf="data.reg_status==='FAIL'" nzStatus="error" nzText="审核失败"></nz-badge>
               </td>
               <td>{{data.country_code}}</td>
               <td>{{data.import_value}}美元</td>

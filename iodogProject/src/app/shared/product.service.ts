@@ -48,6 +48,20 @@ export class ProductService {
   }
 
   /**
+   * 删除商品
+   * */
+  deleteProduct(params: string): Observable<any> {
+    return this.http.delete(`api/products/${params}/`, {observe: 'response'});
+  }
+
+  /**
+   * 批量删除商品
+   * */
+  bulkDeleteProduct(params: any): Observable<any> {
+    return this.http.post(`/api/products-bulk/`, JSON.stringify(params), {observe: 'response'});
+  }
+
+  /**
    * 检查虚拟sku(包含组合虚拟sku)是否存在
    * */
   checkVsku(params: any): Observable<any> {
@@ -58,7 +72,14 @@ export class ProductService {
    * 新增注册国家、产品
    * */
   regProduct(form: any): Observable<any> {
-    return this.http.post('/api/reg-product/', JSON.stringify(form), {observe: 'response'});
+    return this.http.post('api/reg-product/', JSON.stringify(form), {observe: 'response'});
+  }
+
+  /**
+   * 批量新增注册国家、产品
+   * */
+  regProductBulk(form: any): Observable<any> {
+    return this.http.post('api/reg-product-bulk/', JSON.stringify(form), {observe: 'response'});
   }
 
   /**
@@ -101,13 +122,6 @@ export class ProductService {
    * */
   bulkChangeCombopackStatus(params: any): Observable<any> {
     return this.http.patch(`/api/combopacks-bulk/`, JSON.stringify(params), {observe: 'response'});
-  }
-
-  /**
-   * 修改组合状态
-   * */
-  changeCombopackStatus(id: number, status: boolean): Observable<any> {
-    return this.http.patch(`api/combopacks/${id}/`, {'combo_status': status}, {observe: 'response'});
   }
 
   /**

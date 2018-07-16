@@ -5,6 +5,7 @@ import {NzMessageService, NzModalService} from 'ng-zorro-antd';
 import {ProductDisplaySettingComponent} from '../product-display-setting/product-display-setting.component';
 import {SupplierAddComponent} from '../supplier-add/supplier-add.component';
 import {ProductDetailComponent} from '../product-detail/product-detail.component';
+import {AddCountryComponent} from '../add-country/add-country.component';
 
 @Component({
   selector: 'app-product-list',
@@ -254,6 +255,168 @@ export class ProductListComponent implements OnInit {
     }
 
     this.getProducts(urlparams);
+  }
+
+  /**
+   * 删除产品
+   * */
+  deleteConfirm(id): void {
+    this.modalService.confirm({
+      nzTitle: '<i>是否确认要删除?</i>',
+      nzContent: '<b>一旦删除将无法恢复</b>',
+      nzOnOk: () => {
+        this.operating = true;
+
+        if (id) {  // 单个删除
+          this.productService.deleteProduct(id).subscribe(
+            val => {
+              if (val.status === 204) {
+                this.message.create('success', '删除成功！');
+                this.listFilter(); // 刷新数据
+              } else {
+                this.message.create('error', `请求异常 ${val.statusText}`);
+              }
+              this.operating = false;
+            },
+            err => {
+              this.message.create('error', `请求异常 ${err.statusText}`);
+              this.operating = false;
+            }
+          );
+        } else {  // 批量删除
+          const ids = [];
+          this.product.forEach(value => {
+            if (value.checked) {
+              ids.push(value.id);
+            }
+            value.checked = false;
+          });
+          this.productService.bulkDeleteProduct(ids).subscribe(
+            val => {
+              if (val.status === 204) {
+                this.message.create('success', '删除成功！');
+                this.listFilter(); // 刷新数据
+              } else {
+                this.message.create('error', `请求异常 ${val.statusText}`);
+              }
+              this.operating = false;
+            },
+            err => {
+              this.message.create('error', `请求异常 ${err.statusText}`);
+              this.operating = false;
+            }
+          );
+        }
+        this.refreshStatus();
+      }
+    });
+  }
+
+  /**
+   * 单个增加注册国家
+   * */
+  addCountry(id: number): void {
+    const p = this.product.find(item => item.id === id);
+    const reg_country = []; // 获取当天注册国家数据
+    if (p.product_reg_product) {
+      for (let r of p.product_reg_product) {
+        if (r.reg_product_reg_country) {
+          for (let c of r.reg_product_reg_country) {
+            reg_country.push(c.country_code)
+          }
+        }
+      }
+    }
+    const modal = this.modalService.create({
+      nzTitle: '增加注册国家',
+      nzMaskClosable: false,
+      nzClosable: false,
+      nzContent: AddCountryComponent,
+      nzComponentParams: {
+        id: id,
+        reg_country: reg_country ? reg_country : null
+      },
+      nzFooter: [
+        {
+          label: '取消',
+          shape: 'default',
+          onClick: () => modal.destroy()
+        },
+        {
+          label: '确认',
+          type: 'primary',
+          loading: ((componentInstance) => {
+            return componentInstance.isSpinning;
+          }),
+          onClick: (componentInstance) => {
+            componentInstance.destroyModal();
+          }        },
+      ]
+    });
+
+    // 模态框返回数据
+    modal.afterClose.subscribe((result) => {
+      // 如果正常返回，刷新注册产品数据
+      if (result) {
+        if (result.data === 'ok') {
+          this.message.create('success', '注册成功！');
+          this.listFilter(); // 刷新数据
+          this.refreshStatus();
+        }
+      }
+    });
+  }
+
+  /**
+   * 批量增加注册国家
+   * */
+  bulkRegAddCountry(): void {
+    const ids = []; // 获取已选中的产品id
+    this.product.forEach(value => {
+      if (value.checked) {
+        ids.push(value.id);
+      }
+      value.checked = false;
+    });
+    const modal = this.modalService.create({
+      nzTitle: '批量增加注册国家',
+      nzMaskClosable: false,
+      nzClosable: false,
+      nzContent: AddCountryComponent,
+      nzComponentParams: {
+        id: null,
+        reg_country: null,
+        ids: ids
+      },
+      nzFooter: [
+        {
+          label: '取消',
+          shape: 'default',
+          onClick: () => modal.destroy()
+        },
+        {
+          label: '确认',
+          type: 'primary',
+          loading: ((componentInstance) => {
+            return componentInstance.isSpinning;
+          }),
+          onClick: (componentInstance) => {
+            componentInstance.destroyModal();
+          }        },
+      ]
+    });
+
+    // 模态框返回数据
+    modal.afterClose.subscribe((result) => {
+      // 如果正常返回，刷新注册产品数据
+      if (result) {
+        if (result.data === 'ok') {
+          this.message.create('success', '注册成功！');
+          this.listFilter(); // 刷新数据
+          this.refreshStatus();
+        }
+      }
+    });
   }
 
   /**

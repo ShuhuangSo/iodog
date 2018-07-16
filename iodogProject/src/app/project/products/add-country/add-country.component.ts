@@ -11,6 +11,7 @@ import {ProductService} from '../../../shared/product.service';
 export class AddCountryComponent implements OnInit {
   @Input() id: number;
   @Input() reg_country: any;
+  @Input() ids: number[];
   isSpinning = false; // 加载状态
   regInfo = [
     {country_name: '澳大利亚', country_code: 'AU'},
@@ -27,7 +28,7 @@ export class AddCountryComponent implements OnInit {
 
   ngOnInit() {
     this.formModel = this.fb.group({
-      product: [this.id],
+      product: [this.id ? this.id : this.ids],
       country_code: ['', [Validators.required]],
       import_value: ['', [Validators.required]],
       logistics_company: ['万邑通'],
@@ -51,20 +52,39 @@ export class AddCountryComponent implements OnInit {
     // 提交保存注册国家
     if (this.formModel.valid) {
       this.isSpinning = true;
-      this.productService.regProduct(this.formModel.value).subscribe(
-        val => {
-          if (val.status === 201) {
-            this.modal.destroy({ data: 'ok' });
-          } else {
-            console.log(val);
-          }
-        },
-        err => {
-          console.log(err);
-          this.isSpinning = false
-        },
-        () => this.isSpinning = false
-      );
+      if (this.id) {
+        // 单个注册
+        this.productService.regProduct(this.formModel.value).subscribe(
+          val => {
+            if (val.status === 201) {
+              this.modal.destroy({ data: 'ok' });
+            } else {
+              console.log(val);
+            }
+          },
+          err => {
+            console.log(err);
+            this.isSpinning = false
+          },
+          () => this.isSpinning = false
+        );
+      } else {
+        // 批量注册
+        this.productService.regProductBulk(this.formModel.value).subscribe(
+          val => {
+            if (val.status === 201) {
+              this.modal.destroy({ data: 'ok' });
+            } else {
+              console.log(val);
+            }
+          },
+          err => {
+            console.log(err);
+            this.isSpinning = false
+          },
+          () => this.isSpinning = false
+        );
+      }
     } else {
       for (const key in this.formModel.controls) {
         this.formModel.controls[ key ].markAsDirty();

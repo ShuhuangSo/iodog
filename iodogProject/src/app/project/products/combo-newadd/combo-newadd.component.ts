@@ -1,28 +1,27 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {NzMessageService, NzModalRef, NzModalService} from 'ng-zorro-antd';
-import {Combo, ProductService} from '../../../shared/product.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Combo, ComboInsideSKU, ProductService} from '../../../shared/product.service';
 import {sliceName} from '../../../utils/tools';
 import {ProductSearchComponent} from '../product-search/product-search.component';
 import {ProductDetailComponent} from '../product-detail/product-detail.component';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
-  selector: 'app-combo-add',
-  templateUrl: './combo-add.component.html',
-  styleUrls: ['./combo-add.component.css']
+  selector: 'app-combo-newadd',
+  templateUrl: './combo-newadd.component.html',
+  styleUrls: ['./combo-newadd.component.css']
 })
-export class ComboAddComponent implements OnInit {
+export class ComboNewaddComponent implements OnInit {
+  isSpinning = false; // 加载状态
   formModel: FormGroup;
   add_product_formModel: FormGroup;
-  isSpinning = false; // 加载状态
   add_err = false; // 添加产品错误状态
   err_contect = ''; // 添加产品错误内容
   add_loading = false; // 添加产品loading
-
   editCache_quantity = 1; // 编辑数量
-
-  @Input()
-  combo: Combo
+  combo: Combo[];
+  combo_pack_sku = [];
 
   // 虚拟sku数据列表
   tags = [];
@@ -35,18 +34,12 @@ export class ComboAddComponent implements OnInit {
   vsku_loading = false; // 虚拟sku输入loading状态
   @ViewChild('inputElement') inputElement: ElementRef;
 
-  init_combo_sku = []; // 初始组合内sku
-  remove_combo_sku = []; // 删除的组合内sku
-  edit_combo_sku = []; // 需要修改数量的组合内sku
-  add_combo_sku = []; // 需要增加的组合内sku
-
   constructor(
     private modal: NzModalRef,
     private modalService: NzModalService,
     private productService: ProductService,
     private message: NzMessageService,
-    private fb: FormBuilder
-  ) { }
+    private fb: FormBuilder) { }
 
   ngOnInit() {
     // 新增组合产品
@@ -54,28 +47,12 @@ export class ComboAddComponent implements OnInit {
       sku: ['', [Validators.required]],
       quantity: ['', [Validators.required]]
     });
-    if (this.combo) {
-      // 编辑组合
-      this.formModel = this.fb.group({
-        id: [this.combo.id],
-        combo_code: [this.combo.combo_code, [Validators.required, Validators.maxLength(30)]],
-        combo_name: [this.combo.combo_name, [Validators.maxLength(50)]],
-        remove_combo_sku: [this.remove_combo_sku],
-        edit_combo_sku: [this.edit_combo_sku],
-        add_combo_sku: [this.add_combo_sku],
-        add_vsku: [this.add_vsku],
-        remove_vsku: [this.remove_vsku]
-      });
-      // 虚拟sku赋值
-      for (let vs of this.combo.combo_pack_vcombo) {
-        this.tags.push(vs.vsku);
-        this.vskus.push(vs.vsku);
-      }
-      // 组合内sku赋值
-      for (let item of this.combo.combo_pack_sku) {
-        this.init_combo_sku.push(item)
-      }
-    }
+    this.formModel = this.fb.group({
+      combo_code: ['', [Validators.required, Validators.maxLength(30)], [this.comboCodeAsyncValidator]],
+      combo_name: ['', [Validators.maxLength(50)]],
+      combo_pack_vcombo: [this.tags],
+      combo_pack_sku: ['']
+    });
   }
 
   // 获取FormControl
@@ -129,64 +106,18 @@ export class ComboAddComponent implements OnInit {
 
   }
 
-  /**
-   * 获取虚拟sku的删除和增加
-   * */
-  checkVsku() {
-    // 获取删除的虚拟sku
-    for (let vs of this.combo.combo_pack_vcombo) {
-      // 如果vs.sku不在tags中，说明该虚拟sku被删除
-      if (this.tags.indexOf(vs.vsku) === -1) {
-        this.remove_vsku.push(vs.vsku);
-      }
-    }
-    // 获取增加的虚拟sku
-    for (let tag of this.tags) {
-      // 如果tag不在vsku中，说明该虚拟sku是新增加
-      if (this.vskus.indexOf(tag) === -1) {
-        this.add_vsku.push(tag);
-      }
-    }
-  }
-
-  /**
-   * 获取组合内sku的删除，增加，修改
-   * */
-  checkCombosku() {
-
-    for (let vs of this.init_combo_sku) {
-      const pack_sku = this.combo.combo_pack_sku.find(item => item.sku === vs.sku)
-      // 如果找不到，则进入删除列表
-      if (!pack_sku) {
-        this.remove_combo_sku.push(vs.sku);
-      }
-    }
-    // 需要添加的sku
-    for (let s of this.combo.combo_pack_sku) {
-      const p_sku = this.init_combo_sku.find(item => item.sku === s.sku)
-      if (!p_sku) {
-        this.add_combo_sku.push({'sku': s.sku, 'quantity': s.quantity})
-      }
-    }
-  }
-
   // 开始编辑数量
   startEdit(sku: string): void {
-    const pack = this.combo.combo_pack_sku.find(item => item.sku === sku);
+    const pack = this.combo_pack_sku.find(item => item.sku === sku);
     pack.edit = true;
     this.editCache_quantity = pack.quantity;
   }
 
   // 完成编辑数量
   finishEdit(sku: string): void {
-    const pack = this.combo.combo_pack_sku.find(item => item.sku === sku)
+    const pack = this.combo_pack_sku.find(item => item.sku === sku)
     pack.edit = false;
     pack.quantity = this.editCache_quantity;
-
-    const p_sku = this.init_combo_sku.find(item => item.sku === sku)
-    if (p_sku) {
-      this.edit_combo_sku.push({'sku': sku, 'quantity': this.editCache_quantity})
-    }
   }
 
   /**
@@ -196,8 +127,8 @@ export class ComboAddComponent implements OnInit {
     this.add_err = false;
     if (this.add_product_formModel.valid) {
       // 检查添加的sku是否已存在
-      if (this.combo.combo_pack_sku.length) {
-        for (let i of this.combo.combo_pack_sku) {
+      if (this.combo_pack_sku) {
+        for (let i of this.combo_pack_sku) {
           if (i.sku === this.add_product_formModel.value.sku.trim()) {
             this.add_err = true;
             this.err_contect = 'SKU重复添加';
@@ -212,7 +143,8 @@ export class ComboAddComponent implements OnInit {
         this.productService.getProductBySku(urlparams.toString()).subscribe(
           val => {
             if (val.results.length) {
-              this.combo.combo_pack_sku = [ ...this.combo.combo_pack_sku, {
+              console.log(val.results[0])
+              this.combo_pack_sku = [ ...this.combo_pack_sku, {
                 product_id: val.results[0].id,
                 sku: val.results[0].sku,
                 cn_name: val.results[0].cn_name,
@@ -282,7 +214,7 @@ export class ComboAddComponent implements OnInit {
    * 删除组合内sku
    * */
   deleteSKU(val: string) {
-    this.combo.combo_pack_sku = this.combo.combo_pack_sku.filter(pack => pack.sku !== val);
+    this.combo_pack_sku = this.combo_pack_sku.filter(pack => pack.sku !== val);
   }
 
   /**
@@ -329,29 +261,56 @@ export class ComboAddComponent implements OnInit {
     });
   }
 
-  // 确认提交
-  destroyModal(): void {
-    this.checkVsku()
-    this.checkCombosku()
-    if (!this.combo.combo_pack_sku.length) {
-      this.add_err = true;
-      this.err_contect = '组合内SKU不能为空';
-    } else {
-      this.isSpinning = true;
-      this.productService.updateCombopack(this.formModel.value).subscribe(
-        val => {
-          if (val.status === 200) {
-            this.modal.destroy({ data: 'ok' });
+  /**
+   * 异步校验组合编码是否存在
+   * */
+  comboCodeAsyncValidator = (control: FormControl) => Observable.create((observer) => {
+    setTimeout(() => {
+      this.productService.checkVsku(control.value).subscribe(
+        value => {
+          if (value.status === 200) {
+            observer.next({ error: true, duplicated: true });
+          } else {
+            observer.next(null);
           }
         },
-        err => {
-          this.message.create('error', `请求异常 ${err.statusText}`);
-          this.isSpinning = false;
-        },
-        () => this.isSpinning = false
+        err => console.log(err),
+        () => observer.complete()
       );
-    }
+    }, 500);
 
+  })
+
+  // 确认提交
+  destroyModal(): void {
+    this.formModel.patchValue({combo_pack_sku: this.combo_pack_sku})
+
+    if (this.formModel.valid) {
+      if (!this.combo_pack_sku.length) {
+        this.add_err = true;
+        this.err_contect = '组合内SKU不能为空';
+      } else {
+        console.log(this.formModel.value)
+        this.isSpinning = true;
+        this.productService.addCombopack(this.formModel.value).subscribe(
+          val => {
+            if (val.status === 201) {
+              this.modal.destroy({ data: 'ok' });
+            }
+          },
+          err => {
+            this.message.create('error', `请求异常 ${err.statusText}`);
+            this.isSpinning = false;
+          },
+          () => this.isSpinning = false
+        );
+      }
+    } else {
+      for (const key in this.formModel.controls) {
+        this.formModel.controls[key].markAsDirty();
+        this.formModel.controls[key].updateValueAndValidity();
+      }
+    }
   }
 
 }

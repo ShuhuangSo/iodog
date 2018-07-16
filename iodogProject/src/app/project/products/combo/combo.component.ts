@@ -3,6 +3,8 @@ import {Combo, ProductService} from '../../../shared/product.service';
 import {NzMessageService, NzModalService} from 'ng-zorro-antd';
 import {ListDisplaySettingComponent} from '../../list-display-setting/list-display-setting.component';
 import {ComboAddComponent} from '../combo-add/combo-add.component';
+import {ProductDetailComponent} from '../product-detail/product-detail.component';
+import {ComboNewaddComponent} from '../combo-newadd/combo-newadd.component';
 
 @Component({
   selector: 'app-combo',
@@ -216,17 +218,17 @@ export class ComboComponent implements OnInit {
   }
 
   /**
-   * 添加、编辑组合sku
+   * 编辑组合sku
    * */
-  addCombo(id: number): void {
+  editCombo(id: number): void {
     const modal = this.modalService.create({
-      nzTitle: id ? '编辑组合' : '添加组合',
+      nzTitle: '编辑组合',
       nzMaskClosable: false,
       nzClosable: true,
       nzWidth: '900px',
       nzContent: ComboAddComponent,
       nzComponentParams: {
-        combo: id ? this.combo.find((cob => cob.id === id)) : null,
+        combo: this.combo.find((cob => cob.id === id)),
       },
       nzFooter: [
         {
@@ -254,6 +256,190 @@ export class ComboComponent implements OnInit {
       }
     });
 
+  }
+
+  /**
+   * 添加组合sku
+   * */
+  addCombo(): void {
+    const modal = this.modalService.create({
+      nzTitle: '新建组合',
+      nzMaskClosable: false,
+      nzClosable: true,
+      nzWidth: '900px',
+      nzContent: ComboNewaddComponent,
+
+      nzFooter: [
+        {
+          label: '取消',
+          shape: 'default',
+          onClick: () => modal.destroy()
+        },
+        {
+          label: '确认',
+          type: 'primary',
+          loading: ((componentInstance) => {
+            return componentInstance.isSpinning;
+          }),
+          onClick: (componentInstance) => {
+            componentInstance.destroyModal();
+          }
+        },
+      ]
+    });
+
+    // 模态框返回数据
+    modal.afterClose.subscribe((result) => {
+      if (result) {
+        this.listFilter(); // 刷新列表数据
+      }
+    });
+
+  }
+
+  /**
+   * 启用/停用组合
+   * */
+  changeStatus(id: number, status: boolean) {
+    this.combo.forEach(value => {
+      if (value.id === id) {
+        value.checked = true;
+      } else {
+        value.checked = false;
+      }
+    });
+    this.bulkChangeStatus(!status);
+  }
+
+  /**
+   * 批量启用/停用组合
+   * */
+  bulkChangeStatus(status: boolean) {
+    const ids = [];
+    this.combo.forEach(value => {
+      if (value.checked) {
+        ids.push(value.id);
+      }
+      value.checked = false;
+    });
+
+    this.operating = true;
+    this.productService.bulkChangeCombopackStatus({'ids': ids, 'combo_status': status}).subscribe(
+      val => {
+        if (val.status === 200) {
+          this.message.create('success', !status ? '组合已停用！' : '组合已启用！');
+          this.operating = false;
+          this.listFilter(); // 刷新数据
+        } else {
+          this.message.create('error', `请求异常 ${val.status}`);
+        }
+      },
+      err => {
+        this.message.create('error', `请求异常 ${err.statusText}`);
+        this.operating = false;
+      });
+    this.refreshStatus();
+  }
+
+  /**
+   * 删除组合
+   * */
+  deleteConfirm(id): void {
+    this.modalService.confirm({
+      nzTitle: '<i>是否确认要删除?</i>',
+      nzContent: '<b>一旦删除将无法恢复</b>',
+      nzOnOk: () => {
+        this.operating = true;
+
+        if (id) {  // 单个删除
+          this.productService.deleteCombopack(id).subscribe(
+            val => {
+              if (val.status === 204) {
+                this.message.create('success', '删除成功！');
+                this.listFilter(); // 刷新数据
+              } else {
+                this.message.create('error', `请求异常 ${val.statusText}`);
+              }
+              this.operating = false;
+            },
+            err => {
+              this.message.create('error', `请求异常 ${err.statusText}`);
+              this.operating = false;
+            }
+          );
+        } else {  // 批量删除
+          const ids = [];
+          this.combo.forEach(value => {
+            if (value.checked) {
+              ids.push(value.id);
+            }
+            value.checked = false;
+          });
+          console.log(ids);
+          this.productService.bulkDeleteCombopack(ids).subscribe(
+            val => {
+              if (val.status === 204) {
+                this.message.create('success', '删除成功！');
+                this.listFilter(); // 刷新数据
+              } else {
+                this.message.create('error', `请求异常 ${val.statusText}`);
+              }
+              this.operating = false;
+            },
+            err => {
+              this.message.create('error', `请求异常 ${err.statusText}`);
+              this.operating = false;
+            }
+          );
+        }
+        this.refreshStatus();
+      }
+    });
+  }
+
+  /**
+   * 查看、编辑商品详情弹框
+   * */
+  editProduct(id: number): void {
+    const modal = this.modalService.create({
+      nzTitle: '商品详情',
+      nzMaskClosable: true,
+      nzClosable: true,
+      nzWidth: '90%',
+      nzStyle: {top: '20px'},
+      nzContent: ProductDetailComponent,
+      nzComponentParams: {
+        productId: id,
+      },
+      nzFooter: [
+        {
+          label: '取消',
+          shape: 'default',
+          onClick: () => modal.destroy()
+        },
+        {
+          label: '确认',
+          type: 'primary',
+          loading: ((componentInstance) => {
+            return componentInstance.isSpinning;
+          }),
+          onClick: (componentInstance) => {
+            componentInstance.destroyModal();
+          }
+        },
+      ]
+    });
+
+    // 模态框返回数据
+    modal.afterClose.subscribe((result) => {
+      // 如果正常返回，刷新产品列表数据
+      if (result) {
+        if (result.data === 'ok') {
+          this.message.create('success', '产品修改成功！');
+          this.listFilter();
+        }
+      }
+    });
   }
 
 }

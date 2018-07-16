@@ -117,11 +117,12 @@ export class ProductSearchComponent implements OnInit {
    * 选中产品
    * */
   chooseProduct(p: Product) {
-    console.log(p)
     this.modal.destroy(p);
   }
 
   // 确认提交
-  destroyModal(): void {}
+  destroyModal(): void {
+    this.modal.destroy();
+  }
 
 }

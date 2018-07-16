@@ -83,6 +83,34 @@ export class ProductService {
   }
 
   /**
+   * 删除组合
+   * */
+  deleteCombopack(params: string): Observable<any> {
+    return this.http.delete(`api/combopacks/${params}/`, {observe: 'response'});
+  }
+
+  /**
+   * 批量删除组合
+   * */
+  bulkDeleteCombopack(params: any): Observable<any> {
+    return this.http.post(`/api/combopacks-bulk/`, JSON.stringify(params), {observe: 'response'});
+  }
+
+  /**
+   * 批量启用/停用组合
+   * */
+  bulkChangeCombopackStatus(params: any): Observable<any> {
+    return this.http.patch(`/api/combopacks-bulk/`, JSON.stringify(params), {observe: 'response'});
+  }
+
+  /**
+   * 修改组合状态
+   * */
+  changeCombopackStatus(id: number, status: boolean): Observable<any> {
+    return this.http.patch(`api/combopacks/${id}/`, {'combo_status': status}, {observe: 'response'});
+  }
+
+  /**
   * 获取供应商列表
   * */
   getSuppliers(params: string): Observable<any> {
@@ -232,7 +260,7 @@ export class RegCountry {
     public country_code: string, // 国家编码
     public import_value: number, // 申报价值
     public import_rate: number, // 税率
-    public reg_status: boolean, // 注册状态
+    public reg_status: string, // 注册状态
   ) {}
 }
 

@@ -68,14 +68,14 @@
       <tr *ngFor="let s of data.combo_pack_sku; index as i" >
         <td *ngIf="i===0" [attr.rowspan]="data.combo_pack_sku.length" nzShowCheckbox [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatus($event)"></td>
         <td *ngIf="i===0" [attr.rowspan]="data.combo_pack_sku.length">
-          <div class="green">{{data.combo_code}}</div>
+          <div class="green"><a (click)="editCombo(data.id)">{{data.combo_code}}</a></div>
           <div>{{data.combo_name}}</div>
         </td>
         <td>
           <img src="http://placehold.it/40x40">
         </td>
         <td>
-          <div>{{s.sku}}x <span class="green">{{s.quantity}}</span></div>
+          <div><a (click)="editProduct(s.product_id)">{{s.sku}}</a>* <span class="green">{{s.quantity}}</span></div>
           <div>{{s.cn_name}}</div>
         </td>
 
@@ -99,8 +99,10 @@
             <button nz-button nz-dropdown [nzSize]="'small'"><span>处理</span> <i class="anticon anticon-down"></i></button>
 
             <ul nz-menu>
-              <li nz-menu-item (click)="addCombo(data.id)"><i class="anticon anticon-edit"></i>&nbsp;编辑</li>
-              <li nz-menu-item class="red"><i class="anticon anticon-delete"></i>&nbsp;删除</li>
+              <li nz-menu-item (click)="editCombo(data.id)"><i class="anticon anticon-edit"></i>&nbsp;编辑</li>
+              <li nz-menu-item (click)="changeStatus(data.id, data.combo_status)" *ngIf="!data.combo_status"><i class="anticon anticon-retweet"></i>&nbsp;启用</li>
+              <li nz-menu-item (click)="changeStatus(data.id, data.combo_status)" *ngIf="data.combo_status"><i class="anticon anticon-retweet"></i>&nbsp;停用</li>
+              <li nz-menu-item class="red" (click)="deleteConfirm(data.id)"><i class="anticon anticon-delete"></i>&nbsp;删除</li>
             </ul>
           </nz-dropdown>
         </td>
@@ -124,8 +126,18 @@
     <div class="operating">
 
       <button nz-button [nzType]="'primary'" (click)="addCombo()"><i class="anticon anticon-plus"></i>新增组合SKU</button>
-      <button nz-button [disabled]="disabledButton"><i class="anticon anticon-edit"></i>批量编辑</button>
-      <button nz-button [nzType]="'danger'" [disabled]="disabledButton"><i class="anticon anticon-delete"></i>删除</button>
+      <nz-dropdown [nzTrigger]="'click'">
+        <button nz-button nz-dropdown >
+          <i class="anticon anticon-edit"></i>
+          批量操作
+          <i class="anticon anticon-down"></i>
+        </button>
+        <ul nz-menu>
+          <li nz-menu-item [nzDisabled]="disabledButton" (click)="bulkChangeStatus(true)"><i class="anticon anticon-smile-o"></i>&nbsp;批量启用</li>
+          <li nz-menu-item [nzDisabled]="disabledButton" (click)="bulkChangeStatus(false)"><i class="anticon anticon-frown-o"></i>&nbsp;批量停用</li>
+          <li nz-menu-item [nzDisabled]="disabledButton" (click)="deleteConfirm()"><i class="anticon anticon-delete"></i>&nbsp;批量删除</li>
+        </ul>
+      </nz-dropdown>
 
       <button nz-button class="at_right" (click)="setDisplay()"><i class="anticon anticon-setting"></i>自定义</button>
 
@@ -142,9 +154,6 @@
         </ul>
       </nz-dropdown>
 
-      <button nz-button [disabled]="disabledButton" [nzType]="'primary'" [nzLoading]="operating" (click)="operateData()">
-        Reload{{checkedNumber}}
-      </button>
       <span style="margin-left: 8px;" *ngIf="checkedNumber">共选中 {{checkedNumber}} 项</span>
     </div>
   </ng-template>

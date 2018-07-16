@@ -38,7 +38,7 @@ export class ProductListComponent implements OnInit {
   nameFormat = sliceName; // 格式化显示长度
 
   p_status = 'ON_SALE'; // 产品状态：ALL:全部，ON_SALE：在售，OFFLINE：停售，CLEAN：清仓中，UNKNOWN：自动创建
-  r_status = 'PUBLISH'; // 产品注册状态
+  r_status = 'ALL'; // 产品注册状态
   search = '';  // 搜索值
   pageSize = 20;  // 默认一页显示条数
   totalCount = 0;  // 产品总数
@@ -221,7 +221,7 @@ export class ProductListComponent implements OnInit {
       urlparams.append('status', this.p_status);
     }
     if (this.r_status !== 'ALL') {
-      urlparams.append('reg_status', this.r_status);
+      urlparams.append('product_reg_product__reg_product_reg_country__reg_status', this.p_status);
     }
     urlparams.append('page_size', this.pageSize.toString());
     if (this.search) {
@@ -246,7 +246,7 @@ export class ProductListComponent implements OnInit {
       urlparams.append('status', this.p_status);
     }
     if (this.r_status !== 'ALL') {
-      urlparams.append('reg_status', this.r_status);
+      urlparams.append('product_reg_product__reg_product_reg_country__reg_status', this.p_status);
     }
     urlparams.append('page_size', pageSize.toString());
     if (this.search) {
@@ -265,7 +265,7 @@ export class ProductListComponent implements OnInit {
       urlparams.append('status', this.p_status);
     }
     if (this.r_status !== 'ALL') {
-      urlparams.append('reg_status', this.r_status);
+      urlparams.append('product_reg_product__reg_product_reg_country__reg_status', this.r_status);
     }
     urlparams.append('page_size', this.pageSize.toString());
     if (this.search) {

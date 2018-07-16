@@ -29,6 +29,7 @@ import {UsersService} from './shared/users.service';
 import { ProductSupplierAddComponent } from './project/products/product-supplier-add/product-supplier-add.component';
 import { ProductSupplierEditComponent } from './project/products/product-supplier-edit/product-supplier-edit.component';
 import { ComboAddComponent } from './project/products/combo-add/combo-add.component';
+import { ComboNewaddComponent } from './project/products/combo-newadd/combo-newadd.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { ComboAddComponent } from './project/products/combo-add/combo-add.compon
     SupplierAddComponent,
     ProductSupplierAddComponent,
     ProductSupplierEditComponent,
-    ComboAddComponent
+    ComboAddComponent,
+    ComboNewaddComponent
   ],
   imports: [
     BrowserModule,
@@ -71,7 +73,8 @@ import { ComboAddComponent } from './project/products/combo-add/combo-add.compon
     ProductDetailComponent, // 商品详情
     ProductSupplierAddComponent, // 商品添加关联供应商
     ProductSupplierEditComponent, // 编辑关联供应商
-    ComboAddComponent, // 添加、编辑组合sku
+    ComboAddComponent, // 编辑组合sku
+    ComboNewaddComponent, // 添加组合sku
     ProductSearchComponent // 搜索产品并返回
   ],
   providers: [

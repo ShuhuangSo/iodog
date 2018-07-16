@@ -1,0 +1,163 @@
+<nz-spin [nzSpinning]="isSpinning">
+
+  <nz-tabset nzTabPosition="left">
+    <nz-tab nzTitle="基本信息">
+      <form nz-form [formGroup]="formModel">
+        <nz-form-item>
+          <nz-form-label nzRequired [nzSm]="4">
+            组合编码
+          </nz-form-label>
+          <nz-form-control [nzSm]="20" nzHasFeedback>
+            <input nz-input formControlName="combo_code" type="text">
+            <nz-form-explain *ngIf="getFormControl('combo_code').dirty && getFormControl('combo_code').errors">
+              <ng-container *ngIf="getFormControl('combo_code').hasError('required')">
+                请输入组合编码!
+              </ng-container>
+              <ng-container *ngIf="getFormControl('combo_code').hasError('duplicated')">
+                该编码已存在!
+              </ng-container>
+              <ng-container *ngIf="getFormControl('combo_code').hasError('maxlength')">
+                编码最大长度不超过30位
+              </ng-container>
+            </nz-form-explain>
+          </nz-form-control>
+
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="4">
+            组合名称
+          </nz-form-label>
+          <nz-form-control [nzSm]="20">
+            <input nz-input formControlName="combo_name" type="text">
+          </nz-form-control>
+        </nz-form-item>
+
+      </form>
+    </nz-tab>
+
+
+
+    <nz-tab nzTitle="虚拟组合SKU">
+      <nz-alert *ngIf="vsku_err_status" nzType="error" nzMessage="该虚拟sku已存在！"></nz-alert>
+      <!--虚拟sku-->
+      <nz-form-item>
+        <nz-form-label>
+          虚拟SKU列表（输入并回车新增）
+        </nz-form-label>
+      </nz-form-item>
+
+      <nz-tag
+        *ngFor="let tag of tags;"
+        nzMode = "closeable"
+        (nzAfterClose)="handleClose(tag)">
+        {{ sliceTagName(tag) }}
+      </nz-tag>
+
+      <button nz-button nzType="dashed" nzSize="small" *ngIf="!inputVisible" (click)="showInput()">
+        <i class="anticon anticon-plus"></i>添加虚拟SKU
+      </button>
+
+      <input
+        #inputElement
+        nz-input
+        nzSize="small"
+        *ngIf="inputVisible" type="text"
+        [(ngModel)]="inputValue"
+        style="width: 100px;"
+        (blur)="handleInputConfirm()"
+        (keydown.enter)="handleInputConfirm()">
+      <i class="anticon anticon-spin anticon-loading" *ngIf="vsku_loading"></i>
+    </nz-tab>
+
+
+
+    <nz-tab nzTitle="组合内产品">
+      <nz-alert *ngIf="add_err" nzType="error" [nzMessage]="err_contect"></nz-alert>
+      <form nz-form [nzLayout]="'inline'" [formGroup]="add_product_formModel">
+
+        <nz-form-item>
+          <nz-form-label>
+            产品SKU
+          </nz-form-label>
+          <nz-form-control>
+            <input nz-input formControlName="sku" type="text">
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label>
+            数量
+          </nz-form-label>
+          <nz-form-control>
+            <nz-input-number formControlName="quantity" type [nzMin]="1" [nzStep]="1"></nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button [nzLoading]="add_loading" nzType="primary" (click)="addSKU()">
+              +增加
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button nzType="default" (click)="searchProduct()">
+              <i class="anticon anticon-search"></i>查找SKU
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+
+      </form>
+      <nz-table #nzTable nzShowPagination="false" [nzData]="this.combo_pack_sku">
+
+        <thead>
+        <tr>
+          <th>缩略图</th>
+          <th>产品SKU编号*数量</th>
+          <th>产品名称</th>
+          <th>操作</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let data of nzTable.data">
+          <td>
+            <img src="http://placehold.it/40x40">
+          </td>
+          <td>
+            <div class="editable-cell">
+              <ng-container *ngIf="!data.edit">
+                <a (click)="editProduct(data.product_id)">{{data.sku}}</a>*{{data.quantity}}
+                <i class="anticon anticon-edit editable-cell-icon" (click)="startEdit(data.sku)"></i>
+              </ng-container>
+              <ng-container *ngIf="data.edit">
+                <nz-input-number [nzMin]="1" [nzStep]="1" [(ngModel)]="editCache_quantity"></nz-input-number>
+                <i class="anticon anticon-check editable-cell-icon-check" (click)="finishEdit(data.sku)"></i>
+              </ng-container>
+            </div>
+
+
+
+          </td>
+          <td>{{data.cn_name}}</td>
+          <td>
+            <nz-popconfirm [nzTitle]="'确认删除?'" (nzOnConfirm)="deleteSKU(data.sku)">
+              <a nz-popconfirm nz-tooltip="删除"><i class="anticon anticon-delete"></i></a>
+            </nz-popconfirm>
+
+          </td>
+        </tr>
+        </tbody>
+      </nz-table>
+    </nz-tab>
+  </nz-tabset>
+
+
+
+
+
+</nz-spin>
+

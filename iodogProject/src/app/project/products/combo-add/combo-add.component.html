@@ -3,26 +3,6 @@
     <nz-tabset nzTabPosition="left">
       <nz-tab nzTitle="基本信息">
         <form nz-form [formGroup]="formModel">
-        <nz-form-item *ngIf="!this.combo">
-          <nz-form-label nzRequired [nzSm]="4">
-            组合编码
-          </nz-form-label>
-          <nz-form-control [nzSm]="20" nzHasFeedback>
-            <input nz-input formControlName="combo_code" type="text">
-            <nz-form-explain *ngIf="getFormControl('combo_code').dirty && getFormControl('combo_code').errors">
-              <ng-container *ngIf="getFormControl('combo_code').hasError('required')">
-                请输入组合编码!
-              </ng-container>
-              <ng-container *ngIf="getFormControl('combo_code').hasError('duplicated')">
-                该供应商已存在!
-              </ng-container>
-              <ng-container *ngIf="getFormControl('combo_code').hasError('maxlength')">
-                编码最大长度不超过30位
-              </ng-container>
-            </nz-form-explain>
-          </nz-form-control>
-
-        </nz-form-item>
 
           <!--组合编码-->
           <nz-form-item *ngIf="this.combo">
@@ -140,7 +120,7 @@
             <td>
               <div class="editable-cell">
                   <ng-container *ngIf="!data.edit">
-                    {{data.sku}}*{{data.quantity}}
+                    <a (click)="editProduct(data.product_id)">{{data.sku}}</a>*{{data.quantity}}
                     <i class="anticon anticon-edit editable-cell-icon" (click)="startEdit(data.sku)"></i>
                   </ng-container>
                   <ng-container *ngIf="data.edit">
@@ -157,8 +137,6 @@
               <nz-popconfirm [nzTitle]="'确认删除?'" (nzOnConfirm)="deleteSKU(data.sku)">
                 <a nz-popconfirm nz-tooltip="删除"><i class="anticon anticon-delete"></i></a>
               </nz-popconfirm>
-
-              <a nz-tooltip="更换"><i class="anticon anticon-retweet"></i></a>
 
             </td>
           </tr>

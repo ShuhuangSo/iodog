@@ -1,0 +1,17 @@
+<nz-spin [nzSpinning]="isSpinning">
+  <form nz-form [formGroup]="formModel">
+    <!--产品状态-->
+    <nz-form-item >
+      <nz-form-label nzRequired nz-col [nzSm]="6">
+        产品状态
+      </nz-form-label>
+      <nz-form-control [nzSm]="8">
+        <nz-select formControlName="status">
+          <nz-option [nzLabel]="'正常销售'" [nzValue]="'ON_SALE'"></nz-option>
+          <nz-option [nzLabel]="'停售'" [nzValue]="'OFFLINE'"></nz-option>
+          <nz-option [nzLabel]="'清仓'" [nzValue]="'CLEAN'"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-spin>

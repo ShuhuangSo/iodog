@@ -6,6 +6,7 @@ import {ProductDisplaySettingComponent} from '../product-display-setting/product
 import {SupplierAddComponent} from '../supplier-add/supplier-add.component';
 import {ProductDetailComponent} from '../product-detail/product-detail.component';
 import {AddCountryComponent} from '../add-country/add-country.component';
+import {ProductBulkEditComponent} from '../product-bulk-edit/product-bulk-edit.component';
 
 @Component({
   selector: 'app-product-list',
@@ -360,6 +361,55 @@ export class ProductListComponent implements OnInit {
       if (result) {
         if (result.data === 'ok') {
           this.message.create('success', '注册成功！');
+          this.listFilter(); // 刷新数据
+          this.refreshStatus();
+        }
+      }
+    });
+  }
+
+  /**
+   * 批量编辑产品
+   * */
+  bulkEditProduct(): void {
+    const ids = []; // 获取已选中的产品id
+    this.product.forEach(value => {
+      if (value.checked) {
+        ids.push(value.id);
+      }
+    });
+    const modal = this.modalService.create({
+      nzTitle: `批量编辑产品(${ids.length})`,
+      nzMaskClosable: false,
+      nzClosable: false,
+      nzContent: ProductBulkEditComponent,
+      nzComponentParams: {
+        ids: ids
+      },
+      nzFooter: [
+        {
+          label: '取消',
+          shape: 'default',
+          onClick: () => modal.destroy()
+        },
+        {
+          label: '确认',
+          type: 'primary',
+          loading: ((componentInstance) => {
+            return componentInstance.isSpinning;
+          }),
+          onClick: (componentInstance) => {
+            componentInstance.destroyModal();
+          }        },
+      ]
+    });
+
+    // 模态框返回数据
+    modal.afterClose.subscribe((result) => {
+      // 如果正常返回，刷新注册产品数据
+      if (result) {
+        if (result.data === 'ok') {
+          this.message.create('success', '修改成功！');
           this.listFilter(); // 刷新数据
           this.refreshStatus();
         }

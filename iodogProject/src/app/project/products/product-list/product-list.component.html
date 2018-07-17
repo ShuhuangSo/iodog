@@ -73,10 +73,10 @@
     <tr *ngFor="let data of basicTable.data">
       <td nzShowCheckbox [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatus($event)"></td>
       <td *ngIf="display.image">
-        <img src="http://placehold.it/50x50">
+        <img (click)="editProduct(data.id)" src="http://placehold.it/50x50">
       </td>
       <td>
-          <div>{{data.sku}}</div>
+        <div><a (click)="editProduct(data.id)">{{data.sku}}</a></div>
           <div>{{nameFormat(data.cn_name,30)}}</div>
       </td>
 
@@ -84,7 +84,7 @@
         <nz-tag [nzColor]="'green'" *ngSwitchCase="'ON_SALE'">正常</nz-tag>
         <nz-tag [nzColor]="'red'" *ngSwitchCase="'OFFLINE'">停售</nz-tag>
         <nz-tag [nzColor]="'orange'" *ngSwitchCase="'CLEAN'">清仓中</nz-tag>
-        <nz-tag [nzColor]="'blue'" *ngSwitchCase="'UNKNOW'">自动创建</nz-tag>
+        <nz-tag [nzColor]="'blue'" *ngSwitchCase="'UNKNOWN'">自动创建</nz-tag>
       </td>
 
       <td *ngIf="display.reg_status" >
@@ -145,7 +145,7 @@
   <div class="operating">
 
     <button nz-button [nzType]="'primary'" [disabled]="disabledButton"><i class="anticon anticon-barcode"></i>打印标签</button>
-    <button nz-button [nzType]="'primary'" [disabled]="disabledButton"><i class="anticon anticon-edit"></i>批量编辑</button>
+    <button nz-button [nzType]="'primary'" [disabled]="disabledButton" (click)="bulkEditProduct()"><i class="anticon anticon-edit"></i>批量编辑</button>
     <button nz-button [nzType]="'primary'" [disabled]="disabledButton" (click)="bulkRegAddCountry()"><i class="anticon anticon-idcard"></i>批量注册</button>
     <button nz-button [nzType]="'danger'" [disabled]="disabledButton" (click)="deleteConfirm()"><i class="anticon anticon-delete"></i>删除</button>
 
@@ -164,9 +164,6 @@
       </ul>
     </nz-dropdown>
 
-    <button nz-button [disabled]="disabledButton" [nzType]="'primary'" [nzLoading]="operating" (click)="operateData()">
-      Reload{{checkedNumber}}
-    </button>
     <span style="margin-left: 8px;" *ngIf="checkedNumber">共选中 {{checkedNumber}} 项</span>
   </div>
 </ng-template>

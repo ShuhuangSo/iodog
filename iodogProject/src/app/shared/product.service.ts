@@ -62,6 +62,13 @@ export class ProductService {
   }
 
   /**
+   * 批量编辑产品
+   * */
+  bulkEditProduct(params: any): Observable<any> {
+    return this.http.patch(`api/products-bulk/`, JSON.stringify(params), {observe: 'response'});
+  }
+
+  /**
    * 检查虚拟sku(包含组合虚拟sku)是否存在
    * */
   checkVsku(params: any): Observable<any> {

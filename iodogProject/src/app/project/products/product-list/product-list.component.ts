@@ -7,6 +7,7 @@ import {SupplierAddComponent} from '../supplier-add/supplier-add.component';
 import {ProductDetailComponent} from '../product-detail/product-detail.component';
 import {AddCountryComponent} from '../add-country/add-country.component';
 import {ProductBulkEditComponent} from '../product-bulk-edit/product-bulk-edit.component';
+import {UploadsComponent} from '../../uploads/uploads.component';
 
 @Component({
   selector: 'app-product-list',
@@ -462,6 +463,40 @@ export class ProductListComponent implements OnInit {
       if (result) {
         if (result.data === 'ok') {
           this.message.create('success', '注册成功！');
+          this.listFilter(); // 刷新数据
+          this.refreshStatus();
+        }
+      }
+    });
+  }
+
+  /**
+   * 模板批量导入产品
+   * */
+  bulkUploadProduct(): void {
+    const modal = this.modalService.create({
+      nzTitle: `批量导入产品`,
+      nzMaskClosable: false,
+      nzClosable: true,
+      nzContent: UploadsComponent,
+      nzComponentParams: {
+        type: 'PRODUCT'
+      },
+      nzFooter: [
+        {
+          label: '关闭',
+          shape: 'default',
+          onClick: () => modal.destroy()
+        },
+      ]
+    });
+
+    // 模态框返回数据
+    modal.afterClose.subscribe((result) => {
+      // 如果正常返回，刷新注册产品数据
+      if (result) {
+        if (result.data === 'ok') {
+          this.message.create('success', '修改成功！');
           this.listFilter(); // 刷新数据
           this.refreshStatus();
         }

@@ -1,0 +1,31 @@
+<input type="file" (change)="getFile($event)" multiple="false" /><br>
+<button nz-button [nzType]="'primary'" [nzLoading]="uploading" (click)="fileToJson(target_file)" [disabled]="file_valid" style="margin-top: 16px">
+  {{ uploading ? '正在导入中' : '开始上传' }}
+</button>
+
+<nz-alert *ngIf="success_count > 0" nzType="success" nzMessage="成功：{{success_count}}" nzShowIcon></nz-alert>
+<nz-alert *ngIf="fail_count > 0" nzType="error" nzMessage="失败：{{fail_count}}" nzShowIcon></nz-alert>
+
+<nz-table
+  *ngIf="fail_count > 0"
+  #basicTable
+  nzSize="small"
+  [nzShowTotal] = "totalItemsTemp"
+  [nzData]="err_list">
+  <thead>
+  <tr>
+    <th>SKU</th>
+    <th>错误内容</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of basicTable.data">
+    <td>{{data.sku}}</td>
+    <td>{{data.msg}}</td>
+  </tr>
+  </tbody>
+</nz-table>
+
+<ng-template #totalItemsTemp let-total>
+  总共 {{total}} 条
+</ng-template>

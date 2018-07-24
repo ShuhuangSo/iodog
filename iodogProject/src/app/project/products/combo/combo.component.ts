@@ -5,6 +5,7 @@ import {ListDisplaySettingComponent} from '../../list-display-setting/list-displ
 import {ComboAddComponent} from '../combo-add/combo-add.component';
 import {ProductDetailComponent} from '../product-detail/product-detail.component';
 import {ComboNewaddComponent} from '../combo-newadd/combo-newadd.component';
+import {UploadsComponent} from '../../uploads/uploads.component';
 
 @Component({
   selector: 'app-combo',
@@ -393,6 +394,40 @@ export class ComboComponent implements OnInit {
           );
         }
         this.refreshStatus();
+      }
+    });
+  }
+
+  /**
+   * 模板批量导入组合
+   * */
+  bulkUploadCombo(): void {
+    const modal = this.modalService.create({
+      nzTitle: `批量导入组合`,
+      nzMaskClosable: false,
+      nzClosable: true,
+      nzContent: UploadsComponent,
+      nzComponentParams: {
+        type: 'COMBO'
+      },
+      nzFooter: [
+        {
+          label: '关闭',
+          shape: 'default',
+          onClick: () => modal.destroy()
+        },
+      ]
+    });
+
+    // 模态框返回数据
+    modal.afterClose.subscribe((result) => {
+      // 如果正常返回，刷新注册产品数据
+      if (result) {
+        if (result.data === 'ok') {
+          this.message.create('success', '修改成功！');
+          this.listFilter(); // 刷新数据
+          this.refreshStatus();
+        }
       }
     });
   }

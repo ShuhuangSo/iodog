@@ -49,7 +49,6 @@ export class UploadsComponent implements OnInit {
 
   // 转成Json
   fileToJson(target) {
-    this.uploading = true;
     const reader: FileReader = new FileReader();
     reader.onload = (e: any) => {
       /* read workbook */
@@ -66,6 +65,14 @@ export class UploadsComponent implements OnInit {
         console.log(JSON.stringify(data))
         this.uploadProduct(data);
       }
+      if (this.type === 'VSKU') {
+        console.log(JSON.stringify(data))
+        this.uploadVsku(data);
+      }
+      if (this.type === 'COMBO') {
+        console.log(JSON.stringify(data))
+        this.uploadCombo(data);
+      }
     };
 
       reader.readAsBinaryString(target.files[0]);
@@ -79,6 +86,52 @@ export class UploadsComponent implements OnInit {
   uploadProduct(data): void {
     this.uploading = true;
     this.productService.bulkAddProduct(data).subscribe(
+      val => {
+        if (val.status === 201) {
+          this.err_list = val.body.err_list;
+          this.fail_count = val.body.fail_count;
+          this.success_count = val.body.success_count;
+        } else {
+          console.log(val);
+        }
+      },
+      err => {
+        console.log(err);
+        this.uploading = false;
+      },
+      () => this.uploading = false
+    );
+  }
+
+  /**
+   * 批量导入虚拟sku
+   * */
+  uploadVsku(data): void {
+    this.uploading = true;
+    this.productService.bulkAddVsku(data).subscribe(
+      val => {
+        if (val.status === 201) {
+          this.err_list = val.body.err_list;
+          this.fail_count = val.body.fail_count;
+          this.success_count = val.body.success_count;
+        } else {
+          console.log(val);
+        }
+      },
+      err => {
+        console.log(err);
+        this.uploading = false;
+      },
+      () => this.uploading = false
+    );
+  }
+
+  /**
+   * 批量导入组合
+   * */
+  uploadCombo(data): void {
+    this.uploading = true;
+    this.productService.bulkAddCombo(data).subscribe(
       val => {
         if (val.status === 201) {
           this.err_list = val.body.err_list;

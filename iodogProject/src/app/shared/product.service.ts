@@ -76,6 +76,20 @@ export class ProductService {
   }
 
   /**
+   * 模板批量导入虚拟sku
+   * */
+  bulkAddVsku(form: any): Observable<any> {
+    return this.http.post('api/import-vsku/', JSON.stringify(form), {observe: 'response'});
+  }
+
+  /**
+   * 模板批量导入产品
+   * */
+  bulkAddCombo(form: any): Observable<any> {
+    return this.http.post('api/import-combo/', JSON.stringify(form), {observe: 'response'});
+  }
+
+  /**
    * 检查虚拟sku(包含组合虚拟sku)是否存在
    * */
   checkVsku(params: any): Observable<any> {

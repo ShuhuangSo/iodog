@@ -471,7 +471,7 @@ export class ProductListComponent implements OnInit {
   }
 
   /**
-   * 模板批量导入产品
+   * 模板批量导入SKU
    * */
   bulkUploadProduct(): void {
     const modal = this.modalService.create({
@@ -481,6 +481,40 @@ export class ProductListComponent implements OnInit {
       nzContent: UploadsComponent,
       nzComponentParams: {
         type: 'PRODUCT'
+      },
+      nzFooter: [
+        {
+          label: '关闭',
+          shape: 'default',
+          onClick: () => modal.destroy()
+        },
+      ]
+    });
+
+    // 模态框返回数据
+    modal.afterClose.subscribe((result) => {
+      // 如果正常返回，刷新注册产品数据
+      if (result) {
+        if (result.data === 'ok') {
+          this.message.create('success', '修改成功！');
+          this.listFilter(); // 刷新数据
+          this.refreshStatus();
+        }
+      }
+    });
+  }
+
+  /**
+   * 模板批量导入虚拟SKU
+   * */
+  bulkUploadVsku(): void {
+    const modal = this.modalService.create({
+      nzTitle: `批量导入虚拟SKU`,
+      nzMaskClosable: false,
+      nzClosable: true,
+      nzContent: UploadsComponent,
+      nzComponentParams: {
+        type: 'VSKU'
       },
       nzFooter: [
         {

@@ -486,7 +486,9 @@ export class ProductListComponent implements OnInit {
         {
           label: '关闭',
           shape: 'default',
-          onClick: () => modal.destroy()
+          onClick: (componentInstance) => {
+            componentInstance.destroyModal();
+          }
         },
       ]
     });
@@ -496,7 +498,6 @@ export class ProductListComponent implements OnInit {
       // 如果正常返回，刷新注册产品数据
       if (result) {
         if (result.data === 'ok') {
-          this.message.create('success', '修改成功！');
           this.listFilter(); // 刷新数据
           this.refreshStatus();
         }
@@ -520,7 +521,9 @@ export class ProductListComponent implements OnInit {
         {
           label: '关闭',
           shape: 'default',
-          onClick: () => modal.destroy()
+          onClick: (componentInstance) => {
+            componentInstance.destroyModal();
+          }
         },
       ]
     });
@@ -530,7 +533,6 @@ export class ProductListComponent implements OnInit {
       // 如果正常返回，刷新注册产品数据
       if (result) {
         if (result.data === 'ok') {
-          this.message.create('success', '修改成功！');
           this.listFilter(); // 刷新数据
           this.refreshStatus();
         }

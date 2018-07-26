@@ -62,16 +62,20 @@ export class UploadsComponent implements OnInit {
       /* save data */
       const data = XLSX.utils.sheet_to_json(ws, {header: 1, blankrows: false});
       if (this.type === 'PRODUCT') {
-        console.log(JSON.stringify(data))
         this.uploadProduct(data);
       }
       if (this.type === 'VSKU') {
-        console.log(JSON.stringify(data))
         this.uploadVsku(data);
       }
       if (this.type === 'COMBO') {
-        console.log(JSON.stringify(data))
         this.uploadCombo(data);
+      }
+      if (this.type === 'VCOMBO') {
+        this.uploadVcombo(data);
+      }
+      if (this.type === 'SUPPLIER') {
+        // console.log(JSON.stringify(data))
+        this.uploadSupplier(data);
       }
     };
 
@@ -149,6 +153,54 @@ export class UploadsComponent implements OnInit {
     );
   }
 
-  destroyModal(): void {}
+  /**
+   * 批量导入虚拟组合
+   * */
+  uploadVcombo(data): void {
+    this.uploading = true;
+    this.productService.bulkAddVcombo(data).subscribe(
+      val => {
+        if (val.status === 201) {
+          this.err_list = val.body.err_list;
+          this.fail_count = val.body.fail_count;
+          this.success_count = val.body.success_count;
+        } else {
+          console.log(val);
+        }
+      },
+      err => {
+        console.log(err);
+        this.uploading = false;
+      },
+      () => this.uploading = false
+    );
+  }
+
+  /**
+   * 批量导入供应商
+   * */
+  uploadSupplier(data): void {
+    this.uploading = true;
+    this.productService.bulkAddSupplier(data).subscribe(
+      val => {
+        if (val.status === 201) {
+          this.err_list = val.body.err_list;
+          this.fail_count = val.body.fail_count;
+          this.success_count = val.body.success_count;
+        } else {
+          console.log(val);
+        }
+      },
+      err => {
+        console.log(err);
+        this.uploading = false;
+      },
+      () => this.uploading = false
+    );
+  }
+
+  destroyModal(): void {
+    this.modal.destroy({ data: this.success_count > 0 ? 'ok' : null});
+  }
 
 }

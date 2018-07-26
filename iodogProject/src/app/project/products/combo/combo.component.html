@@ -81,7 +81,7 @@
 
         <td *ngIf="i===0 && checkDisplay('combo_cost')"
             [attr.rowspan]="data.combo_pack_sku.length">
-          {{data.cost}}元
+          {{data.cost | number:'1.2-2'}}元
         </td>
 
         <td *ngIf="i===0 && checkDisplay('combo_weight')" [attr.rowspan]="data.combo_pack_sku.length">{{data.weight}}g</td>
@@ -149,7 +149,7 @@
         </button>
         <ul nz-menu>
           <li nz-menu-item (click)="bulkUploadCombo()"><i class="anticon anticon-cloud-upload-o"></i>&nbsp;模板导入新增组合SKU</li>
-          <li nz-menu-item><i class="anticon anticon-cloud-upload-o"></i>&nbsp;模板导入组合虚拟SKU</li>
+          <li nz-menu-item (click)="bulkUploadVcombo()"><i class="anticon anticon-cloud-upload-o"></i>&nbsp;模板导入组合虚拟SKU</li>
           <li nz-menu-item><i class="anticon anticon-cloud-download-o"></i>&nbsp;导出组合SKU</li>
         </ul>
       </nz-dropdown>

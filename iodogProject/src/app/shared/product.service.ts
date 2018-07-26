@@ -83,10 +83,24 @@ export class ProductService {
   }
 
   /**
-   * 模板批量导入产品
+   * 模板批量导入组合
    * */
   bulkAddCombo(form: any): Observable<any> {
     return this.http.post('api/import-combo/', JSON.stringify(form), {observe: 'response'});
+  }
+
+  /**
+   * 模板批量导入虚拟组合
+   * */
+  bulkAddVcombo(form: any): Observable<any> {
+    return this.http.post('api/import-vcombo/', JSON.stringify(form), {observe: 'response'});
+  }
+
+  /**
+   * 模板批量导入供应商
+   * */
+  bulkAddSupplier(form: any): Observable<any> {
+    return this.http.post('api/import-supplier/', JSON.stringify(form), {observe: 'response'});
   }
 
   /**

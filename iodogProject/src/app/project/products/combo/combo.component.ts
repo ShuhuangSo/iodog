@@ -414,7 +414,9 @@ export class ComboComponent implements OnInit {
         {
           label: '关闭',
           shape: 'default',
-          onClick: () => modal.destroy()
+          onClick: (componentInstance) => {
+            componentInstance.destroyModal();
+          }
         },
       ]
     });
@@ -424,7 +426,41 @@ export class ComboComponent implements OnInit {
       // 如果正常返回，刷新注册产品数据
       if (result) {
         if (result.data === 'ok') {
-          this.message.create('success', '修改成功！');
+          this.listFilter(); // 刷新数据
+          this.refreshStatus();
+        }
+      }
+    });
+  }
+
+  /**
+   * 模板批量导入组合虚拟sku
+   * */
+  bulkUploadVcombo(): void {
+    const modal = this.modalService.create({
+      nzTitle: `批量导入组合虚拟SKU`,
+      nzMaskClosable: false,
+      nzClosable: true,
+      nzContent: UploadsComponent,
+      nzComponentParams: {
+        type: 'VCOMBO'
+      },
+      nzFooter: [
+        {
+          label: '关闭',
+          shape: 'default',
+          onClick: (componentInstance) => {
+            componentInstance.destroyModal();
+          }
+        },
+      ]
+    });
+
+    // 模态框返回数据
+    modal.afterClose.subscribe((result) => {
+      // 如果正常返回，刷新注册产品数据
+      if (result) {
+        if (result.data === 'ok') {
           this.listFilter(); // 刷新数据
           this.refreshStatus();
         }

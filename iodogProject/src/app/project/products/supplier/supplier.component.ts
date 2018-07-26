@@ -3,6 +3,7 @@ import {ProductService, Supplier} from '../../../shared/product.service';
 import {NzMessageService, NzModalService} from 'ng-zorro-antd';
 import {ListDisplaySettingComponent} from '../../list-display-setting/list-display-setting.component';
 import {SupplierAddComponent} from '../supplier-add/supplier-add.component';
+import {UploadsComponent} from '../../uploads/uploads.component';
 
 @Component({
   selector: 'app-supplier',
@@ -271,6 +272,41 @@ export class SupplierComponent implements OnInit {
         this.message.create('error', `请求异常 ${err.statusText}`);
         this.operating = false;
       });
+  }
+
+  /**
+   * 模板批量导入供应商
+   * */
+  bulkUploadSupplier(): void {
+    const modal = this.modalService.create({
+      nzTitle: `批量导入供应商`,
+      nzMaskClosable: false,
+      nzClosable: true,
+      nzContent: UploadsComponent,
+      nzComponentParams: {
+        type: 'SUPPLIER'
+      },
+      nzFooter: [
+        {
+          label: '关闭',
+          shape: 'default',
+          onClick: (componentInstance) => {
+            componentInstance.destroyModal();
+          }
+        },
+      ]
+    });
+
+    // 模态框返回数据
+    modal.afterClose.subscribe((result) => {
+      // 如果正常返回，刷新注册产品数据
+      if (result) {
+        if (result.data === 'ok') {
+          this.listFilter(); // 刷新数据
+          this.refreshStatus();
+        }
+      }
+    });
   }
 
   /**

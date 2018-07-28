@@ -4,6 +4,7 @@ import {NzMessageService, NzModalService} from 'ng-zorro-antd';
 import {ListDisplaySettingComponent} from '../../list-display-setting/list-display-setting.component';
 import {SupplierAddComponent} from '../supplier-add/supplier-add.component';
 import {UploadsComponent} from '../../uploads/uploads.component';
+import {SupplierProductComponent} from '../supplier-product/supplier-product.component';
 
 @Component({
   selector: 'app-supplier',
@@ -239,6 +240,39 @@ export class SupplierComponent implements OnInit {
   }
 
   /**
+   * 供应商关联产品列表
+   * */
+  supplierProducts(id: number): void {
+    const modal = this.modalService.create({
+      nzTitle: '供应商关联产品列表',
+      nzMaskClosable: false,
+      nzClosable: true,
+      nzWidth: '90%',
+      nzStyle: {top: '20px'},
+      nzContent: SupplierProductComponent,
+      nzComponentParams: {
+        supplier_id: id,
+      },
+      nzFooter: [
+        {
+          label: '关闭',
+          shape: 'default',
+          onClick: () => modal.destroy()
+        },
+      ]
+    });
+
+    // 模态框返回数据
+    modal.afterClose.subscribe((result) => {
+      if (result) {
+        this.listFilter(); // 刷新列表数据
+        console.log('1：' + result);
+      }
+    });
+
+  }
+
+  /**
    * 供应商筛选、搜索
    * */
   listFilter() {
@@ -314,30 +348,31 @@ export class SupplierComponent implements OnInit {
    * */
   bulkChangeStatus(status: boolean) {
     const ids = [];
-    this.supplier.forEach(value => {
-      if (value.checked) {
-        ids.push(value.id);
-      }
-      value.checked = false;
-    });
-    const params = new BulkParams(ids, status);
-    this.operating = true;
-    this.productService.bulkChangeSupplierStatus(params).subscribe(
-      val => {
-        console.log(val.status);
-        if (val.status === 200) {
-          this.message.create('success', !status ? '供应商已停用！' : '供应商已启用！');
-          this.operating = false;
-          this.listFilter(); // 刷新数据
-        } else {
-          this.message.create('error', `请求异常 ${val.status}`);
+    if (ids.length > 0) {
+      this.supplier.forEach(value => {
+        if (value.checked) {
+          ids.push(value.id);
         }
-      },
-      err => {
-        this.message.create('error', `请求异常 ${err.statusText}`);
-        this.operating = false;
+        value.checked = false;
       });
-    this.refreshStatus();
+      const params = new BulkParams(ids, status);
+      this.operating = true;
+      this.productService.bulkChangeSupplierStatus(params).subscribe(
+        val => {
+          if (val.status === 200) {
+            this.message.create('success', !status ? '供应商已停用！' : '供应商已启用！');
+            this.operating = false;
+            this.listFilter(); // 刷新数据
+          } else {
+            this.message.create('error', `请求异常 ${val.status}`);
+          }
+        },
+        err => {
+          this.message.create('error', `请求异常 ${err.statusText}`);
+          this.operating = false;
+        });
+      this.refreshStatus();
+    }
   }
 
   /**
@@ -348,9 +383,9 @@ export class SupplierComponent implements OnInit {
       nzTitle: '<i>是否确认要删除?</i>',
       nzContent: '<b>一旦删除将无法恢复</b>',
       nzOnOk: () => {
-        this.operating = true;
 
           if (id) {  // 单个删除
+            this.operating = true;
             this.productService.deleteSupplier(id).subscribe(
               val => {
                 console.log(val.status);
@@ -375,23 +410,25 @@ export class SupplierComponent implements OnInit {
               }
               value.checked = false;
             });
-            console.log(ids);
-            this.productService.bulkDeleteSupplier(ids).subscribe(
-              val => {
-                console.log(val.status);
-                if (val.status === 204) {
-                  this.message.create('success', '删除成功！');
-                  this.listFilter(); // 刷新数据
-                } else {
-                  this.message.create('error', `请求异常 ${val.statusText}`);
+            if (ids.length > 0) {
+              this.operating = true;
+              this.productService.bulkDeleteSupplier(ids).subscribe(
+                val => {
+                  console.log(val.status);
+                  if (val.status === 204) {
+                    this.message.create('success', '删除成功！');
+                    this.listFilter(); // 刷新数据
+                  } else {
+                    this.message.create('error', `请求异常 ${val.statusText}`);
+                  }
+                  this.operating = false;
+                },
+                err => {
+                  this.message.create('error', `请求异常 ${err.statusText}`);
+                  this.operating = false;
                 }
-                this.operating = false;
-              },
-              err => {
-                this.message.create('error', `请求异常 ${err.statusText}`);
-                this.operating = false;
-              }
-            );
+              );
+            }
           }
           this.refreshStatus();
       }

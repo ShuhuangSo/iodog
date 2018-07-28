@@ -74,6 +74,7 @@ import { UploadsComponent } from './project/uploads/uploads.component';
     ProductDisplaySettingComponent, // 产品列表自定义显示
     ListDisplaySettingComponent, // 自定义显示
     SupplierAddComponent, // 添加、编辑供应商
+    SupplierProductComponent, // 供应商产品列表
     ProductDetailComponent, // 商品详情
     ProductSupplierAddComponent, // 商品添加关联供应商
     ProductSupplierEditComponent, // 编辑关联供应商

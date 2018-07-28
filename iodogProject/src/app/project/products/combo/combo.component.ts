@@ -324,22 +324,24 @@ export class ComboComponent implements OnInit {
       value.checked = false;
     });
 
-    this.operating = true;
-    this.productService.bulkChangeCombopackStatus({'ids': ids, 'combo_status': status}).subscribe(
-      val => {
-        if (val.status === 200) {
-          this.message.create('success', !status ? '组合已停用！' : '组合已启用！');
+    if (ids.length > 0) {
+      this.operating = true;
+      this.productService.bulkChangeCombopackStatus({'ids': ids, 'combo_status': status}).subscribe(
+        val => {
+          if (val.status === 200) {
+            this.message.create('success', !status ? '组合已停用！' : '组合已启用！');
+            this.operating = false;
+            this.listFilter(); // 刷新数据
+          } else {
+            this.message.create('error', `请求异常 ${val.status}`);
+          }
+        },
+        err => {
+          this.message.create('error', `请求异常 ${err.statusText}`);
           this.operating = false;
-          this.listFilter(); // 刷新数据
-        } else {
-          this.message.create('error', `请求异常 ${val.status}`);
-        }
-      },
-      err => {
-        this.message.create('error', `请求异常 ${err.statusText}`);
-        this.operating = false;
-      });
-    this.refreshStatus();
+        });
+      this.refreshStatus();
+    }
   }
 
   /**
@@ -350,9 +352,9 @@ export class ComboComponent implements OnInit {
       nzTitle: '<i>是否确认要删除?</i>',
       nzContent: '<b>一旦删除将无法恢复</b>',
       nzOnOk: () => {
-        this.operating = true;
 
         if (id) {  // 单个删除
+          this.operating = true;
           this.productService.deleteCombopack(id).subscribe(
             val => {
               if (val.status === 204) {
@@ -376,22 +378,24 @@ export class ComboComponent implements OnInit {
             }
             value.checked = false;
           });
-          console.log(ids);
-          this.productService.bulkDeleteCombopack(ids).subscribe(
-            val => {
-              if (val.status === 204) {
-                this.message.create('success', '删除成功！');
-                this.listFilter(); // 刷新数据
-              } else {
-                this.message.create('error', `请求异常 ${val.statusText}`);
+          if (ids.length > 0) {
+            this.operating = true;
+            this.productService.bulkDeleteCombopack(ids).subscribe(
+              val => {
+                if (val.status === 204) {
+                  this.message.create('success', '删除成功！');
+                  this.listFilter(); // 刷新数据
+                } else {
+                  this.message.create('error', `请求异常 ${val.statusText}`);
+                }
+                this.operating = false;
+              },
+              err => {
+                this.message.create('error', `请求异常 ${err.statusText}`);
+                this.operating = false;
               }
-              this.operating = false;
-            },
-            err => {
-              this.message.create('error', `请求异常 ${err.statusText}`);
-              this.operating = false;
-            }
-          );
+            );
+          }
         }
         this.refreshStatus();
       }

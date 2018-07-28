@@ -267,16 +267,16 @@ export class ProductListComponent implements OnInit {
       nzTitle: '<i>是否确认要删除?</i>',
       nzContent: '<b>一旦删除将无法恢复</b>',
       nzOnOk: () => {
-        this.operating = true;
 
         if (id) {  // 单个删除
+          this.operating = true;
           this.productService.deleteProduct(id).subscribe(
             val => {
               if (val.status === 204) {
                 this.message.create('success', '删除成功！');
                 this.listFilter(); // 刷新数据
               } else {
-                this.message.create('error', `请求异常 ${val.statusText}`);
+                this.message.create('error', val.body.err);
               }
               this.operating = false;
             },
@@ -293,21 +293,27 @@ export class ProductListComponent implements OnInit {
             }
             value.checked = false;
           });
-          this.productService.bulkDeleteProduct(ids).subscribe(
-            val => {
-              if (val.status === 204) {
-                this.message.create('success', '删除成功！');
-                this.listFilter(); // 刷新数据
-              } else {
-                this.message.create('error', `请求异常 ${val.statusText}`);
+          if (ids.length > 0) {
+            this.operating = true;
+            this.productService.bulkDeleteProduct(ids).subscribe(
+              val => {
+                if (val.status === 200) {
+                  if (val.body.length > 0) {
+                    console.log(val)
+                    this.message.create('error', '有SKU已绑定在组合中，需要解除绑定才能删除');
+                  } else {
+                    this.message.create('success', '删除成功！');
+                  }
+                  this.listFilter(); // 刷新数据
+                }
+                this.operating = false;
+              },
+              err => {
+                this.message.create('error', `请求异常 ${err.statusText}`);
+                this.operating = false;
               }
-              this.operating = false;
-            },
-            err => {
-              this.message.create('error', `请求异常 ${err.statusText}`);
-              this.operating = false;
-            }
-          );
+            );
+          }
         }
         this.refreshStatus();
       }

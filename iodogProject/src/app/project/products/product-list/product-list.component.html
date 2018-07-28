@@ -104,7 +104,7 @@
           <!--<div>US: <nz-badge nzStatus="processing" nzText="待审核"></nz-badge></div>-->
 
       </td>
-      <td *ngIf="display.cost">{{data.cost | number:'1.2-2'}}</td>
+      <td *ngIf="display.cost">{{data.cost}}</td>
       <td *ngIf="display.weight">{{data.weight}}</td>
       <td *ngIf="display.supplier">
         <div *ngFor="let sup of data.product_sup_product">

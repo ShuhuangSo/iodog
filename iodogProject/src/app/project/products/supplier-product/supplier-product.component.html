@@ -1,3 +1,134 @@
-<p>
-  supplier-product works!
-</p>
+<div class="search">
+  <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+    <input [(ngModel)]='search' (keyup.enter)="listFilter()" type="text" nz-input placeholder="SKU编码 | 产品名称">
+  </nz-input-group>
+  <ng-template #suffixIconButton>
+    <i class="anticon anticon-close-circle" (click)="cleanSearch()" *ngIf="search"></i>
+    <button nz-button nzType="primary" nzSearch (click)="listFilter()"><i class="anticon anticon-search"></i></button>
+  </ng-template>
+</div>
+
+<div class="search">
+  <nz-radio-group
+    [(ngModel)]='primary_supplier'
+    (ngModelChange)="listFilter()"
+    [nzSize]="'small'">
+    <label nz-radio-button nzValue="ALL">全部</label>
+    <label nz-radio-button nzValue="true">默认供应商</label>
+    <label nz-radio-button nzValue="false">非默认</label>
+  </nz-radio-group>
+</div>
+
+<nz-table #basicTable
+          [nzScroll]="{ y: '400px' }"
+          nzShowSizeChanger="true"
+          [nzLoading] = "operating"
+          nzLoadingDelay="500"
+          [nzTitle] = "titleTemp"
+          [nzShowTotal] = "totalItemsTemp"
+          [nzNoResult] = "noResultTemp"
+          nzFrontPagination="false"
+          [nzPageSizeOptions]="[20,50,100]"
+          [nzTotal]="totalCount"
+          (nzPageSizeChange) = "pageSizeChange($event)"
+          (nzPageIndexChange) = "pageIndexChange($event)"
+          (nzCurrentPageDataChange)="currentPageDataChange($event)"
+          [nzData]="supplier_product" [(nzPageSize)]=pageSize>
+
+  <thead>
+  <tr>
+    <th nzWidth="30px"
+        nzShowCheckbox
+        [(nzChecked)]="allChecked"
+        [nzIndeterminate]="indeterminate"
+        (nzCheckedChange)="checkAll($event)"
+    >
+    </th>
+    <th nzWidth="100px">图片</th>
+    <th nzWidth="300px">SKU/产品名称</th>
+    <th *ngIf="checkDisplay('buy_url')">采购链接</th>
+    <th nzWidth="150px" *ngIf="checkDisplay('primary_supplier')">默认供应商</th>
+    <th nzWidth="150px" *ngIf="checkDisplay('create_time')">创建时间</th>
+    <th nzWidth="100px">操作</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <tr *ngFor="let data of basicTable.data">
+    <td nzShowCheckbox [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatus($event)"></td>
+    <td>
+      <img src="http://placehold.it/50x50">
+    </td>
+    <td>
+      <div>{{data.sku}}</div>
+      <div>{{data.cn_name}}</div>
+    </td>
+
+    <td *ngIf="checkDisplay('buy_url')">
+      <a *ngIf="data.buy_url" target="_blank" rel="noopener noreferrer" href="{{data.buy_url}}">链接</a>
+      <div *ngIf="!data.buy_url">--</div>
+    </td>
+
+    <td *ngIf="checkDisplay('primary_supplier')">
+      <nz-tag [nzColor]="'blue'" *ngIf="data.primary_supplier">默认</nz-tag>
+    </td>
+    <td *ngIf="checkDisplay('create_time')">
+      <div>{{data.create_time | date:'yyyy-MM-dd'}}</div>
+      <div>{{data.create_time | date:'HH:mm:ss'}}</div>
+    </td>
+    <td>
+      <nz-dropdown [nzTrigger]="'click'">
+        <button nz-button nz-dropdown [nzSize]="'small'"><span>处理</span> <i class="anticon anticon-down"></i></button>
+
+        <ul nz-menu>
+          <li nz-menu-item><i class="anticon anticon-edit"></i>&nbsp;编辑</li>
+          <li nz-menu-item class="red"><a (click)="deleteSupplierProduct(data.id)"><i class="anticon anticon-delete"></i>&nbsp;解除关联</a></li>
+        </ul>
+      </nz-dropdown>
+    </td>
+  </tr>
+  </tbody>
+</nz-table>
+
+<ng-template #totalItemsTemp let-total>
+  总共 {{total}} 个产品
+</ng-template>
+
+<ng-template #noResultTemp>
+  <i class="fa fa-child fa-5x"></i>木有！
+</ng-template>
+
+<ng-template #titleTemp>
+  <div class="operating">
+
+    <button nz-button [nzType]="'primary'" ><i class="anticon anticon-plus"></i>新增供应商</button>
+    <nz-dropdown [nzTrigger]="'click'">
+      <button nz-button nz-dropdown >
+        <i class="anticon anticon-edit"></i>
+        批量操作
+        <i class="anticon anticon-down"></i>
+      </button>
+      <ul nz-menu>
+        <li nz-menu-item [nzDisabled]="disabledButton" (click)="bulkChangeStatus(true)"><i class="anticon anticon-smile-o"></i>&nbsp;批量启用</li>
+        <li nz-menu-item [nzDisabled]="disabledButton" (click)="bulkChangeStatus(false)"><i class="anticon anticon-frown-o"></i>&nbsp;批量停用</li>
+        <li nz-menu-item [nzDisabled]="disabledButton" (click)="deleteSupplierProduct()"><i class="anticon anticon-delete"></i>&nbsp;批量解除关联</li>
+      </ul>
+    </nz-dropdown>
+
+    <button nz-button class="at_right" (click)="setDisplay()"><i class="anticon anticon-filter"></i>自定义列</button>
+
+    <nz-dropdown class="at_right" [nzTrigger]="'click'">
+      <button nz-button nz-dropdown >
+        <i class="anticon anticon-cloud-download"></i>
+        导入/导出
+        <i class="anticon anticon-down"></i>
+      </button>
+      <ul nz-menu>
+        <li nz-menu-item (click)="bulkUploadSupplier()"><i class="anticon anticon-cloud-upload-o"></i>&nbsp;模板导入供应商</li>
+        <li nz-menu-item><i class="anticon anticon-cloud-download-o"></i>&nbsp;导出供应商</li>
+      </ul>
+    </nz-dropdown>
+
+    <span style="margin-left: 8px;" *ngIf="checkedNumber">共选中 {{checkedNumber}} 项</span>
+  </div>
+</ng-template>

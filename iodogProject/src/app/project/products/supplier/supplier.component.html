@@ -22,7 +22,6 @@
 
 
   <nz-table #basicTable
-            nzBordered
             nzShowSizeChanger="true"
             [nzLoading] = "operating"
             nzLoadingDelay="500"
@@ -85,7 +84,7 @@
           <button nz-button nz-dropdown [nzSize]="'small'"><span>处理</span> <i class="anticon anticon-down"></i></button>
 
           <ul nz-menu>
-            <li nz-menu-item><i class="anticon anticon-profile"></i>&nbsp;产品列表</li>
+            <li nz-menu-item (click)="supplierProducts(data.id)"><i class="anticon anticon-profile"></i>&nbsp;产品列表</li>
             <li nz-menu-item (click)="addSupplier(data.id)"><i class="anticon anticon-edit"></i>&nbsp;编辑</li>
             <li nz-menu-item (click)="changeStatus(data.id, data.status)" *ngIf="!data.status"><i class="anticon anticon-retweet"></i>&nbsp;启用</li>
             <li nz-menu-item (click)="changeStatus(data.id, data.status)" *ngIf="data.status"><i class="anticon anticon-retweet"></i>&nbsp;停用</li>
@@ -122,7 +121,7 @@
         </ul>
       </nz-dropdown>
 
-      <button nz-button class="at_right" (click)="setDisplay()"><i class="anticon anticon-setting"></i>自定义</button>
+      <button nz-button class="at_right" (click)="setDisplay()"><i class="anticon anticon-filter"></i>自定义列</button>
 
       <nz-dropdown class="at_right" [nzTrigger]="'click'">
         <button nz-button nz-dropdown >

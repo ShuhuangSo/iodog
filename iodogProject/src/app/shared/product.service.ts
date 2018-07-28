@@ -238,10 +238,24 @@ export class ProductService {
   }
 
   /**
+   * 批量删除供应商关联产品
+   * */
+  bulkDeleteSupplierProduct(params: any): Observable<any> {
+    return this.http.post(`api/supplier-products-bulk/`, JSON.stringify(params), {observe: 'response'});
+  }
+
+  /**
    * 修改供应商关联产品
    * */
   updateSupplierProduct(form: any): Observable<any> {
     return this.http.put(`api/supplier-product/${form.id}/`, JSON.stringify(form), {observe: 'response'});
+  }
+
+  /**
+   * 获取供应商关联产品列表（通过供应商id）
+   * */
+  getSupplierProductsBySupplier_id(params: string): Observable<any> {
+    return this.http.get(`api/supplier-product-list/?${params}`);
   }
 
   /**
@@ -328,6 +342,9 @@ export class SupplierProduct {
     public primary_supplier: boolean, // 是否默认供应商
     public create_time: string, // 创建时间
     public supplier: string, // 供应商名称
+    public sku: string, // 产品sku
+    public cn_name: string, // 产品名称
+    public checked: boolean // 数据选择状态
   ) {}
 }
 

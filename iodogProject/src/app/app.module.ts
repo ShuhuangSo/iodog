@@ -32,6 +32,7 @@ import { ComboAddComponent } from './project/products/combo-add/combo-add.compon
 import { ComboNewaddComponent } from './project/products/combo-newadd/combo-newadd.component';
 import { ProductBulkEditComponent } from './project/products/product-bulk-edit/product-bulk-edit.component';
 import { UploadsComponent } from './project/uploads/uploads.component';
+import { SupplierProductAddComponent } from './project/products/supplier-product-add/supplier-product-add.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { UploadsComponent } from './project/uploads/uploads.component';
     ComboAddComponent,
     ComboNewaddComponent,
     ProductBulkEditComponent,
-    UploadsComponent
+    UploadsComponent,
+    SupplierProductAddComponent
   ],
   imports: [
     BrowserModule,
@@ -75,6 +77,7 @@ import { UploadsComponent } from './project/uploads/uploads.component';
     ListDisplaySettingComponent, // 自定义显示
     SupplierAddComponent, // 添加、编辑供应商
     SupplierProductComponent, // 供应商产品列表
+    SupplierProductAddComponent, // 供应商产品添加，编辑
     ProductDetailComponent, // 商品详情
     ProductSupplierAddComponent, // 商品添加关联供应商
     ProductSupplierEditComponent, // 编辑关联供应商

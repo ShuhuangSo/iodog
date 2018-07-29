@@ -48,6 +48,13 @@ export class ProductService {
   }
 
   /**
+   * 检查sku是否存在
+   * */
+  checkSKU(params: any): Observable<any> {
+    return this.http.post(`api/sku-is-exist-check/`, JSON.stringify(params), {observe: 'response'});
+  }
+
+  /**
    * 删除商品
    * */
   deleteProduct(params: string): Observable<any> {

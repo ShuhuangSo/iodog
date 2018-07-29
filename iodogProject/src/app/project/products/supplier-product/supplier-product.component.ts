@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {ProductService, SupplierProduct} from '../../../shared/product.service';
 import {NzModalRef, NzModalService} from 'ng-zorro-antd';
 import {ListDisplaySettingComponent} from '../../list-display-setting/list-display-setting.component';
+import {SupplierProductAddComponent} from '../supplier-product-add/supplier-product-add.component';
 
 @Component({
   selector: 'app-supplier-product',
@@ -222,6 +223,48 @@ export class SupplierProductComponent implements OnInit {
         this.operating = false;
       }
     );
+  }
+
+  /**
+   * 供应商关联产品添加
+   * */
+  addSupplierProduct(): void {
+    const modal = this.modalService.create({
+      nzTitle: '新增关联产品',
+      nzMaskClosable: false,
+      nzClosable: true,
+      nzWidth: '800',
+      nzContent: SupplierProductAddComponent,
+      nzComponentParams: {
+        supplier_id: this.supplier_id,
+        mode: 'ADD'
+      },
+      nzFooter: [
+        {
+          label: '取消',
+          shape: 'default',
+          onClick: () => modal.destroy()
+        },
+        {
+          label: '确认',
+          type: 'primary',
+          loading: ((componentInstance) => {
+            return componentInstance.operating;
+          }),
+          onClick: (componentInstance) => {
+            componentInstance.destroyModal();
+          }
+        },
+      ]
+    });
+
+    // 模态框返回数据
+    modal.afterClose.subscribe((result) => {
+      if (result) {
+        this.listFilter(); // 刷新列表数据
+      }
+    });
+
   }
 
   /**

@@ -1,0 +1,57 @@
+<form nz-form [formGroup]="formModel">
+
+  <!--产品编码-->
+  <nz-form-item>
+    <nz-form-label nzRequired [nzSm]="4">
+      产品SKU
+    </nz-form-label>
+    <nz-form-control nzHasFeedback [nzSm]="8">
+      <nz-input-group nzSearch [nzSuffix]="suffixButton">
+        <input nz-input formControlName="sku" type="text">
+      </nz-input-group>
+      <ng-template #suffixButton>
+        <button nz-button nzType="primary" (click)="searchProduct()" nzSearch>查找SKU</button>
+      </ng-template>
+
+      <nz-form-explain *ngIf="getFormControl('sku').dirty && getFormControl('sku').errors">
+        <ng-container *ngIf="getFormControl('sku').hasError('required')">
+          请输入SKU!
+        </ng-container>
+        <ng-container *ngIf="getFormControl('sku').hasError('not_exist')">
+          该SKU不存在!
+        </ng-container>
+        <ng-container *ngIf="getFormControl('sku').hasError('maxlength')">
+          SKU最大长度不超过30位
+        </ng-container>
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item *ngIf="show_info">
+    <nz-form-label [nzSm]="4">
+      图片
+    </nz-form-label>
+    <nz-form-control [nzSm]="20">
+      <img src="http://placehold.it/50x50">
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item *ngIf="show_info">
+    <nz-form-label [nzSm]="4">
+      产品名称
+    </nz-form-label>
+    <nz-form-control [nzSm]="20">
+      {{cn_name}}
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSm]="4">
+      采购链接
+    </nz-form-label>
+    <nz-form-control [nzSm]="20">
+      <input nz-input formControlName="buy_url" type="text">
+    </nz-form-control>
+  </nz-form-item>
+
+</form>

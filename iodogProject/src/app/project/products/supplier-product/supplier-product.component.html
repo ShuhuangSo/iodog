@@ -101,7 +101,7 @@
 <ng-template #titleTemp>
   <div class="operating">
 
-    <button nz-button [nzType]="'primary'" ><i class="anticon anticon-plus"></i>新增供应商</button>
+    <button nz-button [nzType]="'primary'" (click)="addSupplierProduct()"><i class="anticon anticon-plus"></i>新增关联产品</button>
     <nz-dropdown [nzTrigger]="'click'">
       <button nz-button nz-dropdown >
         <i class="anticon anticon-edit"></i>

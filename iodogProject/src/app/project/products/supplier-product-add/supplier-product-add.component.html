@@ -1,7 +1,7 @@
 <form nz-form [formGroup]="formModel">
 
-  <!--产品编码-->
-  <nz-form-item>
+  <!--产品编码(新增)-->
+  <nz-form-item *ngIf="mode === 'ADD'">
     <nz-form-label nzRequired [nzSm]="4">
       产品SKU
     </nz-form-label>
@@ -18,12 +18,22 @@
           请输入SKU!
         </ng-container>
         <ng-container *ngIf="getFormControl('sku').hasError('not_exist')">
-          该SKU不存在!
+          {{err_msg}}
         </ng-container>
         <ng-container *ngIf="getFormControl('sku').hasError('maxlength')">
           SKU最大长度不超过30位
         </ng-container>
       </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+
+  <!--产品编码(编辑状态)-->
+  <nz-form-item *ngIf="mode === 'EDIT'">
+    <nz-form-label [nzSm]="4">
+      产品SKU
+    </nz-form-label>
+    <nz-form-control [nzSm]="8">
+      <nz-tag [nzColor]="'cyan'">{{ sku }}</nz-tag>
     </nz-form-control>
   </nz-form-item>
 

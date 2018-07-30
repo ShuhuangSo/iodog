@@ -1,8 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ProductService, SupplierProduct} from '../../../shared/product.service';
-import {NzModalRef, NzModalService} from 'ng-zorro-antd';
+import {NzMessageService, NzModalRef, NzModalService} from 'ng-zorro-antd';
 import {ListDisplaySettingComponent} from '../../list-display-setting/list-display-setting.component';
 import {SupplierProductAddComponent} from '../supplier-product-add/supplier-product-add.component';
+import {ProductDetailComponent} from '../product-detail/product-detail.component';
 
 @Component({
   selector: 'app-supplier-product',
@@ -38,6 +39,7 @@ export class SupplierProductComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private modal: NzModalRef,
+    private message: NzMessageService,
     private modalService: NzModalService
   ) { }
 
@@ -265,6 +267,94 @@ export class SupplierProductComponent implements OnInit {
       }
     });
 
+  }
+
+  /**
+   * 供应商关联产品编辑
+   * */
+  editSupplierProduct(sup_product: number, sku: string): void {
+    const modal = this.modalService.create({
+      nzTitle: '编辑关联产品',
+      nzMaskClosable: false,
+      nzClosable: true,
+      nzWidth: '800',
+      nzContent: SupplierProductAddComponent,
+      nzComponentParams: {
+        sup_product_id: sup_product,
+        sku: sku,
+        mode: 'EDIT'
+      },
+      nzFooter: [
+        {
+          label: '取消',
+          shape: 'default',
+          onClick: () => modal.destroy()
+        },
+        {
+          label: '确认',
+          type: 'primary',
+          loading: ((componentInstance) => {
+            return componentInstance.operating;
+          }),
+          onClick: (componentInstance) => {
+            componentInstance.destroyModal();
+          }
+        },
+      ]
+    });
+
+    // 模态框返回数据
+    modal.afterClose.subscribe((result) => {
+      if (result) {
+        this.listFilter(); // 刷新列表数据
+      }
+    });
+
+  }
+
+  /**
+   * 查看、编辑商品详情弹框
+   * */
+  editProduct(id: number): void {
+    const modal = this.modalService.create({
+      nzTitle: '商品详情',
+      nzMaskClosable: true,
+      nzClosable: true,
+      nzWidth: '90%',
+      nzStyle: {top: '20px'},
+      nzContent: ProductDetailComponent,
+      nzComponentParams: {
+        productId: id,
+      },
+      nzFooter: [
+        {
+          label: '取消',
+          shape: 'default',
+          onClick: () => modal.destroy()
+        },
+        {
+          label: '确认',
+          type: 'primary',
+          loading: ((componentInstance) => {
+            return componentInstance.isSpinning;
+          }),
+          onClick: (componentInstance) => {
+            componentInstance.destroyModal();
+          }
+        },
+      ]
+    });
+
+    // 模态框返回数据
+    modal.afterClose.subscribe((result) => {
+      // 如果正常返回，刷新产品列表数据
+      if (result) {
+        if (result.data === 'ok') {
+          this.message.create('success', '产品修改成功！');
+          this.listFilter();
+        }
+      }
+    });
   }
 
   /**

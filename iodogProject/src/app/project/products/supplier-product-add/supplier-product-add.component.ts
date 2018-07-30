@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ProductService} from '../../../shared/product.service';
+import {ProductService, SupplierProduct} from '../../../shared/product.service';
 import {NzModalRef, NzModalService} from 'ng-zorro-antd';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ProductSearchComponent} from '../product-search/product-search.component';
@@ -13,10 +13,15 @@ import {Observable} from 'rxjs/Observable';
 export class SupplierProductAddComponent implements OnInit {
   @Input() mode: string;
   @Input() supplier_id: number;
+  @Input() sup_product_id: number;
+  @Input() sku: string;
+
+  supplierProduct: SupplierProduct
 
   formModel: FormGroup;
   image: string; // 产品图片
   cn_name: string; // 产品名称
+  err_msg: string; // 错误信息
 
   operating = false; // 操作loading状态
   show_info =  false; // 显示sku其它信息状态
@@ -38,6 +43,33 @@ export class SupplierProductAddComponent implements OnInit {
         supplier: [this.supplier_id]
       });
     }
+
+    if (this.mode === 'EDIT') {
+      // 编辑关联产品
+      this.formModel = this.fb.group({
+        buy_url: ['', [Validators.maxLength(300)]],
+        id: [this.sup_product_id]
+      });
+
+      this.operating = true;
+      this.productService.getSupplierProductsById(this.sup_product_id).subscribe(
+        val => {
+          this.supplierProduct = val;
+        },
+        err => {
+          console.log(err)
+          this.operating = false;
+        },
+        () => {
+          // 表单初始化
+          this.formModel.patchValue(this.supplierProduct);
+          this.operating = false;
+        }
+      );
+    }
+
+
+
   }
 
   // 获取FormControl
@@ -46,14 +78,15 @@ export class SupplierProductAddComponent implements OnInit {
   }
 
   /**
-   * 异步校验sku是否存在
+   * 异步校验sku是否存在,是否已关联到供应商
    * */
   check_SkuAsyncValidator = (control: FormControl) => Observable.create((observer) => {
     this.show_info = false;
     setTimeout(() => {
-      this.productService.checkSKU(control.value).subscribe(
+      this.productService.checkSKU({'sku': control.value, 'supplier': this.supplier_id}).subscribe(
         value => {
-          if (value.status !== 200) {
+          if (value.status === 200) {
+            this.err_msg = value.body.msg;
             observer.next({ error: true, not_exist: true });
           } else {
             observer.next(null);
@@ -109,24 +142,55 @@ export class SupplierProductAddComponent implements OnInit {
 
   }
 
+  /**
+   * 新增
+   * */
+  addFunc(): void {
+    this.operating = true;
+    this.productService.addSupplierProduct(this.formModel.value).subscribe(
+      val => {
+        if (val.status === 201) {
+          this.modal.destroy({ data: 'ok' });
+        } else {
+          console.log(val);
+        }
+      },
+      err => {
+        console.log(err);
+        this.operating = false
+      },
+      () => this.operating = false
+    );
+  }
+
+  /**
+   * 修改
+   * */
+  editFunc(): void {
+    this.operating = true;
+    this.productService.updateSupplierProduct(this.formModel.value).subscribe(
+      val => {
+        if (val.status === 200) {
+          this.modal.destroy({ data: 'ok' });
+        } else {
+          console.log(val);
+        }
+      },
+      err => {
+        console.log(err);
+        this.operating = false;
+      },
+      () => this.operating = false
+    );
+  }
+
   destroyModal(): void {
     if (this.formModel.valid) {
-      console.log(this.formModel.value)
-      this.operating = true;
-      this.productService.addSupplierProduct(this.formModel.value).subscribe(
-        val => {
-          if (val.status === 201) {
-            this.modal.destroy({ data: 'ok' });
-          } else {
-            console.log(val);
-          }
-        },
-        err => {
-          console.log(err);
-          this.operating = false
-        },
-        () => this.operating = false
-      );
+      if (this.mode === 'ADD') {
+        this.addFunc();
+      } else {
+        this.editFunc();
+      }
     } else {
       for (const key in this.formModel.controls) {
         this.formModel.controls[key].markAsDirty();

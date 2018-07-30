@@ -259,6 +259,13 @@ export class ProductService {
   }
 
   /**
+   * 获取供应商关联产品（通过id）
+   * */
+  getSupplierProductsById(id: number): Observable<any> {
+    return this.http.get(`api/supplier-product/${id}`);
+  }
+
+  /**
    * 获取供应商关联产品列表（通过供应商id）
    * */
   getSupplierProductsBySupplier_id(params: string): Observable<any> {
@@ -351,6 +358,7 @@ export class SupplierProduct {
     public supplier: string, // 供应商名称
     public sku: string, // 产品sku
     public cn_name: string, // 产品名称
+    public product: number, // 产品id
     public checked: boolean // 数据选择状态
   ) {}
 }

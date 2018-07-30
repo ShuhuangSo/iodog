@@ -60,12 +60,12 @@
       <img src="http://placehold.it/50x50">
     </td>
     <td>
-      <div>{{data.sku}}</div>
+      <div><a (click)="editProduct(data.product)">{{data.sku}}</a></div>
       <div>{{data.cn_name}}</div>
     </td>
 
     <td *ngIf="checkDisplay('buy_url')">
-      <a *ngIf="data.buy_url" target="_blank" rel="noopener noreferrer" href="{{data.buy_url}}">链接</a>
+      <a *ngIf="data.buy_url" target="_blank" rel="noopener noreferrer" href="{{data.buy_url}}">去采购</a>
       <div *ngIf="!data.buy_url">--</div>
     </td>
 
@@ -81,7 +81,7 @@
         <button nz-button nz-dropdown [nzSize]="'small'"><span>处理</span> <i class="anticon anticon-down"></i></button>
 
         <ul nz-menu>
-          <li nz-menu-item><i class="anticon anticon-edit"></i>&nbsp;编辑</li>
+          <li nz-menu-item (click)="editSupplierProduct(data.id, data.sku)"><i class="anticon anticon-edit"></i>&nbsp;编辑</li>
           <li nz-menu-item class="red"><a (click)="deleteSupplierProduct(data.id)"><i class="anticon anticon-delete"></i>&nbsp;解除关联</a></li>
         </ul>
       </nz-dropdown>
@@ -109,25 +109,11 @@
         <i class="anticon anticon-down"></i>
       </button>
       <ul nz-menu>
-        <li nz-menu-item [nzDisabled]="disabledButton" (click)="bulkChangeStatus(true)"><i class="anticon anticon-smile-o"></i>&nbsp;批量启用</li>
-        <li nz-menu-item [nzDisabled]="disabledButton" (click)="bulkChangeStatus(false)"><i class="anticon anticon-frown-o"></i>&nbsp;批量停用</li>
         <li nz-menu-item [nzDisabled]="disabledButton" (click)="deleteSupplierProduct()"><i class="anticon anticon-delete"></i>&nbsp;批量解除关联</li>
       </ul>
     </nz-dropdown>
 
     <button nz-button class="at_right" (click)="setDisplay()"><i class="anticon anticon-filter"></i>自定义列</button>
-
-    <nz-dropdown class="at_right" [nzTrigger]="'click'">
-      <button nz-button nz-dropdown >
-        <i class="anticon anticon-cloud-download"></i>
-        导入/导出
-        <i class="anticon anticon-down"></i>
-      </button>
-      <ul nz-menu>
-        <li nz-menu-item (click)="bulkUploadSupplier()"><i class="anticon anticon-cloud-upload-o"></i>&nbsp;模板导入供应商</li>
-        <li nz-menu-item><i class="anticon anticon-cloud-download-o"></i>&nbsp;导出供应商</li>
-      </ul>
-    </nz-dropdown>
 
     <span style="margin-left: 8px;" *ngIf="checkedNumber">共选中 {{checkedNumber}} 项</span>
   </div>

@@ -132,6 +132,13 @@ export class ProductService {
   }
 
   /**
+   * 打印产品标签
+   * */
+  printProduct(params: any): Observable<any> {
+    return this.http.post(`api/product-print/`, JSON.stringify(params), {observe: 'response'});
+  }
+
+  /**
    * 获取组合sku列表
    * */
   getCombopacks(params: string): Observable<any> {

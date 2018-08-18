@@ -8,6 +8,7 @@ import {ProductDetailComponent} from '../product-detail/product-detail.component
 import {AddCountryComponent} from '../add-country/add-country.component';
 import {ProductBulkEditComponent} from '../product-bulk-edit/product-bulk-edit.component';
 import {UploadsComponent} from '../../uploads/uploads.component';
+import {ProductPrintComponent} from '../product-print/product-print.component';
 
 @Component({
   selector: 'app-product-list',
@@ -407,6 +408,60 @@ export class ProductListComponent implements OnInit {
           }),
           onClick: (componentInstance) => {
             componentInstance.destroyModal();
+          }        },
+      ]
+    });
+
+    // 模态框返回数据
+    modal.afterClose.subscribe((result) => {
+      // 如果正常返回，刷新注册产品数据
+      if (result) {
+        if (result.data === 'ok') {
+          this.message.create('success', '修改成功！');
+          this.listFilter(); // 刷新数据
+          this.refreshStatus();
+        }
+      }
+    });
+  }
+
+  /**
+   * 打印产品标签
+   * */
+  printProduct(sku): void {
+    const sku_list = []; // 获取已选中的产品sku
+    if (sku) {
+      sku_list.push(sku);
+    } else {
+      this.product.forEach(value => {
+        if (value.checked) {
+          sku_list.push(value.sku);
+        }
+      });
+    }
+
+    const modal = this.modalService.create({
+      nzTitle: `打印产品标签(${sku_list.length})`,
+      nzMaskClosable: false,
+      nzClosable: true,
+      nzContent: ProductPrintComponent,
+      nzComponentParams: {
+        sku_list: sku_list
+      },
+      nzFooter: [
+        {
+          label: '取消',
+          shape: 'default',
+          onClick: () => modal.destroy()
+        },
+        {
+          label: '打印',
+          type: 'primary',
+          loading: ((componentInstance) => {
+            return componentInstance.isSpinning;
+          }),
+          onClick: (componentInstance) => {
+            componentInstance.print();
           }        },
       ]
     });

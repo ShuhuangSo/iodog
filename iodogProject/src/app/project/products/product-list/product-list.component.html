@@ -122,7 +122,7 @@
           <button nz-button nz-dropdown [nzSize]="'small'"><span>处理</span> <i class="anticon anticon-down"></i></button>
 
           <ul nz-menu>
-            <li nz-menu-item><i class="anticon anticon-barcode"></i>&nbsp;打印标签</li>
+            <li nz-menu-item (click)="printProduct(data.sku)"><i class="anticon anticon-barcode"></i>&nbsp;打印标签</li>
             <li nz-menu-item (click)="editProduct(data.id)"><i class="anticon anticon-edit"></i>&nbsp;编辑</li>
             <li nz-menu-item (click)="addCountry(data.id)"><i class="anticon anticon-idcard"></i>&nbsp;添加注册</li>
             <li nz-menu-item class="red" (click)="deleteConfirm(data.id)"><i class="anticon anticon-delete"></i>&nbsp;删除</li>
@@ -144,7 +144,7 @@
 <ng-template #titleTemp>
   <div class="operating">
 
-    <button nz-button [nzType]="'primary'" [disabled]="disabledButton"><i class="anticon anticon-barcode"></i>打印标签</button>
+    <button nz-button [nzType]="'primary'" [disabled]="disabledButton" (click)="printProduct()"><i class="anticon anticon-barcode"></i>打印标签</button>
     <button nz-button [nzType]="'primary'" [disabled]="disabledButton" (click)="bulkEditProduct()"><i class="anticon anticon-edit"></i>批量编辑</button>
     <button nz-button [nzType]="'primary'" [disabled]="disabledButton" (click)="bulkRegAddCountry()"><i class="anticon anticon-idcard"></i>批量注册</button>
     <button nz-button [nzType]="'danger'" [disabled]="disabledButton" (click)="deleteConfirm()"><i class="anticon anticon-delete"></i>删除</button>

@@ -1,0 +1,58 @@
+<nz-spin [nzSpinning]="isSpinning">
+  <form nz-form [formGroup]="formModel">
+
+    <!--打印数量-->
+    <nz-form-item >
+      <nz-form-label nzRequired nz-col [nzSm]="6">
+        打印数量
+      </nz-form-label>
+      <nz-form-control [nzSm]="14">
+        <nz-input-number formControlName="print_qty" [nzMin]="1" [nzMax]="1000" [nzStep]="1"></nz-input-number>
+        <nz-tag [nzColor]="'geekblue'" (click)="setQty(10)">10</nz-tag>
+        <nz-tag [nzColor]="'orange'" (click)="setQty(20)">20</nz-tag>
+        <nz-tag [nzColor]="'cyan'" (click)="setQty(30)">30</nz-tag>
+        <nz-tag [nzColor]="'purple'" (click)="setQty(50)">50</nz-tag>
+      </nz-form-control>
+    </nz-form-item>
+
+    <!--标签来源-->
+    <nz-form-item>
+      <nz-form-label [nzSm]="6">
+        标签来源
+      </nz-form-label>
+      <nz-form-control [nzSm]="14">
+        <nz-select formControlName="label_from">
+          <nz-option nzValue="winit" nzLabel="万邑通"></nz-option>
+
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+
+    <!--标签尺寸-->
+    <nz-form-item>
+      <nz-form-label [nzSm]="6">
+        标签尺寸
+      </nz-form-label>
+      <nz-form-control [nzSm]="14">
+        <nz-select formControlName="label_type">
+          <nz-option nzValue="LZ6040" nzLabel="60x40mm"></nz-option>
+          <nz-option nzValue="LZ7050" nzLabel="70x50mm"></nz-option>
+          <nz-option nzValue="LZ10060" nzLabel="100x60mm"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+
+    <!--原产地-->
+    <nz-form-item>
+      <nz-form-label [nzSm]="6">
+        原产地
+      </nz-form-label>
+      <nz-form-control [nzSm]="14">
+        <nz-select formControlName="made_in">
+          <nz-option nzValue="China" nzLabel="Made in China"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+
+  </form>
+</nz-spin>

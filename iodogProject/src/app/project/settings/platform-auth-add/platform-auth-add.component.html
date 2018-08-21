@@ -1,0 +1,22 @@
+<form nz-form [formGroup]="formModel">
+
+  <!--物流授权-->
+  <nz-form-item>
+    <nz-form-label nzRequired [nzSm]="6">
+      用户名
+    </nz-form-label>
+    <nz-form-control [nzSm]="18">
+      <input nz-input formControlName="app_key" type="text">
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzRequired [nzSm]="6">
+      密钥(Token)
+    </nz-form-label>
+    <nz-form-control [nzSm]="18">
+      <input nz-input formControlName="token" type="text">
+    </nz-form-control>
+  </nz-form-item>
+
+</form>

@@ -1,0 +1,58 @@
+<nz-card>
+  <nz-tabset>
+    <nz-tab nzTitle="物流授权">
+
+      <nz-table #basicTable
+                nzShowSizeChanger="true"
+                [nzLoading] = "operating"
+                [nzShowPagination] = "false"
+                [nzData]="logisticsAuth">
+
+        <thead>
+        <tr>
+          <th>物流名称</th>
+          <th>状态</th>
+          <th>授权日期</th>
+          <th>过期日期</th>
+          <th nzWidth="100px">操作</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{data.logistics_company}}</td>
+          <td>
+            <nz-tag [nzColor]="'green'" *ngIf="data.auth_status">已授权</nz-tag>
+            <nz-tag [nzColor]="'red'" *ngIf="!data.auth_status">未授权</nz-tag>
+          </td>
+          <td>
+            <div *ngIf="data.auth_status">{{data.auth_time | date:'yyyy-MM-dd'}}</div>
+          </td>
+          <td>
+            <div *ngIf="data.auth_status">{{data.exp_time | date:'yyyy-MM-dd'}}</div>
+          </td>
+          <td>
+            <button nz-button [nzType]="'primary'" (click)="addLogisAuth(data.id, data.auth_link)" *ngIf="!data.auth_status"><i class="anticon anticon-key"></i>开始授权</button>
+            <nz-dropdown [nzTrigger]="'click'" *ngIf="data.auth_status">
+              <button nz-button nz-dropdown [nzSize]="'small'"><span>处理</span> <i class="anticon anticon-down"></i></button>
+
+              <ul nz-menu>
+                <li nz-menu-item (click)="addLogisAuth(data.id, data.auth_link)"><i class="anticon anticon-key"></i>重新授权</li>
+                <li nz-menu-item (click)="addLogisAuth(data.id)"><i class="anticon anticon-edit"></i>&nbsp;编辑</li>
+                <li nz-menu-item class="red"><a (click)="cancelConfirm(data.id)"><i class="anticon anticon-disconnect"></i>取消授权</a></li>
+              </ul>
+            </nz-dropdown>
+          </td>
+        </tr>
+        </tbody>
+      </nz-table>
+
+    </nz-tab>
+    <nz-tab nzTitle="eBay授权">
+      Content of Tab Pane 2
+    </nz-tab>
+    <nz-tab nzTitle="1688授权">
+      Content of Tab Pane 3
+    </nz-tab>
+  </nz-tabset>
+</nz-card>

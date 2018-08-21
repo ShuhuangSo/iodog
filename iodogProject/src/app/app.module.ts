@@ -34,6 +34,9 @@ import { ProductBulkEditComponent } from './project/products/product-bulk-edit/p
 import { UploadsComponent } from './project/uploads/uploads.component';
 import { SupplierProductAddComponent } from './project/products/supplier-product-add/supplier-product-add.component';
 import { ProductPrintComponent } from './project/products/product-print/product-print.component';
+import { PlatformAuthComponent } from './project/settings/platform-auth/platform-auth.component';
+import {SettingsService} from './shared/settings.service';
+import { PlatformAuthAddComponent } from './project/settings/platform-auth-add/platform-auth-add.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +65,9 @@ import { ProductPrintComponent } from './project/products/product-print/product-
     ProductBulkEditComponent,
     UploadsComponent,
     SupplierProductAddComponent,
-    ProductPrintComponent
+    ProductPrintComponent,
+    PlatformAuthComponent,
+    PlatformAuthAddComponent
   ],
   imports: [
     BrowserModule,
@@ -88,11 +93,13 @@ import { ProductPrintComponent } from './project/products/product-print/product-
     ProductSearchComponent, // 搜索产品并返回
     ProductBulkEditComponent, // 产品批量编辑
     ProductPrintComponent, // 产品标签打印
-    UploadsComponent // 导入上传
+    UploadsComponent, // 导入上传
+    PlatformAuthAddComponent, // 添加，编辑授权窗口
   ],
   providers: [
     ProductService,
     UsersService,
+    SettingsService,
     [{ provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true }]
   ],
   bootstrap: [AppComponent]

@@ -8,6 +8,7 @@ import {DashboardComponent} from './project/dashboard/dashboard.component';
 import {ProductComponent} from './project/products/product/product.component';
 import {SupplierComponent} from './project/products/supplier/supplier.component';
 import {ComboComponent} from './project/products/combo/combo.component';
+import {PlatformAuthComponent} from './project/settings/platform-auth/platform-auth.component';
 
 
 const routes: Routes = [
@@ -21,7 +22,8 @@ const routes: Routes = [
       {path: 'product/:id', component: ProductDetailComponent},
       {path: 'product', component: ProductComponent},
       {path: 'supplier', component: SupplierComponent},
-      {path: 'combo', component: ComboComponent}
+      {path: 'combo', component: ComboComponent},
+      {path: 'platform-auth', component: PlatformAuthComponent}
     ]
   },
   {

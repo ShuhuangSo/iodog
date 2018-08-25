@@ -316,8 +316,8 @@
               </td>
               <td>{{data.country_code}}</td>
               <td>{{data.import_value}}美元</td>
-              <td *ngIf="data.import_rate">{{data.import_rate}}%</td>
-              <td *ngIf="!data.import_rate">--</td>
+              <td>{{data.import_rate | percent:'1.1-1'}}</td>
+              <!--<td *ngIf="!data.import_rate">&#45;&#45;</td>-->
             </tr>
             </tbody>
           </nz-table>

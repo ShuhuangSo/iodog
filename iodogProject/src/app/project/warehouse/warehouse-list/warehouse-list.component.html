@@ -1,0 +1,228 @@
+<nz-card>
+  <nz-tabset>
+  <nz-tab nzTitle="海外仓">
+
+    <div class="search">
+
+      <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+        <input [(ngModel)]='search' (keyup.enter)="listFilter()" type="text" nz-input placeholder="SKU | 产品名称搜索">
+      </nz-input-group>
+      <ng-template #suffixIconButton>
+        <button nz-button nzType="primary" nzSearch (click)="listFilter()"><i class="anticon anticon-search"></i></button>
+      </ng-template>
+    </div>
+
+    <div class="search">
+      <nz-radio-group
+        [(ngModel)]='p_status1'
+        (ngModelChange)="listFilter()"
+        [nzSize]="'small'">
+        <label nz-radio nzValue="ALL">AU Warehouse</label>
+        <label nz-radio nzValue="ON_SALE">UCWC Warehouse</label>
+        <label nz-radio nzValue="CLEAN">AUME Warehouse</label>
+        <label nz-radio nzValue="OFFLINE">UK Warehouse</label>
+        <label nz-radio nzValue="UNKNOWN">DE Warehouse</label>
+      </nz-radio-group>
+    </div>
+
+    <div class="search">
+      <nz-radio-group
+        [(ngModel)]='p_status2'
+        (ngModelChange)="listFilter()"
+        [nzSize]="'small'">
+        <label nz-radio-button nzValue="ALL">全部</label>
+        <label nz-radio-button nzValue="ON_SALE">快周转</label>
+        <label nz-radio-button nzValue="CLEAN">正常周转</label>
+        <label nz-radio-button nzValue="OFFLINE">慢周转</label>
+      </nz-radio-group>
+
+      <nz-radio-group
+        [(ngModel)]='p_status3'
+        (ngModelChange)="listFilter()"
+        [nzSize]="'small'">
+        <label nz-radio-button nzValue="ALL">全部</label>
+        <label nz-radio-button nzValue="ON_SALE">在售</label>
+        <label nz-radio-button nzValue="CLEAN">停售</label>
+      </nz-radio-group>
+
+      <button [nzSize]="'small'" nz-button class="at_right" (click)="setDisplay()"><i class="anticon anticon-setting"></i>自定义</button>
+
+      <nz-tooltip [nzTitle]="'最近同步时间'">
+        <span nz-tooltip class="at_right"><i class="fa fa-clock-o" aria-hidden="true"></i>2018-08-28 22:56:30</span>
+      </nz-tooltip>
+
+      <nz-popover [nzPlacement]="'bottomLeft'" [nzTrigger]="'click'">
+        <button nz-button nzSize="small" nz-popover>排序<i class="anticon anticon-caret-down"></i></button>
+        <ng-template #nzTemplate>
+          <div class="order">
+              <p>可用库存
+                <nz-radio-group
+                  nzSize="small"
+                  [(ngModel)]='order'
+                  (ngModelChange)="listFilter()">
+                <label nz-radio-button nzValue="ALL1"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="ON_SALE2"><i class="anticon anticon-caret-down"></i></label>
+                </nz-radio-group>
+              </p>
+            <p>待出库
+              <nz-radio-group
+                nzSize="small"
+                [(ngModel)]='order'
+                (ngModelChange)="listFilter()">
+                <label nz-radio-button nzValue="ALL3"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="ON_SALE4"><i class="anticon anticon-caret-down"></i></label>
+              </nz-radio-group>
+            </p>
+            <p>在途库存
+              <nz-radio-group
+                nzSize="small"
+                [(ngModel)]='order'
+                (ngModelChange)="listFilter()">
+                <label nz-radio-button nzValue="ALL5"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="ON_SALE6"><i class="anticon anticon-caret-down"></i></label>
+              </nz-radio-group>
+            </p>
+            <p>历史入库
+              <nz-radio-group
+                nzSize="small"
+                [(ngModel)]='order'
+                (ngModelChange)="listFilter()">
+                <label nz-radio-button nzValue="ALL7"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="ON_SALE8"><i class="anticon anticon-caret-down"></i></label>
+              </nz-radio-group>
+            </p>
+            <p>历史销量
+              <nz-radio-group
+                nzSize="small"
+                [(ngModel)]='order'
+                (ngModelChange)="listFilter()">
+                <label nz-radio-button nzValue="ALL9"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="ON_SALE10"><i class="anticon anticon-caret-down"></i></label>
+              </nz-radio-group>
+            </p>
+            <p>30天销量
+              <nz-radio-group
+                nzSize="small"
+                [(ngModel)]='order'
+                (ngModelChange)="listFilter()">
+                <label nz-radio-button nzValue="ALL11"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="ON_SALE12"><i class="anticon anticon-caret-down"></i></label>
+              </nz-radio-group>
+            </p>
+            <p>30天库存
+              <nz-radio-group
+                nzSize="small"
+                [(ngModel)]='order'
+                (ngModelChange)="listFilter()">
+                <label nz-radio-button nzValue="ALL13"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="ON_SALE14"><i class="anticon anticon-caret-down"></i></label>
+              </nz-radio-group>
+            </p>
+            <p>DOI
+              <nz-radio-group
+                nzSize="small"
+                [(ngModel)]='order'
+                (ngModelChange)="listFilter()">
+                <label nz-radio-button nzValue="ALL15"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="ON_SALE16"><i class="anticon anticon-caret-down"></i></label>
+              </nz-radio-group>
+            </p>
+
+          </div>
+        </ng-template>
+      </nz-popover>
+    </div>
+
+
+    <div class="search">
+
+      <nz-table #basicTable
+                nzShowSizeChanger="true"
+                [nzLoading] = "operating"
+                nzLoadingDelay="500"
+                [nzTitle] = "titleTemp"
+                [nzShowTotal] = "totalItemsTemp"
+                [nzNoResult] = "noResultTemp"
+                nzFrontPagination="false"
+                [nzPageSizeOptions]="[20,50,100]"
+                [nzTotal]="totalCount"
+                (nzPageSizeChange) = "pageSizeChange($event)"
+                (nzPageIndexChange) = "pageIndexChange($event)"
+                (nzCurrentPageDataChange)="currentPageDataChange($event)"
+                [nzData]="wh_stock" [(nzPageSize)]=pageSize>
+
+        <thead>
+        <tr>
+          <th class="set_center" nzWidth="60px" *ngIf="checkDisplay('image')">缩略图</th>
+          <th nzWidth="300px">
+            <div>SKU</div>
+            <div>中文名称</div>
+          </th>
+          <th class="set_center" *ngIf="checkDisplay('available_qty')">可用库存</th>
+          <th class="set_center" *ngIf="checkDisplay('reserved_qty')">待出库</th>
+          <th class="set_center" *ngIf="checkDisplay('on_way_qty')">在途库存</th>
+          <th class="set_center" *ngIf="checkDisplay('his')">
+            <div>历史入库数量</div>
+            <div>历史销量</div>
+          </th>
+          <th class="set_center" *ngIf="checkDisplay('avg')">
+            <div>近30天平均销量</div>
+            <div>近30天平均库存</div>
+          </th>
+          <th class="set_center" *ngIf="checkDisplay('doi')">DOI</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td *ngIf="checkDisplay('image')">
+            <img src="http://placehold.it/50x50">
+          </td>
+          <td>
+            <div><a (click)="editProduct(data.id)">{{data.sku}}</a></div>
+            <div>{{data.cn_name}}</div>
+          </td>
+
+          <td class="set_center" *ngIf="checkDisplay('available_qty')">{{data.available_qty}}</td>
+          <td class="set_center" *ngIf="checkDisplay('reserved_qty')">{{data.reserved_qty}}</td>
+          <td class="set_center" *ngIf="checkDisplay('on_way_qty')">{{data.on_way_qty}}</td>
+
+          <td class="set_center" *ngIf="checkDisplay('his')">
+            <div>{{data.his_in_qty}}</div>
+            <div>{{data.his_sell_qty}}</div>
+          </td>
+          <td class="set_center" *ngIf="checkDisplay('avg')">
+            <div>{{data.avg_sell_qty}}</div>
+            <div>{{data.avg_stock}}</div>
+          </td>
+          <td class="set_center" *ngIf="checkDisplay('doi')">{{data.doi}}</td>
+
+        </tr>
+        </tbody>
+      </nz-table>
+
+      <ng-template #totalItemsTemp let-total>
+        总共 {{total}} 个产品
+      </ng-template>
+
+      <ng-template #noResultTemp>
+        <i class="fa fa-child fa-5x"></i>木有！
+      </ng-template>
+
+      <!--<ng-template #titleTemp>-->
+        <!--<div class="operating">-->
+          <!--<span><i class="fa fa-clock-o" aria-hidden="true"></i>2018-08-28 22:56:30</span>-->
+          <!--<button nz-button class="at_right" (click)="setDisplay()"><i class="anticon anticon-setting"></i>自定义</button>-->
+
+        <!--</div>-->
+      <!--</ng-template>-->
+
+    </div>
+
+  </nz-tab>
+  <nz-tab nzTitle="本地仓">
+    Content of Tab Pane 2
+  </nz-tab>
+  </nz-tabset>
+
+</nz-card>

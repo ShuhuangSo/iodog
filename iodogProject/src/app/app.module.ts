@@ -37,6 +37,10 @@ import { ProductPrintComponent } from './project/products/product-print/product-
 import { PlatformAuthComponent } from './project/settings/platform-auth/platform-auth.component';
 import {SettingsService} from './shared/settings.service';
 import { PlatformAuthAddComponent } from './project/settings/platform-auth-add/platform-auth-add.component';
+import { WarehouseListComponent } from './project/warehouse/warehouse-list/warehouse-list.component';
+import {WarehouseService} from './shared/warehouse.service';
+import { WarehouseSettingsComponent } from './project/warehouse/warehouse-settings/warehouse-settings.component';
+import { WarehouseAddComponent } from './project/warehouse/warehouse-add/warehouse-add.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +71,10 @@ import { PlatformAuthAddComponent } from './project/settings/platform-auth-add/p
     SupplierProductAddComponent,
     ProductPrintComponent,
     PlatformAuthComponent,
-    PlatformAuthAddComponent
+    PlatformAuthAddComponent,
+    WarehouseListComponent,
+    WarehouseSettingsComponent,
+    WarehouseAddComponent
   ],
   imports: [
     BrowserModule,
@@ -93,6 +100,7 @@ import { PlatformAuthAddComponent } from './project/settings/platform-auth-add/p
     ProductSearchComponent, // 搜索产品并返回
     ProductBulkEditComponent, // 产品批量编辑
     ProductPrintComponent, // 产品标签打印
+    WarehouseAddComponent, // 仓库添加
     UploadsComponent, // 导入上传
     PlatformAuthAddComponent, // 添加，编辑授权窗口
   ],
@@ -100,6 +108,7 @@ import { PlatformAuthAddComponent } from './project/settings/platform-auth-add/p
     ProductService,
     UsersService,
     SettingsService,
+    WarehouseService,
     [{ provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true }]
   ],
   bootstrap: [AppComponent]

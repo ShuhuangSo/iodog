@@ -13,7 +13,7 @@ export class ProductSearchComponent implements OnInit {
   product: Product[]
   search = '';  // 搜索值
   pageSize = 20;  // 默认一页显示条数
-  totalCount = 0;  // 供应商总数
+  totalCount = 0;  // 总数
   status = 'ON_SALE'
 
   constructor(
@@ -44,7 +44,7 @@ export class ProductSearchComponent implements OnInit {
   }
 
   /**
-   * 获取供应商列表数据（供调用）
+   * 获取列表数据（供调用）
    * */
   getProducts(params) {
     this.isSpinning = true;

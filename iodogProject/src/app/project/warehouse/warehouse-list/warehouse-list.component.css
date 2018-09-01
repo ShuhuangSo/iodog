@@ -1,0 +1,37 @@
+nz-card {
+  margin: 10px 0;
+}
+
+.at_right {
+  float: right;
+  margin: 0 0 0 5px;
+}
+
+.red {
+  color: red;
+}
+
+.search {
+  margin-bottom: 15px;
+}
+
+nz-input-group {
+  width: 300px;
+}
+
+.set_center {
+  text-align: center;
+}
+
+.operating {
+  text-align: right;
+  line-height: 20px;
+}
+
+nz-radio-group {
+  margin-right: 20px;
+}
+
+.order p {
+  text-align: right;
+}

@@ -1,0 +1,175 @@
+<div *ngIf="mode==='ADD'">
+  <div class="search">
+    <nz-select style="width: 120px;" [(ngModel)]="logistics_company" (ngModelChange)="listFilter()">
+      <nz-option nzValue="" nzLabel="全部物流"></nz-option>
+      <nz-option *ngFor="let option of logis" [nzLabel]="option" [nzValue]="option"></nz-option>
+    </nz-select>
+  </div>
+
+  <nz-table #basicTable
+            nzSize="middle"
+            [nzScroll]="{ y: '300px' }"
+            [nzWidthConfig]="['100px','100px','200px', null, '100px']"
+            nzShowSizeChanger="true"
+            [nzLoading] = "operating"
+            [nzShowTotal] = "totalItemsTemp"
+            [nzNoResult] = "noResultTemp"
+            nzLoadingDelay="500"
+            nzFrontPagination="false"
+            [nzPageSizeOptions]="[20,50,100]"
+            [nzTotal]="totalCount"
+            (nzPageSizeChange) = "pageSizeChange($event)"
+            (nzPageIndexChange) = "pageIndexChange($event)"
+            [(nzPageSize)]=pageSize
+            [nzData]="warehouse">
+
+    <thead>
+    <tr>
+      <th>物流公司</th>
+      <th>仓库代码</th>
+      <th>仓库名称</th>
+      <th>地址</th>
+      <th class="set_center">操作</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>{{data.logistics_company}}</td>
+      <td>{{data.wh_code}}</td>
+      <td>{{data.wh_name}}</td>
+      <td>{{data.wh_address}}</td>
+      <td class="set_center" *ngIf="!data.is_added">
+        <a (click)="chooseWarehouse(data.id)">添加</a>
+      </td>
+      <td class="set_center" *ngIf="data.is_added">
+        已添加
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+
+  <ng-template #totalItemsTemp let-total>
+    总共 {{total}} 个仓库
+  </ng-template>
+
+  <ng-template #noResultTemp>
+    <i class="fa fa-child fa-5x"></i>木有！
+  </ng-template>
+</div>
+
+<div *ngIf="mode==='EDIT'">
+  <nz-spin [nzSpinning]="operating">
+    <form nz-form [formGroup]="formModel">
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="4">
+          仓库ID
+        </nz-form-label>
+        <nz-form-control [nzSm]="8">
+          {{wh.wh_id}}
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="4">
+          仓库代码
+        </nz-form-label>
+        <nz-form-control [nzSm]="8">
+          {{wh.wh_code}}
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="4">
+          仓库名称
+        </nz-form-label>
+        <nz-form-control [nzSm]="8">
+          {{wh.wh_name}}
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="4">
+          物流公司
+        </nz-form-label>
+        <nz-form-control [nzSm]="8">
+          {{wh.logistics_company}}
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="4">
+          所在国家
+        </nz-form-label>
+        <nz-form-control [nzSm]="8">
+          {{wh.country_code}}
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="4">
+          仓库地址
+        </nz-form-label>
+        <nz-form-control [nzSm]="20">
+          {{wh.wh_address}}
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="4">
+          退货收件人
+        </nz-form-label>
+        <nz-form-control [nzSm]="8">
+          <input nz-input formControlName="return_name" type="text">
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="4">
+          退货电话
+        </nz-form-label>
+        <nz-form-control [nzSm]="8">
+          <input nz-input formControlName="return_phone" type="text">
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="4">
+          退货地址
+        </nz-form-label>
+        <nz-form-control [nzSm]="20">
+          <input nz-input formControlName="return_address" type="text">
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="4">
+          发货人姓名
+        </nz-form-label>
+        <nz-form-control [nzSm]="8">
+          <input nz-input formControlName="post_name" type="text">
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="4">
+          发货人电话
+        </nz-form-label>
+        <nz-form-control [nzSm]="8">
+          <input nz-input formControlName="post_phone" type="text">
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="4">
+          发货人地址
+        </nz-form-label>
+        <nz-form-control [nzSm]="20">
+          <input nz-input formControlName="post_address" type="text">
+        </nz-form-control>
+      </nz-form-item>
+
+    </form>
+  </nz-spin>
+</div>

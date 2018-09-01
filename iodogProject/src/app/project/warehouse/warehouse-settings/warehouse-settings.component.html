@@ -1,0 +1,124 @@
+<nz-card>
+  <nz-tabset>
+    <nz-tab nzTitle="海外仓设置" (nzSelect)="changeTab('OS')">
+
+      <div class="search">
+        <nz-radio-group
+          [(ngModel)]='is_active'
+          (ngModelChange)="listFilter()"
+          [nzSize]="'small'">
+          <label nz-radio-button nzValue="ALL">全部</label>
+          <label nz-radio-button nzValue="true">启用</label>
+          <label nz-radio-button nzValue="false">停用</label>
+        </nz-radio-group>
+      </div>
+
+      <nz-table #basicTable
+                [nzTitle] = "titleTemp"
+                nzShowSizeChanger="true"
+                [nzLoading] = "operating"
+                [nzShowPagination] = "false"
+                [nzData]="wh">
+
+        <thead>
+        <tr>
+          <th>名称</th>
+          <th class="set_center">物流公司</th>
+          <th class="set_center">所在国家</th>
+          <th class="set_center">库存总量</th>
+          <th class="set_center">库存货值(元)</th>
+          <th class="set_center">状态</th>
+          <th nzWidth="100px">操作</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{data.wh_name}}</td>
+          <td class="set_center">{{data.logistics_company}}</td>
+          <td class="set_center">{{data.country_code}}</td>
+          <td class="set_center">{{data.total_stock_num}}</td>
+          <td class="set_center">{{data.total_value}}</td>
+          <td class="set_center">
+            <nz-switch
+              [ngModel]="data.is_active"
+              [nzLoading]="changing"
+              (ngModelChange)="changeStatus(data.is_active, data.id)"
+              nzCheckedChildren="已启用"
+              nzUnCheckedChildren="已停用"></nz-switch>
+          </td>
+          <td>
+            <a (click)="editWarehouse(data)">设置</a>
+          </td>
+        </tr>
+        </tbody>
+      </nz-table>
+
+      <ng-template #titleTemp>
+        <div class="operating">
+          <button nz-button [nzType]="'primary'" (click)="addWarehouse()"><i class="anticon anticon-plus"></i>新增仓库</button>
+        </div>
+      </ng-template>
+
+    </nz-tab>
+    <nz-tab nzTitle="本地仓设置" (nzSelect)="changeTab('LOCAL')">
+
+      <div class="search">
+        <nz-radio-group
+          [(ngModel)]='is_active'
+          (ngModelChange)="listFilter()"
+          [nzSize]="'small'">
+          <label nz-radio-button nzValue="ALL">全部</label>
+          <label nz-radio-button nzValue="true">启用</label>
+          <label nz-radio-button nzValue="false">停用</label>
+        </nz-radio-group>
+      </div>
+
+      <nz-table #basicTable
+                [nzTitle] = "titleTemp"
+                nzShowSizeChanger="true"
+                [nzLoading] = "operating"
+                [nzShowPagination] = "false"
+                [nzData]="wh">
+
+        <thead>
+        <tr>
+          <th>名称</th>
+          <th class="set_center">库存总量</th>
+          <th class="set_center">库存货值(元)</th>
+          <th class="set_center">状态</th>
+          <th nzWidth="150px" class="set_center">操作</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{data.wh_name}}</td>
+          <td class="set_center">{{data.total_stock_num}}</td>
+          <td class="set_center">{{data.total_value}}</td>
+          <td class="set_center">
+            <nz-switch
+              [ngModel]="data.is_active"
+              [nzLoading]="changing"
+              (ngModelChange)="changeStatus(data.is_active, data.id)"
+              nzCheckedChildren="已启用"
+              nzUnCheckedChildren="已停用"></nz-switch>
+          </td>
+          <td class="set_center">
+            <a>仓位</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a (click)="editWarehouse(data)">设置</a>
+          </td>
+        </tr>
+        </tbody>
+      </nz-table>
+
+      <ng-template #titleTemp>
+        <div class="operating">
+          <button nz-button [nzType]="'primary'" (click)="addWarehouse()"><i class="anticon anticon-plus"></i>新增仓库</button>
+        </div>
+      </ng-template>
+
+    </nz-tab>
+  </nz-tabset>
+</nz-card>

@@ -9,6 +9,8 @@ import {ProductComponent} from './project/products/product/product.component';
 import {SupplierComponent} from './project/products/supplier/supplier.component';
 import {ComboComponent} from './project/products/combo/combo.component';
 import {PlatformAuthComponent} from './project/settings/platform-auth/platform-auth.component';
+import {WarehouseListComponent} from './project/warehouse/warehouse-list/warehouse-list.component';
+import {WarehouseSettingsComponent} from './project/warehouse/warehouse-settings/warehouse-settings.component';
 
 
 const routes: Routes = [
@@ -18,12 +20,14 @@ const routes: Routes = [
   {
     path: 'home', component: HomeComponent,
     children: [
-      {path: '', component: DashboardComponent},
-      {path: 'product/:id', component: ProductDetailComponent},
-      {path: 'product', component: ProductComponent},
-      {path: 'supplier', component: SupplierComponent},
-      {path: 'combo', component: ComboComponent},
-      {path: 'platform-auth', component: PlatformAuthComponent}
+      {path: '', component: DashboardComponent}, // 主页面
+      {path: 'product/:id', component: ProductDetailComponent}, // 产品详情
+      {path: 'product', component: ProductComponent}, // 产品列表
+      {path: 'supplier', component: SupplierComponent}, // 供应商
+      {path: 'combo', component: ComboComponent}, // 产品组合
+      {path: 'warehouse', component: WarehouseListComponent}, // 仓库列表
+      {path: 'warehouse-settings', component: WarehouseSettingsComponent}, // 仓库设置
+      {path: 'platform-auth', component: PlatformAuthComponent} // 平台授权
     ]
   },
   {

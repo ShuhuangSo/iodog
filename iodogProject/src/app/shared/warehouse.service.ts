@@ -58,6 +58,13 @@ export class WarehouseService {
     return this.http.patch(`api/warehouse-setting/${form.id}/`, JSON.stringify(form), {observe: 'response'});
   }
 
+  /**
+   * 添加本地仓库
+   * */
+  addLocalWarehouse(params: any): Observable<any> {
+    return this.http.post(`api/warehouse-add-local/`, JSON.stringify(params), {observe: 'response'});
+  }
+
 }
 
 // 仓库库存列表

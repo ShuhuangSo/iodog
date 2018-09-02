@@ -11,7 +11,6 @@ import {WarehouseAddComponent} from '../warehouse-add/warehouse-add.component';
 export class WarehouseSettingsComponent implements OnInit {
   wh: Warehouse[]
   operating = false; // 操作loading状态
-  changing = false; // 开关loading状态
   pageSize = 20;  // 默认一页显示条数
   totalCount = 0;  // 供应商总数
   is_active = 'true'; // 仓库状态
@@ -70,7 +69,6 @@ export class WarehouseSettingsComponent implements OnInit {
    * 修改仓库状态
    * */
   changeStatus(status, id) {
-    this.changing = true;
     this.warehouseService.updateWarehouse({is_active: !status, id: id}).subscribe(
       val => {
         this.wh = val.results;
@@ -79,17 +77,15 @@ export class WarehouseSettingsComponent implements OnInit {
       },
       err => {
         console.log(err);
-        this.changing = false;
       },
       () => {
-        this.changing = false;
         this.listFilter();
       }
     );
   }
 
   /**
-   * 添加仓库
+   * 添加海外仓
    * */
   addWarehouse(): void {
     const modal = this.modalService.create({
@@ -120,7 +116,7 @@ export class WarehouseSettingsComponent implements OnInit {
   }
 
   /**
-   * 编辑仓库
+   * 编辑海外仓库
    * */
   editWarehouse(wh): void {
     const modal = this.modalService.create({
@@ -133,6 +129,48 @@ export class WarehouseSettingsComponent implements OnInit {
       nzComponentParams: {
         mode: 'EDIT',
         wh: wh
+      },
+      nzFooter: [
+        {
+          label: '取消',
+          shape: 'default',
+          onClick: () => modal.destroy()
+        },
+        {
+          label: '确认',
+          type: 'primary',
+          loading: ((componentInstance) => {
+            return componentInstance.operating;
+          }),
+          onClick: (componentInstance) => {
+            componentInstance.destroyModal();
+          }
+        },
+      ]
+    });
+
+    // 模态框返回数据
+    modal.afterClose.subscribe((result) => {
+      if (result) {
+        this.listFilter();
+      }
+    });
+
+  }
+
+  /**
+   * 添加本地仓库
+   * */
+  addLocalWarehouse(): void {
+    const modal = this.modalService.create({
+      nzTitle: '添加本地仓',
+      nzMaskClosable: false,
+      nzClosable: true,
+      nzWidth: '800px',
+      nzStyle: {top: '20px'},
+      nzContent: WarehouseAddComponent,
+      nzComponentParams: {
+        mode: 'ADDLOCAL'
       },
       nzFooter: [
         {

@@ -17,6 +17,7 @@
                 [nzTitle] = "titleTemp"
                 nzShowSizeChanger="true"
                 [nzLoading] = "operating"
+                nzLoadingDelay="500"
                 [nzShowPagination] = "false"
                 [nzData]="wh">
 
@@ -42,7 +43,6 @@
           <td class="set_center">
             <nz-switch
               [ngModel]="data.is_active"
-              [nzLoading]="changing"
               (ngModelChange)="changeStatus(data.is_active, data.id)"
               nzCheckedChildren="已启用"
               nzUnCheckedChildren="已停用"></nz-switch>
@@ -56,7 +56,7 @@
 
       <ng-template #titleTemp>
         <div class="operating">
-          <button nz-button [nzType]="'primary'" (click)="addWarehouse()"><i class="anticon anticon-plus"></i>新增仓库</button>
+          <button nz-button [nzType]="'primary'" (click)="addWarehouse()"><i class="anticon anticon-plus"></i>新增海外仓</button>
         </div>
       </ng-template>
 
@@ -74,10 +74,11 @@
         </nz-radio-group>
       </div>
 
-      <nz-table #basicTable
-                [nzTitle] = "titleTemp"
+      <nz-table #basicTable2
+                [nzTitle] = "titleTemp2"
                 nzShowSizeChanger="true"
                 [nzLoading] = "operating"
+                nzLoadingDelay="500"
                 [nzShowPagination] = "false"
                 [nzData]="wh">
 
@@ -92,14 +93,13 @@
         </thead>
 
         <tbody>
-        <tr *ngFor="let data of basicTable.data">
+        <tr *ngFor="let data of basicTable2.data">
           <td>{{data.wh_name}}</td>
           <td class="set_center">{{data.total_stock_num}}</td>
           <td class="set_center">{{data.total_value}}</td>
           <td class="set_center">
             <nz-switch
               [ngModel]="data.is_active"
-              [nzLoading]="changing"
               (ngModelChange)="changeStatus(data.is_active, data.id)"
               nzCheckedChildren="已启用"
               nzUnCheckedChildren="已停用"></nz-switch>
@@ -113,9 +113,9 @@
         </tbody>
       </nz-table>
 
-      <ng-template #titleTemp>
+      <ng-template #titleTemp2>
         <div class="operating">
-          <button nz-button [nzType]="'primary'" (click)="addWarehouse()"><i class="anticon anticon-plus"></i>新增仓库</button>
+          <button nz-button [nzType]="'primary'" (click)="addLocalWarehouse()"><i class="anticon anticon-plus"></i>新增本地仓库</button>
         </div>
       </ng-template>
 

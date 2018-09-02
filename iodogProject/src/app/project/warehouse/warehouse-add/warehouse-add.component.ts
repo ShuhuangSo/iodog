@@ -41,6 +41,18 @@ export class WarehouseAddComponent implements OnInit {
         post_address: [this.wh.post_address, [Validators.maxLength(200)]]
       });
     }
+    if (this.mode === 'ADDLOCAL') {
+      this.formModel = this.fb.group({
+        wh_name: ['', [Validators.required, Validators.maxLength(30)]],
+        wh_address: ['', [Validators.maxLength(200)]],
+        return_name: ['', [Validators.maxLength(80)]],
+        return_phone: ['', [Validators.maxLength(30)]],
+        return_address: ['', [Validators.maxLength(200)]],
+        post_name: ['', [Validators.maxLength(80)]],
+        post_phone: ['', [Validators.maxLength(30)]],
+        post_address: ['', [Validators.maxLength(200)]]
+      });
+    }
   }
 
   /**
@@ -127,23 +139,63 @@ export class WarehouseAddComponent implements OnInit {
   }
 
   /**
-   * 提交修改
+   *更新海外仓
+   * */
+  updateOSWarehouse() {
+    this.operating = true;
+    this.warehouseService.updateWarehouse(this.formModel.value).subscribe(
+      val => {
+        if (val.status === 200) {
+          this.operating = false;
+          this.modal.destroy({data: 'ok'});
+        }
+      },
+      err => {
+        console.log(err)
+        this.operating = false;
+      }
+    );
+  }
+
+  // 获取FormControl
+  getFormControl(name) {
+    return this.formModel.controls[ name ];
+  }
+
+  /**
+   * 新增本地仓
+   * */
+  addLocalWarehouse() {
+    this.operating = true;
+    this.warehouseService.addLocalWarehouse(this.formModel.value).subscribe(
+      val => {
+        if (val.status === 201) {
+          this.operating = false;
+          this.modal.destroy({data: 'ok'});
+        }
+        if (val.status === 204) {
+          this.getFormControl('wh_name').setErrors({ error: true, duplicated: true });
+          this.operating = false;
+        }
+      },
+      err => {
+        console.log(err)
+        this.operating = false;
+      }
+    );
+  }
+
+  /**
+   * 提交
    * */
   destroyModal() {
     if (this.formModel.valid) {
-      this.operating = true;
-      this.warehouseService.updateWarehouse(this.formModel.value).subscribe(
-        val => {
-          if (val.status === 200) {
-            this.operating = false;
-            this.modal.destroy({data: 'ok'});
-          }
-        },
-        err => {
-          console.log(err)
-          this.operating = false;
-        }
-      );
+      if (this.mode === 'EDIT') {
+        this.updateOSWarehouse();
+      }
+      if (this.mode === 'ADDLOCAL') {
+        this.addLocalWarehouse();
+      }
     } else {
       for (const key in this.formModel.controls) {
         this.formModel.controls[ key ].markAsDirty();
@@ -151,7 +203,6 @@ export class WarehouseAddComponent implements OnInit {
       }
 
     }
-    this.modal.destroy({data: 'ok'});
   }
 
 }

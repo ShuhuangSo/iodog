@@ -173,3 +173,88 @@
     </form>
   </nz-spin>
 </div>
+
+<div *ngIf="mode==='ADDLOCAL'">
+  <nz-spin [nzSpinning]="operating">
+    <form nz-form [formGroup]="formModel">
+
+      <nz-form-item>
+        <nz-form-label nzRequired [nzSm]="4">
+          仓库名称
+        </nz-form-label>
+        <nz-form-control [nzSm]="8" >
+          <input nz-input formControlName="wh_name" type="text">
+          <nz-form-explain *ngIf="getFormControl('wh_name').dirty && getFormControl('wh_name').errors">
+            <ng-container *ngIf="getFormControl('wh_name').hasError('duplicated')">
+              该仓库名称已存在!
+            </ng-container>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="4">
+          仓库地址
+        </nz-form-label>
+        <nz-form-control [nzSm]="20">
+          <input nz-input formControlName="wh_address" type="text">
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="4">
+          退货收件人
+        </nz-form-label>
+        <nz-form-control [nzSm]="8">
+          <input nz-input formControlName="return_name" type="text">
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="4">
+          退货电话
+        </nz-form-label>
+        <nz-form-control [nzSm]="8">
+          <input nz-input formControlName="return_phone" type="text">
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="4">
+          退货地址
+        </nz-form-label>
+        <nz-form-control [nzSm]="20">
+          <input nz-input formControlName="return_address" type="text">
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="4">
+          发货人姓名
+        </nz-form-label>
+        <nz-form-control [nzSm]="8">
+          <input nz-input formControlName="post_name" type="text">
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="4">
+          发货人电话
+        </nz-form-label>
+        <nz-form-control [nzSm]="8">
+          <input nz-input formControlName="post_phone" type="text">
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="4">
+          发货人地址
+        </nz-form-label>
+        <nz-form-control [nzSm]="20">
+          <input nz-input formControlName="post_address" type="text">
+        </nz-form-control>
+      </nz-form-item>
+
+    </form>
+  </nz-spin>
+</div>

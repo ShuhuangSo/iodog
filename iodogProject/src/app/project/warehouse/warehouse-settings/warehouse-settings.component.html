@@ -105,7 +105,7 @@
               nzUnCheckedChildren="已停用"></nz-switch>
           </td>
           <td class="set_center">
-            <a>仓位</a>
+            <a (click)="addPosition(data.id, data.wh_name)">仓位</a>
             <nz-divider nzType="vertical"></nz-divider>
             <a (click)="editWarehouse(data)">设置</a>
           </td>

@@ -41,6 +41,8 @@ import { WarehouseListComponent } from './project/warehouse/warehouse-list/wareh
 import {WarehouseService} from './shared/warehouse.service';
 import { WarehouseSettingsComponent } from './project/warehouse/warehouse-settings/warehouse-settings.component';
 import { WarehouseAddComponent } from './project/warehouse/warehouse-add/warehouse-add.component';
+import { PositionComponent } from './project/warehouse/position/position.component';
+import { PositionAddComponent } from './project/warehouse/position-add/position-add.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +76,9 @@ import { WarehouseAddComponent } from './project/warehouse/warehouse-add/warehou
     PlatformAuthAddComponent,
     WarehouseListComponent,
     WarehouseSettingsComponent,
-    WarehouseAddComponent
+    WarehouseAddComponent,
+    PositionComponent,
+    PositionAddComponent
   ],
   imports: [
     BrowserModule,
@@ -101,6 +105,8 @@ import { WarehouseAddComponent } from './project/warehouse/warehouse-add/warehou
     ProductBulkEditComponent, // 产品批量编辑
     ProductPrintComponent, // 产品标签打印
     WarehouseAddComponent, // 仓库添加
+    PositionComponent, // 仓位
+    PositionAddComponent, // 添加仓位
     UploadsComponent, // 导入上传
     PlatformAuthAddComponent, // 添加，编辑授权窗口
   ],

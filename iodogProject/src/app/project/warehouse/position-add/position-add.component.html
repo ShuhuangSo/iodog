@@ -1,0 +1,95 @@
+<nz-alert *ngIf="alert_status" nzType="error" nzMessage="列/层无效，请输入有效范围内数字" nzShowIcon></nz-alert>
+<div>
+  <nz-input-group nzAddOnAfter="前缀">
+    <input type="text" nz-input [(ngModel)]="head">
+  </nz-input-group>
+  <nz-input-group nzAddOnAfter="列">
+    <input type="text" nz-input [(ngModel)]="col">
+  </nz-input-group>
+  <nz-input-group nzAddOnAfter="连接符">
+    <input type="text" nz-input [(ngModel)]="connect">
+  </nz-input-group>
+  <nz-input-group nzAddOnAfter="层">
+    <input type="text" nz-input [(ngModel)]="row">
+  </nz-input-group>
+  <button nz-button [nzType]="'primary'" (click)="generatePosition()"><i class="anticon anticon-table"></i>批量生成仓位</button>
+</div>
+<span class="head">仓位号生成规则：仓位前缀+所属列+连接符+所属层;限99列22层</span>
+
+<nz-table #basicTable
+          nzShowSizeChanger="true"
+          [nzScroll]="{ y: '400px' }"
+          [nzWidthConfig]="['30px',null,'100px','100px','100px']"
+          nzSize = 'middle'
+          [nzLoading] = "operating"
+          nzLoadingDelay="500"
+          [nzTitle] = "titleTemp"
+          [nzShowTotal] = "totalItemsTemp"
+          [nzNoResult] = "noResultTemp"
+          [nzPageSizeOptions]="[20,50,100,500]"
+          [nzTotal]="totalCount"
+          (nzCurrentPageDataChange)="currentPageDataChange($event)"
+          [nzData]="position" [nzPageSize]='500'>
+
+  <thead>
+  <tr>
+    <th nzWidth="30px"
+        nzShowCheckbox
+        [(nzChecked)]="allChecked"
+        [nzIndeterminate]="indeterminate"
+        (nzCheckedChange)="checkAll($event)"
+    >
+    </th>
+    <th>仓位编号</th>
+    <th class="set_center" nzWidth="100px">所属列</th>
+    <th class="set_center" nzWidth="100px">所属层</th>
+    <th nzWidth="100px">操作</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <tr *ngFor="let data of basicTable.data">
+    <td
+      nzShowCheckbox
+      [(nzChecked)]="data.checked"
+      (nzCheckedChange)="refreshStatus($event)">
+    </td>
+    <td>
+      <input class="code_input" type="text" nz-input [(ngModel)]="data.po_code">
+    </td>
+    <td class="set_center">{{data.col}}</td>
+
+    <td class="set_center">{{data.row}}</td>
+    <td>
+      <a (click)="deletePosition(data.id)">删除</a>
+    </td>
+  </tr>
+  </tbody>
+</nz-table>
+
+<ng-template #totalItemsTemp let-total>
+  总共 {{total}} 个仓位
+</ng-template>
+
+<ng-template #noResultTemp>
+  <i class="fa fa-child fa-5x"></i>木有！
+</ng-template>
+
+<ng-template #titleTemp>
+  <div class="operating">
+
+    <nz-dropdown [nzTrigger]="'click'">
+      <button nz-button nz-dropdown >
+        <i class="anticon anticon-edit"></i>
+        批量操作
+        <i class="anticon anticon-down"></i>
+      </button>
+      <ul nz-menu>
+        <li nz-menu-item [nzDisabled]="disabledButton" (click)="bulkDeletePosition()"><i class="anticon anticon-delete"></i>&nbsp;批量删除</li>
+      </ul>
+    </nz-dropdown>
+
+    <span style="margin-left: 8px;" *ngIf="checkedNumber">共选中 {{checkedNumber}} 项</span>
+  </div>
+</ng-template>
+

@@ -1,0 +1,20 @@
+nz-input-group {
+  width: 100px;
+}
+
+.head {
+  color: #999999;
+}
+
+.set_center {
+  text-align: center;
+}
+
+.at_right {
+  float: right;
+  margin: 0 0 0 5px;
+}
+
+.code_input {
+  max-width: 300px;
+}

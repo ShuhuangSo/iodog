@@ -1,0 +1,115 @@
+<div class="search">
+  <nz-radio-group
+    [(ngModel)]='is_active'
+    (ngModelChange)="listFilter()"
+    [nzSize]="'small'">
+    <label nz-radio-button nzValue="">全部</label>
+    <label nz-radio-button nzValue="true">启用</label>
+    <label nz-radio-button nzValue="false">停用</label>
+  </nz-radio-group>
+</div>
+
+<nz-table #basicTable
+          nzShowSizeChanger="true"
+          [nzScroll]="{ y: '400px' }"
+          [nzWidthConfig]="['30px',null,'100px','100px']"
+          nzSize = 'middle'
+          [nzLoading] = "operating"
+          nzLoadingDelay="500"
+          [nzTitle] = "titleTemp"
+          [nzShowTotal] = "totalItemsTemp"
+          [nzNoResult] = "noResultTemp"
+          nzFrontPagination="false"
+          [nzPageSizeOptions]="[20,50,100]"
+          [nzTotal]="totalCount"
+          (nzPageSizeChange) = "pageSizeChange($event)"
+          (nzPageIndexChange) = "pageIndexChange($event)"
+          (nzCurrentPageDataChange)="currentPageDataChange($event)"
+          [nzData]="position" [(nzPageSize)]=pageSize>
+
+  <thead>
+  <tr>
+    <th nzShowCheckbox
+        [(nzChecked)]="allChecked"
+        [nzIndeterminate]="indeterminate"
+        (nzCheckedChange)="checkAll($event)"
+    >
+    </th>
+    <th>仓位编号</th>
+    <th class="set_center">状态</th>
+    <th class="set_center">操作</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <tr *ngFor="let data of basicTable.data">
+    <td
+      nzShowCheckbox
+      [(nzChecked)]="data.checked"
+      (nzCheckedChange)="refreshStatus($event)">
+    </td>
+    <td>
+      <div *ngIf="!edit_status">{{data.po_code}}</div>
+      <input *ngIf="edit_status" class="code_input" type="text" nz-input [(ngModel)]="data.po_code">
+    </td>
+
+    <td class="set_center">
+      <nz-tag *ngIf="data.is_active" [nzColor]="'green'">启用</nz-tag>
+      <nz-tag *ngIf="!data.is_active" [nzColor]="'red'">停用</nz-tag>
+    </td>
+    <td class="set_center">
+      <a *ngIf="data.is_active" (click)="changeStatus(data.is_active, data.id)">停用</a>
+      <a *ngIf="!data.is_active" (click)="changeStatus(data.is_active, data.id)">启用</a>
+      <nz-divider nzType="vertical"></nz-divider>
+      <a (click)="deletePosition(data.id)">删除</a>
+    </td>
+  </tr>
+  </tbody>
+</nz-table>
+
+<ng-template #totalItemsTemp let-total>
+  总共 {{total}} 个仓位
+</ng-template>
+
+<ng-template #noResultTemp>
+  <i class="fa fa-child fa-5x"></i>木有！
+</ng-template>
+
+<ng-template #titleTemp>
+  <div class="operating">
+
+    <button nz-button [nzType]="'primary'" (click)="addPosition(id)"><i class="anticon anticon-plus"></i>添加仓位</button>
+
+    <nz-dropdown [nzTrigger]="'click'">
+      <button nz-button nz-dropdown >
+        <i class="anticon anticon-edit"></i>
+        批量操作
+        <i class="anticon anticon-down"></i>
+      </button>
+      <ul nz-menu>
+        <li nz-menu-item [nzDisabled]="disabledButton" (click)="bulkChangeStatus(true)"><i class="anticon anticon-smile-o"></i>&nbsp;批量启用</li>
+        <li nz-menu-item [nzDisabled]="disabledButton" (click)="bulkChangeStatus(false)"><i class="anticon anticon-frown-o"></i>&nbsp;批量停用</li>
+        <li nz-menu-item [nzDisabled]="disabledButton" (click)="bulkDeletePosition()"><i class="anticon anticon-delete"></i>&nbsp;批量删除</li>
+      </ul>
+    </nz-dropdown>
+
+    <nz-switch
+      [(ngModel)]="edit_status"
+      nzCheckedChildren="编辑"
+      nzUnCheckedChildren="编辑"></nz-switch>
+
+    <nz-dropdown class="at_right" [nzTrigger]="'click'">
+      <button nz-button nz-dropdown >
+        <i class="anticon anticon-cloud-download"></i>
+        导入/导出
+        <i class="anticon anticon-down"></i>
+      </button>
+      <ul nz-menu>
+        <li nz-menu-item (click)="bulkUploadSupplier()"><i class="anticon anticon-cloud-upload-o"></i>&nbsp;模板导入仓位</li>
+        <li nz-menu-item><i class="anticon anticon-cloud-download-o"></i>&nbsp;导出仓位</li>
+      </ul>
+    </nz-dropdown>
+
+    <span style="margin-left: 8px;" *ngIf="checkedNumber">共选中 {{checkedNumber}} 项</span>
+  </div>
+</ng-template>

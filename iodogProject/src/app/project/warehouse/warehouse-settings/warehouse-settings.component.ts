@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Warehouse, WarehouseService} from '../../../shared/warehouse.service';
 import {NzModalService} from 'ng-zorro-antd';
 import {WarehouseAddComponent} from '../warehouse-add/warehouse-add.component';
+import {PositionComponent} from '../position/position.component';
 
 @Component({
   selector: 'app-warehouse-settings',
@@ -180,6 +181,48 @@ export class WarehouseSettingsComponent implements OnInit {
         },
         {
           label: '确认',
+          type: 'primary',
+          loading: ((componentInstance) => {
+            return componentInstance.operating;
+          }),
+          onClick: (componentInstance) => {
+            componentInstance.destroyModal();
+          }
+        },
+      ]
+    });
+
+    // 模态框返回数据
+    modal.afterClose.subscribe((result) => {
+      if (result) {
+        this.listFilter();
+      }
+    });
+
+  }
+
+  /**
+   * 添加仓位
+   * */
+  addPosition(id, wh_name): void {
+    const modal = this.modalService.create({
+      nzTitle: `仓位列表--${wh_name}`,
+      nzMaskClosable: false,
+      nzClosable: true,
+      nzWidth: '1000px',
+      nzStyle: {top: '20px'},
+      nzContent: PositionComponent,
+      nzComponentParams: {
+        id: id
+      },
+      nzFooter: [
+        {
+          label: '关闭',
+          shape: 'default',
+          onClick: () => modal.destroy()
+        },
+        {
+          label: '保存',
           type: 'primary',
           loading: ((componentInstance) => {
             return componentInstance.operating;

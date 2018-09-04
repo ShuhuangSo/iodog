@@ -65,6 +65,41 @@ export class WarehouseService {
     return this.http.post(`api/warehouse-add-local/`, JSON.stringify(params), {observe: 'response'});
   }
 
+  /**
+   * 添加仓位
+   * */
+  addPosition(params: any): Observable<any> {
+    return this.http.post(`api/position-add/`, JSON.stringify(params), {observe: 'response'});
+  }
+
+  /**
+   * 获取仓位列表
+   * */
+  getPosition(params: string): Observable<any>  {
+    return this.http.get(`api/position/?${params}`);
+  }
+
+  /**
+   * 修改仓位
+   * */
+  updatePosition(params: any): Observable<any> {
+    return this.http.post(`api/position-update/`, JSON.stringify(params), {observe: 'response'});
+  }
+
+  /**
+   * 修改仓位状态
+   * */
+  updatePositionStatus(form: any): Observable<any> {
+    return this.http.patch(`api/position/${form.id}/`, JSON.stringify(form), {observe: 'response'});
+  }
+
+  /**
+   * 批量修改仓位状态
+   * */
+  bulkUpdatePositionStatus(form: any): Observable<any> {
+    return this.http.post(`api/position-bulk-update/`, JSON.stringify(form), {observe: 'response'});
+  }
+
 }
 
 // 仓库库存列表
@@ -111,5 +146,17 @@ export class Warehouse {
     public total_stock_num: number, // 库存总量
     public total_value: number, // 库存货值(元)
     public logistics_company: string // 物流公司
+  ) {}
+}
+
+// 仓位
+export class Position {
+  constructor(
+    public id: string, // id
+    public po_code: string, // 仓位代码
+    public col: number,
+    public row: number,
+    public is_active = true, // 是否启用
+    public checked = false // 数据选择状态
   ) {}
 }

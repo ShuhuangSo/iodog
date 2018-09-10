@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {WarehouseService, WHStock} from '../../../shared/warehouse.service';
+import {Warehouse, WarehouseService, WHStock} from '../../../shared/warehouse.service';
 import {ListDisplaySettingComponent} from '../../list-display-setting/list-display-setting.component';
 import {NzModalService} from 'ng-zorro-antd';
 import {PlatformAuthAddComponent} from '../../settings/platform-auth-add/platform-auth-add.component';
@@ -11,12 +11,16 @@ import {WarehouseAddComponent} from '../warehouse-add/warehouse-add.component';
   styleUrls: ['./warehouse-list.component.css']
 })
 export class WarehouseListComponent implements OnInit {
-  wh_stock: WHStock[]
+  wh_stock: WHStock[]; // 仓库库存
+  wh: Warehouse[]; // 仓库列表
 
   operating = false; // 操作loading状态
-  search = '';  // 搜索值
+  os_search = '';  // 海外仓搜索值
   pageSize = 20;  // 默认一页显示条数
   totalCount = 0;  // 产品总数
+  wh_type = 'OS'; // 默认仓库类型
+  is_onsale = 'true'; // 默认库存状态
+  current_warehouse = null; // 当前仓库
 
   // 自定义显示{是否显示，字段名，显示名称，是否禁用}
   display = [
@@ -30,7 +34,7 @@ export class WarehouseListComponent implements OnInit {
     {show: true, model_name: 'doi', list_name: 'DOI', disabled: false},
   ];
 
-  constructor(private warehouse: WarehouseService,
+  constructor(private warehouseService: WarehouseService,
               private modalService: NzModalService) { }
 
   ngOnInit() {
@@ -40,7 +44,83 @@ export class WarehouseListComponent implements OnInit {
       this.display = JSON.parse(display_setting);
     }
 
-    this.wh_stock = this.warehouse.getWHStock();
+    this.getWarehouseList();
+  }
+
+  /**
+   * 获取仓库列表数据
+   * */
+  getWarehouseList() {
+    const urlparams = new URLSearchParams();
+    urlparams.append('wh_type', this.wh_type);
+    urlparams.append('is_active', 'true');
+
+    this.operating = true;
+    this.warehouseService.getWarehouse(urlparams.toString()).subscribe(
+      val => {
+        this.wh = val.results;
+        if (this.wh.length) {
+          this.current_warehouse = this.wh[0].id;
+          this.OS_listFilter();
+        }
+
+      },
+      err => {
+        console.log(err);
+        this.operating = false;
+      },
+      () => {
+        this.operating = false;
+      }
+    );
+  }
+
+  /**
+   * 清除海外仓搜索
+   * */
+  cleanSearch() {
+    this.os_search = '';
+    this.OS_listFilter();
+  }
+
+  /**
+   * 获取海外仓列表数据
+   * */
+  OS_listFilter() {
+    const urlparams = new URLSearchParams();
+    urlparams.append('page_size', this.pageSize.toString());
+    urlparams.append('wh_type', 'OS');
+    if (this.is_onsale !== '') {
+      urlparams.append('is_onsale', this.is_onsale);
+    }
+    if (this.os_search !== '') {
+      urlparams.append('search', this.os_search);
+    }
+    if (this.current_warehouse) {
+      urlparams.append('warehouse', this.current_warehouse);
+    }
+    this.getWarehouseStock(urlparams.toString());
+  }
+
+  /**
+   * 获取列表数据（供调用）
+   * */
+  getWarehouseStock(params) {
+    this.operating = true;
+    this.warehouseService.getWarehouseStock(params).subscribe(
+      val => {
+        this.wh_stock = val.results;
+        this.totalCount = val.count;
+
+      },
+      err => {
+        console.log(err);
+        this.operating = false;
+      },
+      () => {
+        this.operating = false;
+      }
+    );
   }
 
   /**

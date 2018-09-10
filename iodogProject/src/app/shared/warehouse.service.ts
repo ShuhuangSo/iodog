@@ -100,6 +100,13 @@ export class WarehouseService {
     return this.http.post(`api/position-bulk-update/`, JSON.stringify(form), {observe: 'response'});
   }
 
+  /**
+   * 获取仓库库存列表
+   * */
+  getWarehouseStock(params: string): Observable<any>  {
+    return this.http.get(`api/warehouse-stock/?${params}`);
+  }
+
 }
 
 // 仓库库存列表

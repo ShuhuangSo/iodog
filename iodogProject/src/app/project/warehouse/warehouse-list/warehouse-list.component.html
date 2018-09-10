@@ -5,23 +5,21 @@
     <div class="search">
 
       <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
-        <input [(ngModel)]='search' (keyup.enter)="listFilter()" type="text" nz-input placeholder="SKU | 产品名称搜索">
+        <input [(ngModel)]='os_search' (keyup.enter)="OS_listFilter()" type="text" nz-input placeholder="SKU | 产品名称搜索">
       </nz-input-group>
       <ng-template #suffixIconButton>
-        <button nz-button nzType="primary" nzSearch (click)="listFilter()"><i class="anticon anticon-search"></i></button>
+        <i class="anticon anticon-close-circle" (click)="cleanSearch()" *ngIf="os_search"></i>
+        <button nz-button nzType="primary" nzSearch (click)="OS_listFilter()"><i class="anticon anticon-search"></i></button>
       </ng-template>
     </div>
 
     <div class="search">
       <nz-radio-group
-        [(ngModel)]='p_status1'
-        (ngModelChange)="listFilter()"
-        [nzSize]="'small'">
-        <label nz-radio nzValue="ALL">AU Warehouse</label>
-        <label nz-radio nzValue="ON_SALE">UCWC Warehouse</label>
-        <label nz-radio nzValue="CLEAN">AUME Warehouse</label>
-        <label nz-radio nzValue="OFFLINE">UK Warehouse</label>
-        <label nz-radio nzValue="UNKNOWN">DE Warehouse</label>
+        [(ngModel)]='current_warehouse'
+        (ngModelChange)="OS_listFilter()"
+        [nzSize]="'small'"
+        *ngFor="let data of wh">
+        <label nz-radio [nzValue]=data.id>{{data.wh_name}}</label>
       </nz-radio-group>
     </div>
 
@@ -37,12 +35,12 @@
       </nz-radio-group>
 
       <nz-radio-group
-        [(ngModel)]='p_status3'
-        (ngModelChange)="listFilter()"
+        [(ngModel)]='is_onsale'
+        (ngModelChange)="OS_listFilter()"
         [nzSize]="'small'">
-        <label nz-radio-button nzValue="ALL">全部</label>
-        <label nz-radio-button nzValue="ON_SALE">在售</label>
-        <label nz-radio-button nzValue="CLEAN">停售</label>
+        <label nz-radio-button nzValue="">全部</label>
+        <label nz-radio-button nzValue="true">在售</label>
+        <label nz-radio-button nzValue="false">停售</label>
       </nz-radio-group>
 
       <button [nzSize]="'small'" nz-button class="at_right" (click)="setDisplay()"><i class="anticon anticon-setting"></i>自定义</button>

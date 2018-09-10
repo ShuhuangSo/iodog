@@ -12,7 +12,7 @@ import {PositionComponent} from '../position/position.component';
 export class WarehouseSettingsComponent implements OnInit {
   wh: Warehouse[]
   operating = false; // 操作loading状态
-  pageSize = 20;  // 默认一页显示条数
+  pageSize = 50;  // 默认一页显示条数
   totalCount = 0;  // 供应商总数
   is_active = 'true'; // 仓库状态
   wh_type = 'OS'; // 仓库类型

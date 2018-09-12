@@ -4,31 +4,8 @@ import {Observable} from 'rxjs/Observable';
 
 @Injectable()
 export class WarehouseService {
-  wh_stock = [new WHStock(
-    1,
-    'N123BK',
-    '平纹真皮手机套',
-    '',
-    100,
-    80,
-    20,
-    50,
-    500,
-    480,
-    '45.6',
-    '48.5',
-    '24.5',
-    true,
-    false,
-    false,
-    ''
-  )];
 
   constructor(private http: HttpClient) { }
-
-  getWHStock() {
-    return this.wh_stock;
-  }
 
   /**
    * 获取初始设置仓库
@@ -107,6 +84,13 @@ export class WarehouseService {
     return this.http.get(`api/warehouse-stock/?${params}`);
   }
 
+  /**
+   * 修改库存状态
+   * */
+  updateWarehouseStock(form: any): Observable<any> {
+    return this.http.patch(`api/warehouse-stock/${form.id}/`, JSON.stringify(form), {observe: 'response'});
+  }
+
 }
 
 // 仓库库存列表
@@ -124,6 +108,10 @@ export class WHStock {
     public his_sell_qty: number, // 历史销量(os)
     public avg_sell_qty: string, // 近30天平均销量(os)
     public avg_stock: string, // 近30天平均库存(os)
+    public avg_sell_qty15: string, // 近15天平均销量(os)
+    public avg_stock15: string, // 近15天平均库存(os)
+    public avg_sell_qty7: string, // 近7天平均销量(os)
+    public avg_stock7: string, // 近7天平均库存(os)
     public doi: string, // DOI(os)
     public is_return: boolean, // 是否退货库存(os)
     public is_active: boolean, // 产品是否有效(os)

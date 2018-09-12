@@ -3,6 +3,19 @@
   <nz-tab nzTitle="海外仓">
 
     <div class="search">
+      <nz-radio-group
+        [(ngModel)]='current_warehouse'
+        (ngModelChange)="OS_listFilter()"
+        [nzSize]="'small'"
+        *ngFor="let data of wh">
+        <label nz-radio [nzValue]=data.id>
+          <nz-tag *ngIf="current_warehouse==data.id" [nzColor]="'#108ee9'">{{data.wh_name}}</nz-tag>
+          <nz-tag *ngIf="current_warehouse!=data.id">{{data.wh_name}}</nz-tag>
+        </label>
+      </nz-radio-group>
+    </div>
+
+    <div class="search">
 
       <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
         <input [(ngModel)]='os_search' (keyup.enter)="OS_listFilter()" type="text" nz-input placeholder="SKU | 产品名称搜索">
@@ -13,15 +26,6 @@
       </ng-template>
     </div>
 
-    <div class="search">
-      <nz-radio-group
-        [(ngModel)]='current_warehouse'
-        (ngModelChange)="OS_listFilter()"
-        [nzSize]="'small'"
-        *ngFor="let data of wh">
-        <label nz-radio [nzValue]=data.id>{{data.wh_name}}</label>
-      </nz-radio-group>
-    </div>
 
     <div class="search">
       <nz-radio-group
@@ -56,73 +60,118 @@
               <p>可用库存
                 <nz-radio-group
                   nzSize="small"
-                  [(ngModel)]='order'
-                  (ngModelChange)="listFilter()">
-                <label nz-radio-button nzValue="ALL1"><i class="anticon anticon-caret-up"></i></label>
-                <label nz-radio-button nzValue="ON_SALE2"><i class="anticon anticon-caret-down"></i></label>
+                  [(ngModel)]='ordering'
+                  (ngModelChange)="OS_listFilter()">
+                <label nz-radio-button nzValue="available_qty"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="-available_qty"><i class="anticon anticon-caret-down"></i></label>
                 </nz-radio-group>
               </p>
             <p>待出库
               <nz-radio-group
                 nzSize="small"
-                [(ngModel)]='order'
-                (ngModelChange)="listFilter()">
-                <label nz-radio-button nzValue="ALL3"><i class="anticon anticon-caret-up"></i></label>
-                <label nz-radio-button nzValue="ON_SALE4"><i class="anticon anticon-caret-down"></i></label>
+                [(ngModel)]='ordering'
+                (ngModelChange)="OS_listFilter()">
+                <label nz-radio-button nzValue="reserved_qty"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="-reserved_qty"><i class="anticon anticon-caret-down"></i></label>
               </nz-radio-group>
             </p>
             <p>在途库存
               <nz-radio-group
                 nzSize="small"
-                [(ngModel)]='order'
-                (ngModelChange)="listFilter()">
-                <label nz-radio-button nzValue="ALL5"><i class="anticon anticon-caret-up"></i></label>
-                <label nz-radio-button nzValue="ON_SALE6"><i class="anticon anticon-caret-down"></i></label>
+                [(ngModel)]='ordering'
+                (ngModelChange)="OS_listFilter()">
+                <label nz-radio-button nzValue="on_way_qty"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="-on_way_qty"><i class="anticon anticon-caret-down"></i></label>
               </nz-radio-group>
             </p>
             <p>历史入库
               <nz-radio-group
                 nzSize="small"
-                [(ngModel)]='order'
-                (ngModelChange)="listFilter()">
-                <label nz-radio-button nzValue="ALL7"><i class="anticon anticon-caret-up"></i></label>
-                <label nz-radio-button nzValue="ON_SALE8"><i class="anticon anticon-caret-down"></i></label>
+                [(ngModel)]='ordering'
+                (ngModelChange)="OS_listFilter()">
+                <label nz-radio-button nzValue="his_in_qty"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="-his_in_qty"><i class="anticon anticon-caret-down"></i></label>
               </nz-radio-group>
             </p>
             <p>历史销量
               <nz-radio-group
                 nzSize="small"
-                [(ngModel)]='order'
-                (ngModelChange)="listFilter()">
-                <label nz-radio-button nzValue="ALL9"><i class="anticon anticon-caret-up"></i></label>
-                <label nz-radio-button nzValue="ON_SALE10"><i class="anticon anticon-caret-down"></i></label>
+                [(ngModel)]='ordering'
+                (ngModelChange)="OS_listFilter()">
+                <label nz-radio-button nzValue="his_sell_qty"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="-his_sell_qty"><i class="anticon anticon-caret-down"></i></label>
               </nz-radio-group>
             </p>
-            <p>30天销量
+            <p>30天平均销量
               <nz-radio-group
                 nzSize="small"
-                [(ngModel)]='order'
-                (ngModelChange)="listFilter()">
-                <label nz-radio-button nzValue="ALL11"><i class="anticon anticon-caret-up"></i></label>
-                <label nz-radio-button nzValue="ON_SALE12"><i class="anticon anticon-caret-down"></i></label>
+                [(ngModel)]='ordering'
+                (ngModelChange)="OS_listFilter()">
+                <label nz-radio-button nzValue="avg_sell_qty"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="-avg_sell_qty"><i class="anticon anticon-caret-down"></i></label>
               </nz-radio-group>
             </p>
-            <p>30天库存
+            <p>30天平均库存
               <nz-radio-group
                 nzSize="small"
-                [(ngModel)]='order'
-                (ngModelChange)="listFilter()">
-                <label nz-radio-button nzValue="ALL13"><i class="anticon anticon-caret-up"></i></label>
-                <label nz-radio-button nzValue="ON_SALE14"><i class="anticon anticon-caret-down"></i></label>
+                [(ngModel)]='ordering'
+                (ngModelChange)="OS_listFilter()">
+                <label nz-radio-button nzValue="avg_stock"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="-avg_stock"><i class="anticon anticon-caret-down"></i></label>
+              </nz-radio-group>
+            </p>
+            <p>15天平均销量
+              <nz-radio-group
+                nzSize="small"
+                [(ngModel)]='ordering'
+                (ngModelChange)="OS_listFilter()">
+                <label nz-radio-button nzValue="avg_sell_qty15"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="-avg_sell_qty15"><i class="anticon anticon-caret-down"></i></label>
+              </nz-radio-group>
+            </p>
+            <p>15天平均库存
+              <nz-radio-group
+                nzSize="small"
+                [(ngModel)]='ordering'
+                (ngModelChange)="OS_listFilter()">
+                <label nz-radio-button nzValue="avg_stock15"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="-avg_stock15"><i class="anticon anticon-caret-down"></i></label>
+              </nz-radio-group>
+            </p>
+            <p>7天平均销量
+              <nz-radio-group
+                nzSize="small"
+                [(ngModel)]='ordering'
+                (ngModelChange)="OS_listFilter()">
+                <label nz-radio-button nzValue="avg_sell_qty7"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="-avg_sell_qty7"><i class="anticon anticon-caret-down"></i></label>
+              </nz-radio-group>
+            </p>
+            <p>7天平均库存
+              <nz-radio-group
+                nzSize="small"
+                [(ngModel)]='ordering'
+                (ngModelChange)="OS_listFilter()">
+                <label nz-radio-button nzValue="avg_stock7"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="-avg_stock7"><i class="anticon anticon-caret-down"></i></label>
               </nz-radio-group>
             </p>
             <p>DOI
               <nz-radio-group
                 nzSize="small"
-                [(ngModel)]='order'
-                (ngModelChange)="listFilter()">
-                <label nz-radio-button nzValue="ALL15"><i class="anticon anticon-caret-up"></i></label>
-                <label nz-radio-button nzValue="ON_SALE16"><i class="anticon anticon-caret-down"></i></label>
+                [(ngModel)]='ordering'
+                (ngModelChange)="OS_listFilter()">
+                <label nz-radio-button nzValue="doi"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="-doi"><i class="anticon anticon-caret-down"></i></label>
+              </nz-radio-group>
+            </p>
+            <p>默认时间
+              <nz-radio-group
+                nzSize="small"
+                [(ngModel)]='ordering'
+                (ngModelChange)="OS_listFilter()">
+                <label nz-radio-button nzValue="create_time"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="-create_time"><i class="anticon anticon-caret-down"></i></label>
               </nz-radio-group>
             </p>
 
@@ -146,7 +195,6 @@
                 [nzTotal]="totalCount"
                 (nzPageSizeChange) = "pageSizeChange($event)"
                 (nzPageIndexChange) = "pageIndexChange($event)"
-                (nzCurrentPageDataChange)="currentPageDataChange($event)"
                 [nzData]="wh_stock" [(nzPageSize)]=pageSize>
 
         <thead>
@@ -167,7 +215,16 @@
             <div>近30天平均销量</div>
             <div>近30天平均库存</div>
           </th>
+          <th class="set_center" *ngIf="checkDisplay('avg15')">
+            <div>近15天平均销量</div>
+            <div>近15天平均库存</div>
+          </th>
+          <th class="set_center" *ngIf="checkDisplay('avg7')">
+            <div>近7天平均销量</div>
+            <div>近7天平均库存</div>
+          </th>
           <th class="set_center" *ngIf="checkDisplay('doi')">DOI</th>
+          <th nzWidth="100px">操作</th>
         </tr>
         </thead>
 
@@ -193,7 +250,25 @@
             <div>{{data.avg_sell_qty}}</div>
             <div>{{data.avg_stock}}</div>
           </td>
+          <td class="set_center" *ngIf="checkDisplay('avg15')">
+            <div>{{data.avg_sell_qty15}}</div>
+            <div>{{data.avg_stock15}}</div>
+          </td>
+          <td class="set_center" *ngIf="checkDisplay('avg7')">
+            <div>{{data.avg_sell_qty7}}</div>
+            <div>{{data.avg_stock7}}</div>
+          </td>
           <td class="set_center" *ngIf="checkDisplay('doi')">{{data.doi}}</td>
+          <td>
+            <nz-dropdown [nzTrigger]="'click'">
+              <button nz-button nz-dropdown [nzSize]="'small'"><span>处理</span> <i class="anticon anticon-down"></i></button>
+
+              <ul nz-menu>
+                <li nz-menu-item (click)="changeStatus(data.id, data.is_onsale)" *ngIf="!data.is_onsale"><i class="anticon anticon-retweet"></i>&nbsp;恢复销售</li>
+                <li nz-menu-item (click)="changeStatus(data.id, data.is_onsale)" *ngIf="data.is_onsale"><i class="anticon anticon-retweet"></i>&nbsp;不再销售</li>
+              </ul>
+            </nz-dropdown>
+          </td>
 
         </tr>
         </tbody>

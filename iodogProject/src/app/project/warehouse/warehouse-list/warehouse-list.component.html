@@ -29,13 +29,14 @@
 
     <div class="search">
       <nz-radio-group
-        [(ngModel)]='p_status2'
-        (ngModelChange)="listFilter()"
+        [(ngModel)]='doi_status'
+        (ngModelChange)="OS_listFilter()"
         [nzSize]="'small'">
-        <label nz-radio-button nzValue="ALL">全部</label>
-        <label nz-radio-button nzValue="ON_SALE">快周转</label>
-        <label nz-radio-button nzValue="CLEAN">正常周转</label>
-        <label nz-radio-button nzValue="OFFLINE">慢周转</label>
+        <label nz-radio-button nzValue="">全部</label>
+        <label nz-radio-button nzValue="FAST"><nz-badge nzStatus="success"></nz-badge>快周转</label>
+        <label nz-radio-button nzValue="NORMAL"><nz-badge nzStatus="processing"></nz-badge>正常周转</label>
+        <label nz-radio-button nzValue="WARN"><nz-badge nzStatus="warning"></nz-badge>偏慢</label>
+        <label nz-radio-button nzValue="SLOW"><nz-badge nzStatus="error"></nz-badge>慢周转</label>
       </nz-radio-group>
 
       <nz-radio-group
@@ -45,6 +46,15 @@
         <label nz-radio-button nzValue="">全部</label>
         <label nz-radio-button nzValue="true">在售</label>
         <label nz-radio-button nzValue="false">停售</label>
+      </nz-radio-group>
+
+      <nz-radio-group
+        [(ngModel)]='is_return'
+        (ngModelChange)="OS_listFilter()"
+        [nzSize]="'small'">
+        <label nz-radio-button nzValue="">全部</label>
+        <label nz-radio-button nzValue="false">在仓库存</label>
+        <label nz-radio-button nzValue="true">退货商品</label>
       </nz-radio-group>
 
       <button [nzSize]="'small'" nz-button class="at_right" (click)="setDisplay()"><i class="anticon anticon-setting"></i>自定义</button>
@@ -178,6 +188,12 @@
           </div>
         </ng-template>
       </nz-popover>
+
+      <nz-switch
+        [(ngModel)]="edit_status"
+        nzCheckedChildren="编辑"
+        nzUnCheckedChildren="编辑">
+      </nz-switch>
     </div>
 
 
@@ -187,7 +203,6 @@
                 nzShowSizeChanger="true"
                 [nzLoading] = "operating"
                 nzLoadingDelay="500"
-                [nzTitle] = "titleTemp"
                 [nzShowTotal] = "totalItemsTemp"
                 [nzNoResult] = "noResultTemp"
                 nzFrontPagination="false"
@@ -224,7 +239,7 @@
             <div>近7天平均库存</div>
           </th>
           <th class="set_center" *ngIf="checkDisplay('doi')">DOI</th>
-          <th nzWidth="100px">操作</th>
+          <th *ngIf="edit_status" nzWidth="100px">操作</th>
         </tr>
         </thead>
 
@@ -234,7 +249,14 @@
             <img src="http://placehold.it/50x50">
           </td>
           <td>
-            <div><a (click)="editProduct(data.id)">{{data.sku}}</a></div>
+            <div><a (click)="editProduct(data.id)">
+              <nz-badge *ngIf="data.doi <= 30 && data.doi > 0" nzStatus="success"></nz-badge>
+              <nz-badge *ngIf="data.doi <= 50 && data.doi > 30" nzStatus="processing"></nz-badge>
+              <nz-badge *ngIf="data.doi <= 60 && data.doi > 50" nzStatus="warning"></nz-badge>
+              <nz-badge *ngIf="data.doi > 60" nzStatus="error"></nz-badge>
+              <nz-badge *ngIf="data.doi == 0" nzStatus="default"></nz-badge>
+              {{data.sku}}
+            </a></div>
             <div>{{data.cn_name}}</div>
           </td>
 
@@ -259,15 +281,9 @@
             <div>{{data.avg_stock7}}</div>
           </td>
           <td class="set_center" *ngIf="checkDisplay('doi')">{{data.doi}}</td>
-          <td>
-            <nz-dropdown [nzTrigger]="'click'">
-              <button nz-button nz-dropdown [nzSize]="'small'"><span>处理</span> <i class="anticon anticon-down"></i></button>
-
-              <ul nz-menu>
-                <li nz-menu-item (click)="changeStatus(data.id, data.is_onsale)" *ngIf="!data.is_onsale"><i class="anticon anticon-retweet"></i>&nbsp;恢复销售</li>
-                <li nz-menu-item (click)="changeStatus(data.id, data.is_onsale)" *ngIf="data.is_onsale"><i class="anticon anticon-retweet"></i>&nbsp;不再销售</li>
-              </ul>
-            </nz-dropdown>
+          <td *ngIf="edit_status">
+            <nz-tag (click)="changeStatus(data.id, data.is_onsale)" *ngIf="data.is_onsale" [nzColor]="'#f50'">不再销售</nz-tag>
+            <nz-tag (click)="changeStatus(data.id, data.is_onsale)" *ngIf="!data.is_onsale" [nzColor]="'#87d068'">恢复销售</nz-tag>
           </td>
 
         </tr>

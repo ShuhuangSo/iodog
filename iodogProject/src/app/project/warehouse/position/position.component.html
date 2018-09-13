@@ -60,8 +60,8 @@
     <td class="set_center">
       <a *ngIf="data.is_active" (click)="changeStatus(data.is_active, data.id)">停用</a>
       <a *ngIf="!data.is_active" (click)="changeStatus(data.is_active, data.id)">启用</a>
-      <nz-divider nzType="vertical"></nz-divider>
-      <a (click)="deletePosition(data.id)">删除</a>
+      <nz-divider *ngIf="edit_status" nzType="vertical"></nz-divider>
+      <a *ngIf="edit_status" (click)="deletePosition(data.id)">删除</a>
     </td>
   </tr>
   </tbody>

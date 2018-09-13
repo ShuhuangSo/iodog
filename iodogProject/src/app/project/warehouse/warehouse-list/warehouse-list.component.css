@@ -29,7 +29,10 @@ nz-input-group {
 }
 
 nz-radio-group {
-  margin-right: 20px;
+  margin-right: 15px;
+}
+nz-switch {
+  margin-left: 15px;
 }
 
 .order p {

@@ -19,10 +19,13 @@ export class WarehouseListComponent implements OnInit {
   pageSize = 20;  // 默认一页显示条数
   page = 1; // 默认页码
   ordering = ''; // 排序
+  is_return = ''; // 是否为退货商品
   totalCount = 0;  // 产品总数
   wh_type = 'OS'; // 默认仓库类型
   is_onsale = 'true'; // 默认库存状态
   current_warehouse = null; // 当前仓库
+  edit_status = false; // 编辑状态
+  doi_status = ''; // 周转状态
 
   // 自定义显示{是否显示，字段名，显示名称，是否禁用}
   display = [
@@ -108,8 +111,28 @@ export class WarehouseListComponent implements OnInit {
     if (this.is_onsale !== '') {
       urlparams.append('is_onsale', this.is_onsale);
     }
+    if (this.is_return !== '') {
+      urlparams.append('is_return', this.is_return);
+    }
     if (this.os_search !== '') {
       urlparams.append('search', this.os_search);
+    }
+    if (this.doi_status !== '') {
+      if (this.doi_status === 'FAST') {
+        urlparams.append('min_doi', '0.001');
+        urlparams.append('max_doi', '30');
+      }
+      if (this.doi_status === 'NORMAL') {
+        urlparams.append('min_doi', '30.001');
+        urlparams.append('max_doi', '50');
+      }
+      if (this.doi_status === 'WARN') {
+        urlparams.append('min_doi', '50.001');
+        urlparams.append('max_doi', '60');
+      }
+      if (this.doi_status === 'SLOW') {
+        urlparams.append('min_doi', '60.001');
+      }
     }
     if (this.current_warehouse) {
       urlparams.append('warehouse', this.current_warehouse);

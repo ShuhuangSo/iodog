@@ -117,6 +117,7 @@ export class WHStock {
     public is_active: boolean, // 产品是否有效(os)
     public is_prohibit: boolean, // 是否禁止出库(os)
     public position: string, // 仓位
+    public product_id: number // 产品在产品库id
   ) {}
 }
 

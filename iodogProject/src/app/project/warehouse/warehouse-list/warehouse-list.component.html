@@ -1,6 +1,9 @@
 <nz-card>
   <nz-tabset>
-  <nz-tab nzTitle="海外仓">
+  <nz-tab [nzTitle]="osTemplate" (nzSelect)="getWarehouseList()">
+    <ng-template #osTemplate>
+      <i class="anticon anticon-global"></i>海外仓
+    </ng-template>
 
     <div class="search">
       <nz-radio-group
@@ -9,8 +12,8 @@
         [nzSize]="'small'"
         *ngFor="let data of wh">
         <label nz-radio [nzValue]=data.id>
-          <nz-tag *ngIf="current_warehouse==data.id" [nzColor]="'#108ee9'">{{data.wh_name}}</nz-tag>
-          <nz-tag *ngIf="current_warehouse!=data.id">{{data.wh_name}}</nz-tag>
+          <nz-tag *ngIf="current_warehouse==data.id" [nzColor]="'#108ee9'">{{data.wh_name}}【{{data.logistics_company}}】</nz-tag>
+          <nz-tag *ngIf="current_warehouse!=data.id">{{data.wh_name}}【{{data.logistics_company}}】</nz-tag>
         </label>
       </nz-radio-group>
     </div>
@@ -249,7 +252,7 @@
             <img src="http://placehold.it/50x50">
           </td>
           <td>
-            <div><a (click)="editProduct(data.id)">
+            <div><a (click)="editProduct(data.product_id)">
               <nz-badge *ngIf="data.doi <= 30 && data.doi > 0" nzStatus="success"></nz-badge>
               <nz-badge *ngIf="data.doi <= 50 && data.doi > 30" nzStatus="processing"></nz-badge>
               <nz-badge *ngIf="data.doi <= 60 && data.doi > 50" nzStatus="warning"></nz-badge>
@@ -298,19 +301,185 @@
         <i class="fa fa-child fa-5x"></i>木有！
       </ng-template>
 
-      <!--<ng-template #titleTemp>-->
-        <!--<div class="operating">-->
-          <!--<span><i class="fa fa-clock-o" aria-hidden="true"></i>2018-08-28 22:56:30</span>-->
-          <!--<button nz-button class="at_right" (click)="setDisplay()"><i class="anticon anticon-setting"></i>自定义</button>-->
-
-        <!--</div>-->
-      <!--</ng-template>-->
-
     </div>
 
   </nz-tab>
-  <nz-tab nzTitle="本地仓">
-    Content of Tab Pane 2
+  <nz-tab  [nzTitle]="localTemplate" (nzSelect)="getLocalWarehouseList()">
+    <ng-template #localTemplate>
+      <i class="anticon anticon-home"></i>本地仓
+    </ng-template>
+
+    <div class="search">
+      <nz-radio-group
+        [(ngModel)]='current_warehouse2'
+        (ngModelChange)="LOCAL_listFilter()"
+        [nzSize]="'small'"
+        *ngFor="let data of wh2">
+        <label nz-radio [nzValue]=data.id>
+          <nz-tag *ngIf="current_warehouse2==data.id" [nzColor]="'#108ee9'">{{data.wh_name}}</nz-tag>
+          <nz-tag *ngIf="current_warehouse2!=data.id">{{data.wh_name}}</nz-tag>
+        </label>
+      </nz-radio-group>
+    </div>
+
+    <div class="search">
+
+      <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+        <input [(ngModel)]='local_search' (keyup.enter)="LOCAL_listFilter()" type="text" nz-input placeholder="SKU | 产品名称搜索">
+      </nz-input-group>
+      <ng-template #suffixIconButton>
+        <i class="anticon anticon-close-circle" (click)="cleanLocalSearch()" *ngIf="local_search"></i>
+        <button nz-button nzType="primary" nzSearch (click)="LOCAL_listFilter()"><i class="anticon anticon-search"></i></button>
+      </ng-template>
+    </div>
+
+    <div class="search">
+      <nz-radio-group
+        [(ngModel)]='is_onsale'
+        (ngModelChange)="LOCAL_listFilter()"
+        [nzSize]="'small'">
+        <label nz-radio-button nzValue="">全部</label>
+        <label nz-radio-button nzValue="true">在售</label>
+        <label nz-radio-button nzValue="false">停售</label>
+      </nz-radio-group>
+
+      <nz-popover [nzPlacement]="'bottomLeft'" [nzTrigger]="'click'">
+        <button nz-button nzSize="small" nz-popover>排序<i class="anticon anticon-caret-down"></i></button>
+        <ng-template #nzTemplate>
+          <div class="order">
+            <p>总库存
+              <nz-radio-group
+                nzSize="small"
+                [(ngModel)]='ordering'
+                (ngModelChange)="LOCAL_listFilter()">
+                <label nz-radio-button nzValue="all_stock"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="-all_stock"><i class="anticon anticon-caret-down"></i></label>
+              </nz-radio-group>
+            </p>
+            <p>可用库存
+              <nz-radio-group
+                nzSize="small"
+                [(ngModel)]='ordering'
+                (ngModelChange)="LOCAL_listFilter()">
+                <label nz-radio-button nzValue="available_qty"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="-available_qty"><i class="anticon anticon-caret-down"></i></label>
+              </nz-radio-group>
+            </p>
+            <p>待出库
+              <nz-radio-group
+                nzSize="small"
+                [(ngModel)]='ordering'
+                (ngModelChange)="LOCAL_listFilter()">
+                <label nz-radio-button nzValue="reserved_qty"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="-reserved_qty"><i class="anticon anticon-caret-down"></i></label>
+              </nz-radio-group>
+            </p>
+            <p>在途库存
+              <nz-radio-group
+                nzSize="small"
+                [(ngModel)]='ordering'
+                (ngModelChange)="LOCAL_listFilter()">
+                <label nz-radio-button nzValue="on_way_qty"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="-on_way_qty"><i class="anticon anticon-caret-down"></i></label>
+              </nz-radio-group>
+            </p>
+            <p>仓位
+              <nz-radio-group
+                nzSize="small"
+                [(ngModel)]='ordering'
+                (ngModelChange)="LOCAL_listFilter()">
+                <label nz-radio-button nzValue="position"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="-position"><i class="anticon anticon-caret-down"></i></label>
+              </nz-radio-group>
+            </p>
+            <p>默认时间
+              <nz-radio-group
+                nzSize="small"
+                [(ngModel)]='ordering'
+                (ngModelChange)="LOCAL_listFilter()">
+                <label nz-radio-button nzValue="create_time"><i class="anticon anticon-caret-up"></i></label>
+                <label nz-radio-button nzValue="-create_time"><i class="anticon anticon-caret-down"></i></label>
+              </nz-radio-group>
+            </p>
+
+          </div>
+        </ng-template>
+      </nz-popover>
+
+      <nz-switch
+        [(ngModel)]="edit_status"
+        nzCheckedChildren="编辑"
+        nzUnCheckedChildren="编辑">
+      </nz-switch>
+    </div>
+
+    <div class="search">
+
+      <nz-table #local
+                nzShowSizeChanger="true"
+                [nzLoading] = "operating2"
+                nzLoadingDelay="500"
+                [nzShowTotal] = "totalItemsTemp"
+                [nzNoResult] = "noResultTemp"
+                nzFrontPagination="false"
+                [nzPageSizeOptions]="[20,50,100]"
+                [nzTotal]="totalCount"
+                (nzPageSizeChange) = "pageSizeChange($event)"
+                (nzPageIndexChange) = "pageIndexChange($event)"
+                [nzData]="wh_stock2" [(nzPageSize)]=pageSize>
+
+        <thead>
+        <tr>
+          <th class="set_center" nzWidth="60px">缩略图</th>
+          <th nzWidth="300px">
+            <div>SKU</div>
+            <div>中文名称</div>
+          </th>
+          <th class="set_center">总库存</th>
+          <th class="set_center">可用库存</th>
+          <th class="set_center">待出库</th>
+          <th class="set_center">在途库存</th>
+          <th class="set_center">仓位</th>
+          <th *ngIf="edit_status" nzWidth="100px">操作</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let data of local.data">
+          <td>
+            <img src="http://placehold.it/50x50">
+          </td>
+          <td>
+            <div><a (click)="editProduct(data.product_id)">
+              {{data.sku}}
+            </a></div>
+            <div>{{data.cn_name}}</div>
+          </td>
+
+          <td class="set_center">{{data.all_stock}}</td>
+          <td class="set_center">{{data.available_qty}}</td>
+          <td class="set_center">{{data.reserved_qty}}</td>
+          <td class="set_center">{{data.on_way_qty}}</td>
+          <td class="set_center">{{data.position}}</td>
+          <td *ngIf="edit_status">
+            <nz-tag (click)="changeLocalStatus(data.id, data.is_onsale)" *ngIf="data.is_onsale" [nzColor]="'#f50'">不再销售</nz-tag>
+            <nz-tag (click)="changeLocalStatus(data.id, data.is_onsale)" *ngIf="!data.is_onsale" [nzColor]="'#87d068'">恢复销售</nz-tag>
+          </td>
+
+        </tr>
+        </tbody>
+      </nz-table>
+
+      <ng-template #totalItemsTemp let-total>
+        总共 {{total}} 个产品
+      </ng-template>
+
+      <ng-template #noResultTemp>
+        <i class="fa fa-child fa-5x"></i>木有！
+      </ng-template>
+
+    </div>
+
   </nz-tab>
   </nz-tabset>
 

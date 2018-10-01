@@ -11,6 +11,7 @@ import {ComboComponent} from './project/products/combo/combo.component';
 import {PlatformAuthComponent} from './project/settings/platform-auth/platform-auth.component';
 import {WarehouseListComponent} from './project/warehouse/warehouse-list/warehouse-list.component';
 import {WarehouseSettingsComponent} from './project/warehouse/warehouse-settings/warehouse-settings.component';
+import {RefillPromoteComponent} from './project/purchase/refill-promote/refill-promote.component';
 
 
 const routes: Routes = [
@@ -27,6 +28,7 @@ const routes: Routes = [
       {path: 'combo', component: ComboComponent}, // 产品组合
       {path: 'warehouse', component: WarehouseListComponent}, // 仓库列表
       {path: 'warehouse-settings', component: WarehouseSettingsComponent}, // 仓库设置
+      {path: 'auto-promote', component: RefillPromoteComponent}, // 补货推荐
       {path: 'platform-auth', component: PlatformAuthComponent} // 平台授权
     ]
   },

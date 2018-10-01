@@ -1,0 +1,26 @@
+nz-card {
+  margin: 10px 0;
+}
+
+.set_center {
+  text-align: center;
+}
+
+nz-input-number {
+  text-align: center;
+}
+
+.at_right {
+  float: right;
+  margin: 0 0 0 5px;
+}
+
+.search {
+  margin-bottom: 15px;
+}
+
+.green {
+  font-size: large;
+  font-weight: bold;
+  color: #0088ed;
+}

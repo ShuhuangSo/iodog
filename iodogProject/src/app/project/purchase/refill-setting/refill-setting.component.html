@@ -1,0 +1,46 @@
+<div>
+  补货推荐功能：<nz-switch
+  [(ngModel)]="is_active"
+  nzCheckedChildren="已启用"
+  nzUnCheckedChildren="已停用"></nz-switch>
+</div>
+
+<nz-divider nzDashed="true"></nz-divider>
+
+<div>
+  库存备货天数：<nz-input-number [(ngModel)]="stock_days" [nzMin]="1" [nzDisabled]="!is_active"></nz-input-number>
+</div>
+<div>
+  最少推荐采购数：<nz-input-number [(ngModel)]="min_buy" [nzMin]="0" [nzDisabled]="!is_active"></nz-input-number>
+  <span class="note">少于最少采购数量的推荐采购将不显示</span>
+</div>
+<div>
+  采购数取整：<nz-select style="width: 120px;" [(ngModel)]="auto_carry" [nzDisabled]="!is_active">
+  <nz-option [nzValue]="0" nzLabel="推荐值"></nz-option>
+  <nz-option [nzValue]="5" nzLabel="5的倍数"></nz-option>
+  <nz-option [nzValue]="10" nzLabel="10的倍数" ></nz-option>
+  <nz-option [nzValue]="50" nzLabel="50的倍数" ></nz-option>
+</nz-select>
+  <span class="note">推荐值为按实际计算数量；取整选项：例如入计算值31，5的倍数则进位为35</span>
+</div>
+
+<nz-divider nzDashed="true"></nz-divider>
+
+<div>
+  自动计算：<nz-switch
+  [(ngModel)]="is_auto_calc"
+  nzCheckedChildren="已启用"
+  nzUnCheckedChildren="已停用" [nzDisabled]="!is_active"></nz-switch>
+</div>
+<div>
+  自动提醒重量kg：<nz-input-number [(ngModel)]="remind_weight" [nzMin]="0" [nzDisabled]="!is_active"></nz-input-number>
+  <span class="note">自动提醒阈值，不启用请设为0</span>
+</div>
+<div>
+  自动提醒商品SKU数：<nz-input-number [(ngModel)]="remind_sku_qty" [nzMin]="0" [nzDisabled]="!is_active"></nz-input-number>
+  <span class="note">自动提醒阈值，不启用请设为0</span>
+</div>
+<div>
+  自动提醒总商品数：<nz-input-number [(ngModel)]="remind_total_qty" [nzMin]="0" [nzDisabled]="!is_active"></nz-input-number>
+  <span class="note">自动提醒阈值，不启用请设为0</span>
+</div>

@@ -1,0 +1,113 @@
+<nz-card>
+
+  <div class="search">
+    <span>目标仓库：</span>
+    <nz-radio-group
+      [(ngModel)]='current_warehouse'
+      (ngModelChange)="listFilter()"
+      [nzSize]="'small'"
+      *ngFor="let data of wh">
+      <label nz-radio [nzValue]=data.id>
+        <nz-tag *ngIf="current_warehouse==data.id" [nzColor]="'#108ee9'">{{data.wh_name}}【{{data.logistics_company}}】</nz-tag>
+        <nz-tag *ngIf="current_warehouse!=data.id">{{data.wh_name}}【{{data.logistics_company}}】</nz-tag>
+      </label>
+    </nz-radio-group>
+  </div>
+
+  <div class="search">
+    <nz-table #buyTable
+              nzSize="middle"
+              nzShowSizeChanger="true"
+              [nzLoading] = "operating"
+              nzLoadingDelay="500"
+              [nzTitle] = "titleTemp"
+              [nzFooter] = "footerTemp"
+              nzShowPagination = false
+              nzFrontPagination= "false"
+              [nzNoResult] = "noResultTemp"
+              (nzCurrentPageDataChange)="currentPageDataChange($event)"
+              [nzData]="promote">
+
+      <thead>
+      <tr>
+        <th nzWidth="30px"
+            nzShowCheckbox
+            [(nzChecked)]="allChecked"
+            [nzIndeterminate]="indeterminate"
+            (nzCheckedChange)="checkAll($event)"
+        >
+        </th>
+        <th class="set_center" nzWidth="60px">图片</th>
+        <th nzWidth="300px">
+          <div>SKU</div>
+          <div>中文名称</div>
+        </th>
+        <th class="set_center">现库存</th>
+        <th class="set_center">在途</th>
+        <th class="set_center">
+          <div>日均销量</div>
+          <div>30|15|7天</div>
+        </th>
+        <th class="set_center">DOI</th>
+        <th class="set_center">单项重kg</th>
+        <th class="set_center">推荐数量</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr *ngFor="let data of buyTable.data">
+        <td nzShowCheckbox [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatus($event)"></td>
+        <td class="set_center">
+          <img (click)="editProduct(data.product_id)" src="http://placehold.it/50x50">
+        </td>
+        <td>
+          <div><a (click)="editProduct(data.product_id)">
+            <nz-badge *ngIf="data.doi <= 30 && data.doi > 0" nzStatus="success"></nz-badge>
+            <nz-badge *ngIf="data.doi <= 50 && data.doi > 30" nzStatus="processing"></nz-badge>
+            <nz-badge *ngIf="data.doi <= 60 && data.doi > 50" nzStatus="warning"></nz-badge>
+            <nz-badge *ngIf="data.doi > 60" nzStatus="error"></nz-badge>
+            <nz-badge *ngIf="data.doi == 0" nzStatus="default"></nz-badge>
+            {{data.sku}}</a></div>
+          <div>{{data.cn_name}}</div>
+        </td>
+
+        <td class="set_center">{{data.available_qty}}</td>
+
+        <td class="set_center">{{data.on_way_qty}}</td>
+        <td class="set_center">
+          {{data.avg_sell_qty}}&nbsp;|&nbsp;{{data.avg_sell_qty15}}&nbsp;|&nbsp;{{data.avg_sell_qty7}}
+        </td>
+        <td class="set_center">{{data.doi}}</td>
+        <td class="set_center">{{data.product_weight*data.buy_qty  | number:'1.2-2'}}</td>
+        <td class="set_center">
+          <nz-input-number [(ngModel)]="data.buy_qty" (ngModelChange)="refreshWeight()" [nzMin]="1"></nz-input-number>
+        </td>
+
+      </tr>
+      </tbody>
+    </nz-table>
+
+    <ng-template #noResultTemp>
+      <i class="fa fa-child fa-5x"></i>木有！
+    </ng-template>
+
+    <ng-template #footerTemp>
+      <button nz-button [disabled]="disabledButton" [nzType]="'primary'" (click)="addSupplier()"><i class="anticon anticon-plus"></i>生成采购计划</button>
+      <span *ngIf="checkedNumber" style="margin-left: 15px;">共</span>
+      <span *ngIf="checkedNumber" class="green">{{checkedNumber}}</span>
+      <span *ngIf="checkedNumber">个SKU, 总重量:</span>
+      <span *ngIf="checkedNumber" class="green">{{total_weight | number:'1.2-2'}}</span>
+      <span *ngIf="checkedNumber">kg</span>
+    </ng-template>
+
+    <ng-template #titleTemp>
+      <div class="operating">
+
+        <button nz-button [nzType]="'primary'" [nzLoading]="loading" (click)="manualCalc()"><i class="anticon anticon-sync"></i>手动计算</button>
+
+        <button nz-button class="at_right" (click)="editRefillSetting()"><i class="anticon anticon-setting"></i>设置</button>
+
+      </div>
+    </ng-template>
+  </div>
+</nz-card>

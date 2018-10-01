@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {Warehouse, WarehouseService, WHStock} from '../../../shared/warehouse.service';
 import {ListDisplaySettingComponent} from '../../list-display-setting/list-display-setting.component';
 import {NzMessageService, NzModalService} from 'ng-zorro-antd';
-import {PlatformAuthAddComponent} from '../../settings/platform-auth-add/platform-auth-add.component';
-import {WarehouseAddComponent} from '../warehouse-add/warehouse-add.component';
 import {ProductDetailComponent} from '../../products/product-detail/product-detail.component';
 
 @Component({

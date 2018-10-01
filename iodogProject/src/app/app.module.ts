@@ -43,6 +43,9 @@ import { WarehouseSettingsComponent } from './project/warehouse/warehouse-settin
 import { WarehouseAddComponent } from './project/warehouse/warehouse-add/warehouse-add.component';
 import { PositionComponent } from './project/warehouse/position/position.component';
 import { PositionAddComponent } from './project/warehouse/position-add/position-add.component';
+import { RefillPromoteComponent } from './project/purchase/refill-promote/refill-promote.component';
+import {PurchaseService} from './shared/purchase.service';
+import { RefillSettingComponent } from './project/purchase/refill-setting/refill-setting.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +81,9 @@ import { PositionAddComponent } from './project/warehouse/position-add/position-
     WarehouseSettingsComponent,
     WarehouseAddComponent,
     PositionComponent,
-    PositionAddComponent
+    PositionAddComponent,
+    RefillPromoteComponent,
+    RefillSettingComponent
   ],
   imports: [
     BrowserModule,
@@ -107,6 +112,7 @@ import { PositionAddComponent } from './project/warehouse/position-add/position-
     WarehouseAddComponent, // 仓库添加
     PositionComponent, // 仓位
     PositionAddComponent, // 添加仓位
+    RefillSettingComponent, // 补货推荐设置
     UploadsComponent, // 导入上传
     PlatformAuthAddComponent, // 添加，编辑授权窗口
   ],
@@ -115,6 +121,7 @@ import { PositionAddComponent } from './project/warehouse/position-add/position-
     UsersService,
     SettingsService,
     WarehouseService,
+    PurchaseService,
     [{ provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true }]
   ],
   bootstrap: [AppComponent]

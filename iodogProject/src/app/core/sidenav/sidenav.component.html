@@ -69,12 +69,14 @@
 
   <li nz-submenu>
           <span title>
-            <i class="anticon anticon-appstore"></i>
+            <i class="anticon anticon-shopping-cart"></i>
             <span>补货管理</span>
           </span>
     <ul>
-      <li nz-menu-item>智能补货</li>
-      <li nz-menu-item>备货计划</li>
+      <li nz-menu-item><a [routerLink]="['/home/auto-promote']">补货推荐</a></li>
+      <li nz-menu-item>采购管理</li>
+      <li nz-menu-item>备货池</li>
+      <li nz-menu-item>入仓计划</li>
     </ul>
   </li>
 
